@@ -1,0 +1,46 @@
+        -:    0:Source:../src/Procedure_Generator/card.hpp
+        -:    0:Graph:src/Procedure_Generator/deck_device_component.gcno
+        -:    0:Data:src/Procedure_Generator/deck_device_component.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * card.hpp
+        -:    3: *
+        -:    4: *  Created on: Jul 9, 2013
+        -:    5: *      Author: George Braxton IV
+        -:    6: *
+        -:    7: *  Copyright 2013 George Braxton IV
+        -:    8: *
+        -:    9: *  This file is part of CCGSS.
+        -:   10: *
+        -:   11: *  CCGSS is free software: you can redistribute it and/or modify
+        -:   12: *  it under the terms of the GNU General Public License as published by
+        -:   13: *  the Free Software Foundation, either version 3 of the License, or
+        -:   14: *  (at your option) any later version.
+        -:   15: *
+        -:   16: *  CCGSS is distributed in the hope that it will be useful,
+        -:   17: *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   18: *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   19: *  GNU General Public License for more details.
+        -:   20: *
+        -:   21: *  You should have received a copy of the GNU General Public License
+        -:   22: *  along with CCGSS.  If not, see <http://www.gnu.org/licenses/>.
+        -:   23: */
+        -:   24:
+        -:   25:#ifndef CARD_HPP_
+        -:   26:#define CARD_HPP_
+        -:   27:
+        -:   28:#include <cstddef>
+        -:   29:#include <vector>
+        -:   30:
+        -:   31:struct Card {
+function _ZN4CardC2Ev called 0 returned 0% blocks executed 0%
+    #####:   32:  Card() : face(NULL), suit(NULL), value(0) {}
+        -:   33:  Card(const char* face, const char* suit, int value) : face(face), suit(suit), value(value) {}
+        -:   34:  const char* face;
+        -:   35:  const char* suit;
+        -:   36:  int value;
+        -:   37:};
+        -:   38:
+        -:   39:
+        -:   40:#endif /* CARD_HPP_ */

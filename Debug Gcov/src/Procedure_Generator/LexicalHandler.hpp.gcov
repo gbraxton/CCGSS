@@ -1,0 +1,184 @@
+        -:    0:Source:/usr/local/include/xercesc/sax2/LexicalHandler.hpp
+        -:    0:Graph:simulation_package_builder.gcno
+        -:    0:Data:simulation_package_builder.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: * 
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: * 
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: LexicalHandler.hpp 932887 2010-04-11 13:04:59Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_LEXICALHANDLER_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_LEXICALHANDLER_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XercesDefs.hpp>
+        -:   26:
+        -:   27:XERCES_CPP_NAMESPACE_BEGIN
+        -:   28:
+        -:   29:/**
+        -:   30:  * Receive notification of lexical events.
+        -:   31:  *
+        -:   32:  * <p>This is an extension handler for that provides lexical information
+        -:   33:  * about an XML document.  It does not provide information about document
+        -:   34:  * content.  For those events, an application must register an instance of
+        -:   35:  * a ContentHandler.</p>
+        -:   36:  *
+        -:   37:  * <p>The order of events in this interface is very important, and
+        -:   38:  * mirrors the order of information in the document itself.  For
+        -:   39:  * example, startDTD() and endDTD() events will occur before the
+        -:   40:  * first element in the document.</p>
+        -:   41:  *
+        -:   42:  * @see SAX2XMLReader#setLexicalHandler
+        -:   43:  * @see SAX2XMLReader#setContentHandler
+        -:   44:  */
+        -:   45:
+        -:   46:class SAX2_EXPORT LexicalHandler
+        -:   47:{
+        -:   48:public:
+        -:   49:    /** @name Constructors and Destructor */
+        -:   50:    //@{
+        -:   51:    /** Default constructor */
+        -:   52:    LexicalHandler()
+        -:   53:    {
+        -:   54:    }
+        -:   55:
+        -:   56:    /** Destructor */
+function _ZN11xercesc_3_114LexicalHandlerD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_114LexicalHandlerD2Ev called 0 returned 0% blocks executed 0%
+    #####:   57:    virtual ~LexicalHandler()
+    #####:   58:    {
+    #####:   59:    }
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   60:    //@}
+        -:   61:
+        -:   62:    /** @name The virtual document handler interface */
+        -:   63:
+        -:   64:    //@{
+        -:   65:   /**
+        -:   66:    * Receive notification of comments.
+        -:   67:    *
+        -:   68:    * <p>The Parser will call this method to report each occurrence of
+        -:   69:    * a comment in the XML document.</p>
+        -:   70:    *
+        -:   71:    * <p>The application must not attempt to read from the array
+        -:   72:    * outside of the specified range.</p>
+        -:   73:    *
+        -:   74:    * @param chars The characters from the XML document.
+        -:   75:    * @param length The number of characters to read from the array.
+        -:   76:    * @exception SAXException Any SAX exception, possibly
+        -:   77:    *            wrapping another exception.
+        -:   78:    */
+        -:   79:    virtual void comment
+        -:   80:    (
+        -:   81:        const   XMLCh* const    chars
+        -:   82:        , const XMLSize_t       length
+        -:   83:    ) = 0;
+        -:   84:
+        -:   85:  /**
+        -:   86:    * Receive notification of the end of a CDATA section.
+        -:   87:    *
+        -:   88:    * <p>The SAX parser will invoke this method at the end of
+        -:   89:    * each CDATA parsed.</p>
+        -:   90:    *
+        -:   91:    * @exception SAXException Any SAX exception, possibly
+        -:   92:    *            wrapping another exception.
+        -:   93:    */
+        -:   94:    virtual void endCDATA () = 0;
+        -:   95:
+        -:   96:  /**
+        -:   97:    * Receive notification of the end of the DTD declarations.
+        -:   98:    *
+        -:   99:    * <p>The SAX parser will invoke this method at the end of the
+        -:  100:    * DTD</p>
+        -:  101:    *
+        -:  102:    * @exception SAXException Any SAX exception, possibly
+        -:  103:    *            wrapping another exception.
+        -:  104:    */
+        -:  105:    virtual void endDTD () = 0;
+        -:  106:
+        -:  107:  /**
+        -:  108:    * Receive notification of the end of an entity.
+        -:  109:    *
+        -:  110:    * <p>The SAX parser will invoke this method at the end of an
+        -:  111:    * entity</p>
+        -:  112:    *
+        -:  113:    * @param name The name of the entity that is ending.
+        -:  114:    * @exception SAXException Any SAX exception, possibly
+        -:  115:    *            wrapping another exception.
+        -:  116:    */
+        -:  117:    virtual void endEntity (const XMLCh* const name) = 0;
+        -:  118:
+        -:  119:  /**
+        -:  120:    * Receive notification of the start of a CDATA section.
+        -:  121:    *
+        -:  122:    * <p>The SAX parser will invoke this method at the start of
+        -:  123:    * each CDATA parsed.</p>
+        -:  124:    *
+        -:  125:    * @exception SAXException Any SAX exception, possibly
+        -:  126:    *            wrapping another exception.
+        -:  127:    */
+        -:  128:    virtual void startCDATA () = 0;
+        -:  129:
+        -:  130:  /**
+        -:  131:    * Receive notification of the start of the DTD declarations.
+        -:  132:    *
+        -:  133:    * <p>The SAX parser will invoke this method at the start of the
+        -:  134:    * DTD</p>
+        -:  135:    *
+        -:  136:    * @param name The document type name.
+        -:  137:    * @param publicId The declared public identifier for the external DTD subset, or null if none was declared.
+        -:  138:    * @param systemId The declared system identifier for the external DTD subset, or null if none was declared.
+        -:  139:    * @exception SAXException Any SAX exception, possibly
+        -:  140:    *            wrapping another exception.
+        -:  141:    */
+        -:  142:    virtual void startDTD
+        -:  143:    (
+        -:  144:        const   XMLCh* const    name
+        -:  145:        , const   XMLCh* const    publicId
+        -:  146:        , const   XMLCh* const    systemId
+        -:  147:    ) = 0;
+        -:  148:
+        -:  149:  /**
+        -:  150:    * Receive notification of the start of an entity.
+        -:  151:    *
+        -:  152:    * <p>The SAX parser will invoke this method at the start of an
+        -:  153:    * entity</p>
+        -:  154:    *
+        -:  155:    * @param name The name of the entity that is starting.
+        -:  156:    * @exception SAXException Any SAX exception, possibly
+        -:  157:    *            wrapping another exception.
+        -:  158:    */
+        -:  159:    virtual void startEntity (const XMLCh* const name) = 0;
+        -:  160:
+        -:  161:    //@}
+        -:  162:private :
+        -:  163:    /* Unimplemented Constructors and operators */
+        -:  164:    /* Copy constructor */
+        -:  165:    LexicalHandler(const LexicalHandler&);
+        -:  166:    /** Assignment operator */
+        -:  167:    LexicalHandler& operator=(const LexicalHandler&);
+        -:  168:};
+        -:  169:
+        -:  170:XERCES_CPP_NAMESPACE_END
+        -:  171:
+        -:  172:#endif

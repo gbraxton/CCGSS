@@ -1,0 +1,862 @@
+        -:    0:Source:/usr/local/include/xercesc/sax2/DefaultHandler.hpp
+        -:    0:Graph:Test.gcno
+        -:    0:Data:Test.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: * 
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: * 
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: DefaultHandler.hpp 932887 2010-04-11 13:04:59Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_DEFAULTHANDLER_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_DEFAULTHANDLER_HPP
+        -:   24:
+        -:   25:#include <xercesc/sax2/ContentHandler.hpp>
+        -:   26:#include <xercesc/sax2/LexicalHandler.hpp>
+        -:   27:#include <xercesc/sax2/DeclHandler.hpp>
+        -:   28:#include <xercesc/sax/DTDHandler.hpp>
+        -:   29:#include <xercesc/sax/EntityResolver.hpp>
+        -:   30:#include <xercesc/sax/ErrorHandler.hpp>
+        -:   31:#include <xercesc/sax/SAXParseException.hpp>
+        -:   32:
+        -:   33:XERCES_CPP_NAMESPACE_BEGIN
+        -:   34:
+        -:   35:class Locator;
+        -:   36:class Attributes;
+        -:   37:
+        -:   38:/**
+        -:   39:  * Default base class for SAX2 handlers.
+        -:   40:  *
+        -:   41:  * <p>This class implements the default behaviour for SAX2
+        -:   42:  * interfaces: EntityResolver, DTDHandler, ContentHandler,
+        -:   43:  * ErrorHandler, LexicalHandler, and DeclHandler.</p>
+        -:   44:  *
+        -:   45:  * <p>Application writers can extend this class when they need to
+        -:   46:  * implement only part of an interface; parser writers can
+        -:   47:  * instantiate this class to provide default handlers when the
+        -:   48:  * application has not supplied its own.</p>
+        -:   49:  *
+        -:   50:  * <p>Note that the use of this class is optional.</p>
+        -:   51:  *
+        -:   52:  * @see EntityResolver#EntityResolver
+        -:   53:  * @see DTDHandler#DTDHandler
+        -:   54:  * @see ContentHandler#ContentHandler
+        -:   55:  * @see ErrorHandler#ErrorHandler
+        -:   56:  * @see LexicalHandler#LexicalHandler
+        -:   57:  * @see DeclHandler#DeclHandler
+        -:   58:  */
+        -:   59:
+        -:   60:class SAX2_EXPORT DefaultHandler :
+        -:   61:
+        -:   62:    public EntityResolver,
+        -:   63:	public DTDHandler,
+        -:   64:	public ContentHandler,
+        -:   65:    public ErrorHandler,
+        -:   66:    public LexicalHandler,
+        -:   67:    public DeclHandler
+        -:   68:{
+        -:   69:public:
+        -:   70:  /** @name Default handlers for the DocumentHandler interface */
+        -:   71:    //@{
+        -:   72:  /**
+        -:   73:    * Receive notification of character data inside an element.
+        -:   74:    *
+        -:   75:    * <p>By default, do nothing.  Application writers may override this
+        -:   76:    * method to take specific actions for each chunk of character data
+        -:   77:    * (such as adding the data to a node or buffer, or printing it to
+        -:   78:    * a file).</p>
+        -:   79:    *
+        -:   80:    * @param chars The characters.
+        -:   81:    * @param length The number of characters to use from the
+        -:   82:    *               character array.
+        -:   83:    * @exception SAXException Any SAX exception, possibly
+        -:   84:    *            wrapping another exception.
+        -:   85:    * @see DocumentHandler#characters
+        -:   86:    */
+        -:   87:    virtual void characters
+        -:   88:    (
+        -:   89:        const   XMLCh* const    chars
+        -:   90:        , const XMLSize_t       length
+        -:   91:    );
+        -:   92:
+        -:   93:  /**
+        -:   94:    * Receive notification of the end of the document.
+        -:   95:    *
+        -:   96:    * <p>By default, do nothing.  Application writers may override this
+        -:   97:    * method in a subclass to take specific actions at the beginning
+        -:   98:    * of a document (such as finalising a tree or closing an output
+        -:   99:    * file).</p>
+        -:  100:    *
+        -:  101:    * @exception SAXException Any SAX exception, possibly
+        -:  102:    *            wrapping another exception.
+        -:  103:    * @see DocumentHandler#endDocument
+        -:  104:    */
+        -:  105:    virtual void endDocument();
+        -:  106:
+        -:  107:  /**
+        -:  108:    * Receive notification of the end of an element.
+        -:  109:    *
+        -:  110:    * <p>By default, do nothing.  Application writers may override this
+        -:  111:    * method in a subclass to take specific actions at the end of
+        -:  112:    * each element (such as finalising a tree node or writing
+        -:  113:    * output to a file).</p>
+        -:  114:    *
+        -:  115:    * @param uri The URI of the associated namespace for this element
+        -:  116:	* @param localname The local part of the element name
+        -:  117:	* @param qname The QName of this element
+        -:  118:    * @exception SAXException Any SAX exception, possibly
+        -:  119:    *            wrapping another exception.
+        -:  120:    * @see DocumentHandler#endElement
+        -:  121:    */
+        -:  122:    virtual void endElement
+        -:  123:	(
+        -:  124:		const XMLCh* const uri,
+        -:  125:		const XMLCh* const localname,
+        -:  126:		const XMLCh* const qname
+        -:  127:	);
+        -:  128:
+        -:  129:  /**
+        -:  130:    * Receive notification of ignorable whitespace in element content.
+        -:  131:    *
+        -:  132:    * <p>By default, do nothing.  Application writers may override this
+        -:  133:    * method to take specific actions for each chunk of ignorable
+        -:  134:    * whitespace (such as adding data to a node or buffer, or printing
+        -:  135:    * it to a file).</p>
+        -:  136:    *
+        -:  137:    * @param chars The whitespace characters.
+        -:  138:    * @param length The number of characters to use from the
+        -:  139:    *               character array.
+        -:  140:    * @exception SAXException Any SAX exception, possibly
+        -:  141:    *            wrapping another exception.
+        -:  142:    * @see DocumentHandler#ignorableWhitespace
+        -:  143:    */
+        -:  144:    virtual void ignorableWhitespace
+        -:  145:    (
+        -:  146:        const   XMLCh* const    chars
+        -:  147:        , const XMLSize_t       length
+        -:  148:    );
+        -:  149:
+        -:  150:  /**
+        -:  151:    * Receive notification of a processing instruction.
+        -:  152:    *
+        -:  153:    * <p>By default, do nothing.  Application writers may override this
+        -:  154:    * method in a subclass to take specific actions for each
+        -:  155:    * processing instruction, such as setting status variables or
+        -:  156:    * invoking other methods.</p>
+        -:  157:    *
+        -:  158:    * @param target The processing instruction target.
+        -:  159:    * @param data The processing instruction data, or null if
+        -:  160:    *             none is supplied.
+        -:  161:    * @exception SAXException Any SAX exception, possibly
+        -:  162:    *            wrapping another exception.
+        -:  163:    * @see DocumentHandler#processingInstruction
+        -:  164:    */
+        -:  165:    virtual void processingInstruction
+        -:  166:    (
+        -:  167:        const   XMLCh* const    target
+        -:  168:        , const XMLCh* const    data
+        -:  169:    );
+        -:  170:
+        -:  171:    /**
+        -:  172:    * Reset the Document object on its reuse
+        -:  173:    *
+        -:  174:    * @see DocumentHandler#resetDocument
+        -:  175:    */
+        -:  176:    virtual void resetDocument();
+        -:  177:    //@}
+        -:  178:
+        -:  179:    /** @name Default implementation of DocumentHandler interface */
+        -:  180:
+        -:  181:    //@{
+        -:  182:  /**
+        -:  183:    * Receive a Locator object for document events.
+        -:  184:    *
+        -:  185:    * <p>By default, do nothing.  Application writers may override this
+        -:  186:    * method in a subclass if they wish to store the locator for use
+        -:  187:    * with other document events.</p>
+        -:  188:    *
+        -:  189:    * @param locator A locator for all SAX document events.
+        -:  190:    * @see DocumentHandler#setDocumentLocator
+        -:  191:    * @see Locator
+        -:  192:    */
+        -:  193:    virtual void setDocumentLocator(const Locator* const locator);
+        -:  194:
+        -:  195:  /**
+        -:  196:    * Receive notification of the beginning of the document.
+        -:  197:    *
+        -:  198:    * <p>By default, do nothing.  Application writers may override this
+        -:  199:    * method in a subclass to take specific actions at the beginning
+        -:  200:    * of a document (such as allocating the root node of a tree or
+        -:  201:    * creating an output file).</p>
+        -:  202:    *
+        -:  203:    * @exception SAXException Any SAX exception, possibly
+        -:  204:    *            wrapping another exception.
+        -:  205:    * @see DocumentHandler#startDocument
+        -:  206:    */
+        -:  207:    virtual void startDocument();
+        -:  208:
+        -:  209:  /**
+        -:  210:    * Receive notification of the start of an element.
+        -:  211:    *
+        -:  212:    * <p>By default, do nothing.  Application writers may override this
+        -:  213:    * method in a subclass to take specific actions at the start of
+        -:  214:    * each element (such as allocating a new tree node or writing
+        -:  215:    * output to a file).</p>
+        -:  216:    *
+        -:  217:    * @param uri The URI of the associated namespace for this element
+        -:  218:	* @param localname the local part of the element name
+        -:  219:	* @param qname the QName of this element
+        -:  220:    * @param attrs The specified or defaulted attributes.
+        -:  221:    * @exception SAXException Any SAX exception, possibly
+        -:  222:    *            wrapping another exception.
+        -:  223:    * @see DocumentHandler#startElement
+        -:  224:    */
+        -:  225:    virtual void startElement
+        -:  226:    (
+        -:  227:        const   XMLCh* const    uri,
+        -:  228:        const   XMLCh* const    localname,
+        -:  229:        const   XMLCh* const    qname
+        -:  230:        , const Attributes&	attrs
+        -:  231:    );
+        -:  232:
+        -:  233:  /**
+        -:  234:    * Receive notification of the start of an namespace prefix mapping.
+        -:  235:    *
+        -:  236:    * <p>By default, do nothing.  Application writers may override this
+        -:  237:    * method in a subclass to take specific actions at the start of
+        -:  238:    * each namespace prefix mapping.</p>
+        -:  239:    *
+        -:  240:    * @param prefix The namespace prefix used
+        -:  241:    * @param uri The namespace URI used.
+        -:  242:    * @exception SAXException Any SAX exception, possibly
+        -:  243:    *            wrapping another exception.
+        -:  244:    * @see DocumentHandler#startPrefixMapping
+        -:  245:    */
+        -:  246:	virtual void startPrefixMapping
+        -:  247:	(
+        -:  248:		const	XMLCh* const	prefix,
+        -:  249:		const	XMLCh* const	uri
+        -:  250:	) ;
+        -:  251:
+        -:  252:  /**
+        -:  253:    * Receive notification of the end of an namespace prefix mapping.
+        -:  254:    *
+        -:  255:    * <p>By default, do nothing.  Application writers may override this
+        -:  256:    * method in a subclass to take specific actions at the end of
+        -:  257:    * each namespace prefix mapping.</p>
+        -:  258:    *
+        -:  259:    * @param prefix The namespace prefix used
+        -:  260:    * @exception SAXException Any SAX exception, possibly
+        -:  261:    *            wrapping another exception.
+        -:  262:    * @see DocumentHandler#endPrefixMapping
+        -:  263:    */
+        -:  264:	virtual void endPrefixMapping
+        -:  265:	(
+        -:  266:		const	XMLCh* const	prefix
+        -:  267:	) ;
+        -:  268:
+        -:  269:  /**
+        -:  270:    * Receive notification of a skipped entity
+        -:  271:    *
+        -:  272:    * <p>The parser will invoke this method once for each entity
+        -:  273:	* skipped.  All processors may skip external entities,
+        -:  274:	* depending on the values of the features:<br>
+        -:  275:	* http://xml.org/sax/features/external-general-entities<br>
+        -:  276:	* http://xml.org/sax/features/external-parameter-entities</p>
+        -:  277:    *
+        -:  278:	* <p>Introduced with SAX2</p>
+        -:  279:	*
+        -:  280:    * @param name The name of the skipped entity.  If it is a parameter entity,
+        -:  281:	* the name will begin with %, and if it is the external DTD subset,
+        -:  282:	* it will be the string [dtd].
+        -:  283:    * @exception SAXException Any SAX exception, possibly
+        -:  284:    *            wrapping another exception.
+        -:  285:    */
+        -:  286:	virtual void skippedEntity
+        -:  287:	(
+        -:  288:		const	XMLCh* const	name
+        -:  289:	) ;
+        -:  290:
+        -:  291:    //@}
+        -:  292:
+        -:  293:    /** @name Default implementation of the EntityResolver interface. */
+        -:  294:
+        -:  295:    //@{
+        -:  296:  /**
+        -:  297:    * Resolve an external entity.
+        -:  298:    *
+        -:  299:    * <p>Always return null, so that the parser will use the system
+        -:  300:    * identifier provided in the XML document.  This method implements
+        -:  301:    * the SAX default behaviour: application writers can override it
+        -:  302:    * in a subclass to do special translations such as catalog lookups
+        -:  303:    * or URI redirection.</p>
+        -:  304:    *
+        -:  305:    * @param publicId The public identifier, or null if none is
+        -:  306:    *                 available.
+        -:  307:    * @param systemId The system identifier provided in the XML
+        -:  308:    *                 document.
+        -:  309:    * @return The new input source, or null to require the
+        -:  310:    *         default behaviour.
+        -:  311:    *         The returned InputSource is owned by the parser which is
+        -:  312:    *         responsible to clean up the memory.
+        -:  313:    * @exception SAXException Any SAX exception, possibly
+        -:  314:    *            wrapping another exception.
+        -:  315:    * @see EntityResolver#resolveEntity
+        -:  316:    */
+        -:  317:    virtual InputSource* resolveEntity
+        -:  318:    (
+        -:  319:        const   XMLCh* const    publicId
+        -:  320:        , const XMLCh* const    systemId
+        -:  321:    );
+        -:  322:
+        -:  323:    //@}
+        -:  324:
+        -:  325:    /** @name Default implementation of the ErrorHandler interface */
+        -:  326:    //@{
+        -:  327:   /**
+        -:  328:    * Receive notification of a recoverable parser error.
+        -:  329:    *
+        -:  330:    * <p>The default implementation does nothing.  Application writers
+        -:  331:    * may override this method in a subclass to take specific actions
+        -:  332:    * for each error, such as inserting the message in a log file or
+        -:  333:    * printing it to the console.</p>
+        -:  334:    *
+        -:  335:    * @param exc The warning information encoded as an exception.
+        -:  336:    * @exception SAXException Any SAX exception, possibly
+        -:  337:    *            wrapping another exception.
+        -:  338:    * @see ErrorHandler#warning
+        -:  339:    * @see SAXParseException#SAXParseException
+        -:  340:    */
+        -:  341:    virtual void error(const SAXParseException& exc);
+        -:  342:
+        -:  343:  /**
+        -:  344:    * Report a fatal XML parsing error.
+        -:  345:    *
+        -:  346:    * <p>The default implementation throws a SAXParseException.
+        -:  347:    * Application writers may override this method in a subclass if
+        -:  348:    * they need to take specific actions for each fatal error (such as
+        -:  349:    * collecting all of the errors into a single report): in any case,
+        -:  350:    * the application must stop all regular processing when this
+        -:  351:    * method is invoked, since the document is no longer reliable, and
+        -:  352:    * the parser may no longer report parsing events.</p>
+        -:  353:    *
+        -:  354:    * @param exc The error information encoded as an exception.
+        -:  355:    * @exception SAXException Any SAX exception, possibly
+        -:  356:    *            wrapping another exception.
+        -:  357:    * @see ErrorHandler#fatalError
+        -:  358:    * @see SAXParseException#SAXParseException
+        -:  359:    */
+        -:  360:    virtual void fatalError(const SAXParseException& exc);
+        -:  361:
+        -:  362:  /**
+        -:  363:    * Receive notification of a parser warning.
+        -:  364:    *
+        -:  365:    * <p>The default implementation does nothing.  Application writers
+        -:  366:    * may override this method in a subclass to take specific actions
+        -:  367:    * for each warning, such as inserting the message in a log file or
+        -:  368:    * printing it to the console.</p>
+        -:  369:    *
+        -:  370:    * @param exc The warning information encoded as an exception.
+        -:  371:    * @exception SAXException Any SAX exception, possibly
+        -:  372:    *            wrapping another exception.
+        -:  373:    * @see ErrorHandler#warning
+        -:  374:    * @see SAXParseException#SAXParseException
+        -:  375:    */
+        -:  376:    virtual void warning(const SAXParseException& exc);
+        -:  377:
+        -:  378:    /**
+        -:  379:    * Reset the Error handler object on its reuse
+        -:  380:    *
+        -:  381:    * @see ErrorHandler#resetErrors
+        -:  382:    */
+        -:  383:    virtual void resetErrors();
+        -:  384:
+        -:  385:    //@}
+        -:  386:
+        -:  387:
+        -:  388:    /** @name Default implementation of DTDHandler interface. */
+        -:  389:    //@{
+        -:  390:
+        -:  391:  /**
+        -:  392:    * Receive notification of a notation declaration.
+        -:  393:    *
+        -:  394:    * <p>By default, do nothing.  Application writers may override this
+        -:  395:    * method in a subclass if they wish to keep track of the notations
+        -:  396:    * declared in a document.</p>
+        -:  397:    *
+        -:  398:    * @param name The notation name.
+        -:  399:    * @param publicId The notation public identifier, or null if not
+        -:  400:    *                 available.
+        -:  401:    * @param systemId The notation system identifier.
+        -:  402:    * @see DTDHandler#notationDecl
+        -:  403:    */
+        -:  404:    virtual void notationDecl
+        -:  405:    (
+        -:  406:        const   XMLCh* const    name
+        -:  407:        , const XMLCh* const    publicId
+        -:  408:        , const XMLCh* const    systemId
+        -:  409:    );
+        -:  410:
+        -:  411:    /**
+        -:  412:    * Reset the DTD object on its reuse
+        -:  413:    *
+        -:  414:    * @see DTDHandler#resetDocType
+        -:  415:    */
+        -:  416:    virtual void resetDocType();
+        -:  417:
+        -:  418:  /**
+        -:  419:    * Receive notification of an unparsed entity declaration.
+        -:  420:    *
+        -:  421:    * <p>By default, do nothing.  Application writers may override this
+        -:  422:    * method in a subclass to keep track of the unparsed entities
+        -:  423:    * declared in a document.</p>
+        -:  424:    *
+        -:  425:    * @param name The entity name.
+        -:  426:    * @param publicId The entity public identifier, or null if not
+        -:  427:    *                 available.
+        -:  428:    * @param systemId The entity system identifier.
+        -:  429:    * @param notationName The name of the associated notation.
+        -:  430:    * @see DTDHandler#unparsedEntityDecl
+        -:  431:    */
+        -:  432:    virtual void unparsedEntityDecl
+        -:  433:    (
+        -:  434:        const   XMLCh* const    name
+        -:  435:        , const XMLCh* const    publicId
+        -:  436:        , const XMLCh* const    systemId
+        -:  437:        , const XMLCh* const    notationName
+        -:  438:    );
+        -:  439:    //@}
+        -:  440:
+        -:  441:
+        -:  442:    /** @name Default implementation of LexicalHandler interface. */
+        -:  443:
+        -:  444:    //@{
+        -:  445:   /**
+        -:  446:    * Receive notification of comments.
+        -:  447:    *
+        -:  448:    * <p>The Parser will call this method to report each occurrence of
+        -:  449:    * a comment in the XML document.</p>
+        -:  450:    *
+        -:  451:    * <p>The application must not attempt to read from the array
+        -:  452:    * outside of the specified range.</p>
+        -:  453:    *
+        -:  454:    * @param chars The characters from the XML document.
+        -:  455:    * @param length The number of characters to read from the array.
+        -:  456:    * @exception SAXException Any SAX exception, possibly
+        -:  457:    *            wrapping another exception.
+        -:  458:    */
+        -:  459:    virtual void comment
+        -:  460:    (
+        -:  461:        const   XMLCh* const    chars
+        -:  462:        , const XMLSize_t       length
+        -:  463:    );
+        -:  464:
+        -:  465:  /**
+        -:  466:    * Receive notification of the end of a CDATA section.
+        -:  467:    *
+        -:  468:    * <p>The SAX parser will invoke this method at the end of
+        -:  469:    * each CDATA parsed.</p>
+        -:  470:    *
+        -:  471:    * @exception SAXException Any SAX exception, possibly
+        -:  472:    *            wrapping another exception.
+        -:  473:    */
+        -:  474:    virtual void endCDATA ();
+        -:  475:
+        -:  476:  /**
+        -:  477:    * Receive notification of the end of the DTD declarations.
+        -:  478:    *
+        -:  479:    * <p>The SAX parser will invoke this method at the end of the
+        -:  480:    * DTD</p>
+        -:  481:    *
+        -:  482:    * @exception SAXException Any SAX exception, possibly
+        -:  483:    *            wrapping another exception.
+        -:  484:    */
+        -:  485:    virtual void endDTD ();
+        -:  486:
+        -:  487:  /**
+        -:  488:    * Receive notification of the end of an entity.
+        -:  489:    *
+        -:  490:    * <p>The SAX parser will invoke this method at the end of an
+        -:  491:    * entity</p>
+        -:  492:    *
+        -:  493:    * @param name The name of the entity that is ending.
+        -:  494:    * @exception SAXException Any SAX exception, possibly
+        -:  495:    *            wrapping another exception.
+        -:  496:    */
+        -:  497:    virtual void endEntity (const XMLCh* const name);
+        -:  498:
+        -:  499:  /**
+        -:  500:    * Receive notification of the start of a CDATA section.
+        -:  501:    *
+        -:  502:    * <p>The SAX parser will invoke this method at the start of
+        -:  503:    * each CDATA parsed.</p>
+        -:  504:    *
+        -:  505:    * @exception SAXException Any SAX exception, possibly
+        -:  506:    *            wrapping another exception.
+        -:  507:    */
+        -:  508:    virtual void startCDATA ();
+        -:  509:
+        -:  510:  /**
+        -:  511:    * Receive notification of the start of the DTD declarations.
+        -:  512:    *
+        -:  513:    * <p>The SAX parser will invoke this method at the start of the
+        -:  514:    * DTD</p>
+        -:  515:    *
+        -:  516:    * @param name The document type name.
+        -:  517:    * @param publicId The declared public identifier for the external DTD subset, or null if none was declared.
+        -:  518:    * @param systemId The declared system identifier for the external DTD subset, or null if none was declared.
+        -:  519:    * @exception SAXException Any SAX exception, possibly
+        -:  520:    *            wrapping another exception.
+        -:  521:    */
+        -:  522:    virtual void startDTD
+        -:  523:    (
+        -:  524:        const   XMLCh* const    name
+        -:  525:        , const   XMLCh* const    publicId
+        -:  526:        , const   XMLCh* const    systemId
+        -:  527:    );
+        -:  528:
+        -:  529:  /**
+        -:  530:    * Receive notification of the start of an entity.
+        -:  531:    *
+        -:  532:    * <p>The SAX parser will invoke this method at the start of an
+        -:  533:    * entity</p>
+        -:  534:    *
+        -:  535:    * @param name The name of the entity that is starting.
+        -:  536:    * @exception SAXException Any SAX exception, possibly
+        -:  537:    *            wrapping another exception.
+        -:  538:    */
+        -:  539:    virtual void startEntity (const XMLCh* const name);
+        -:  540:
+        -:  541:    //@}
+        -:  542:
+        -:  543:    /** @name Default implementation of DeclHandler interface. */
+        -:  544:
+        -:  545:    //@{
+        -:  546:
+        -:  547:   /**
+        -:  548:    * Report an element type declaration.
+        -:  549:    *
+        -:  550:    * <p>The content model will consist of the string "EMPTY", the string
+        -:  551:    * "ANY", or a parenthesised group, optionally followed by an occurrence
+        -:  552:    * indicator. The model will be normalized so that all parameter entities
+        -:  553:    * are fully resolved and all whitespace is removed,and will include the
+        -:  554:    * enclosing parentheses. Other normalization (such as removing redundant
+        -:  555:    * parentheses or simplifying occurrence indicators) is at the discretion
+        -:  556:    * of the parser.</p>
+        -:  557:    *
+        -:  558:    * @param name The element type name.
+        -:  559:    * @param model The content model as a normalized string.
+        -:  560:    * @exception SAXException Any SAX exception, possibly
+        -:  561:    *            wrapping another exception.
+        -:  562:    */
+        -:  563:    virtual void elementDecl
+        -:  564:    (
+        -:  565:        const   XMLCh* const    name
+        -:  566:        , const XMLCh* const    model
+        -:  567:    );
+        -:  568:
+        -:  569:   /**
+        -:  570:    * Report an attribute type declaration.
+        -:  571:    *
+        -:  572:    * <p>Only the effective (first) declaration for an attribute will
+        -:  573:    * be reported.</p>
+        -:  574:    *
+        -:  575:    * @param eName The name of the associated element.
+        -:  576:    * @param aName The name of the attribute.
+        -:  577:    * @param type A string representing the attribute type.
+        -:  578:    * @param mode A string representing the attribute defaulting mode ("#IMPLIED", "#REQUIRED", or "#FIXED") or null if none of these applies.
+        -:  579:    * @param value A string representing the attribute's default value, or null if there is none.
+        -:  580:    * @exception SAXException Any SAX exception, possibly
+        -:  581:    *            wrapping another exception.
+        -:  582:    */
+        -:  583:    virtual void attributeDecl
+        -:  584:    (
+        -:  585:        const   XMLCh* const    eName
+        -:  586:        , const XMLCh* const    aName
+        -:  587:        , const XMLCh* const    type
+        -:  588:        , const XMLCh* const    mode
+        -:  589:        , const XMLCh* const    value
+        -:  590:    );
+        -:  591:
+        -:  592:   /**
+        -:  593:    * Report an internal entity declaration.
+        -:  594:    *
+        -:  595:    * <p>Only the effective (first) declaration for each entity will be
+        -:  596:    * reported. All parameter entities in the value will be expanded, but
+        -:  597:    * general entities will not.</p>
+        -:  598:    *
+        -:  599:    * @param name The name of the entity. If it is a parameter entity, the name will begin with '%'.
+        -:  600:    * @param value The replacement text of the entity.
+        -:  601:    * @exception SAXException Any SAX exception, possibly
+        -:  602:    *            wrapping another exception.
+        -:  603:    */
+        -:  604:    virtual void internalEntityDecl
+        -:  605:    (
+        -:  606:        const   XMLCh* const    name
+        -:  607:        , const XMLCh* const    value
+        -:  608:    );
+        -:  609:
+        -:  610:   /**
+        -:  611:    * Report a parsed external entity declaration.
+        -:  612:    *
+        -:  613:    * <p>Only the effective (first) declaration for each entity will
+        -:  614:    * be reported.</p>
+        -:  615:    *
+        -:  616:    * @param name The name of the entity. If it is a parameter entity, the name will begin with '%'.
+        -:  617:    * @param publicId The The declared public identifier of the entity, or null if none was declared.
+        -:  618:    * @param systemId The declared system identifier of the entity.
+        -:  619:    * @exception SAXException Any SAX exception, possibly
+        -:  620:    *            wrapping another exception.
+        -:  621:    */
+        -:  622:    virtual void externalEntityDecl
+        -:  623:    (
+        -:  624:        const   XMLCh* const    name
+        -:  625:        , const XMLCh* const    publicId
+        -:  626:        , const XMLCh* const    systemId
+        -:  627:    );
+        -:  628:
+        -:  629:    //@}
+        -:  630:
+        -:  631:    DefaultHandler() {};
+function _ZN11xercesc_3_114DefaultHandlerD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_114DefaultHandlerD2Ev called 0 returned 0% blocks executed 0%
+    #####:  632:    virtual ~DefaultHandler() {};
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+call    4 never executed
+call    5 never executed
+call    6 never executed
+call    7 never executed
+branch  8 never executed
+branch  9 never executed
+call   10 never executed
+        -:  633:
+        -:  634:private:
+        -:  635:	// -----------------------------------------------------------------------
+        -:  636:    //  Unimplemented constructors and operators
+        -:  637:    // -----------------------------------------------------------------------
+        -:  638:    DefaultHandler(const DefaultHandler&);
+        -:  639:    DefaultHandler& operator=(const DefaultHandler&);    
+        -:  640:};
+        -:  641:
+        -:  642:
+        -:  643:// ---------------------------------------------------------------------------
+        -:  644://  HandlerBase: Inline default implementations
+        -:  645:// ---------------------------------------------------------------------------
+function _ZN11xercesc_3_114DefaultHandler10charactersEPKtm called 0 returned 0% blocks executed 0%
+    #####:  646:inline void DefaultHandler::characters(const   XMLCh* const
+        -:  647:                                       ,const  XMLSize_t)
+        -:  648:{
+    #####:  649:}
+        -:  650:
+function _ZN11xercesc_3_114DefaultHandler11endDocumentEv called 0 returned 0% blocks executed 0%
+    #####:  651:inline void DefaultHandler::endDocument()
+        -:  652:{
+    #####:  653:}
+        -:  654:
+function _ZN11xercesc_3_114DefaultHandler10endElementEPKtS2_S2_ called 0 returned 0% blocks executed 0%
+    #####:  655:inline void DefaultHandler::endElement(const	XMLCh* const
+        -:  656:										, const XMLCh* const
+        -:  657:										, const XMLCh* const)
+        -:  658:{
+    #####:  659:}
+        -:  660:
+function _ZN11xercesc_3_114DefaultHandler5errorERKNS_17SAXParseExceptionE called 0 returned 0% blocks executed 0%
+    #####:  661:inline void DefaultHandler::error(const SAXParseException&)
+        -:  662:{
+    #####:  663:}
+        -:  664:
+function _ZN11xercesc_3_114DefaultHandler10fatalErrorERKNS_17SAXParseExceptionE called 0 returned 0% blocks executed 0%
+    #####:  665:inline void DefaultHandler::fatalError(const SAXParseException& exc)
+        -:  666:{
+    #####:  667:    throw exc;
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+call    3 never executed
+call    4 never executed
+call    5 never executed
+call    6 never executed
+        -:  668:}
+        -:  669:
+        -:  670:inline void
+function _ZN11xercesc_3_114DefaultHandler19ignorableWhitespaceEPKtm called 0 returned 0% blocks executed 0%
+    #####:  671:DefaultHandler::ignorableWhitespace( const   XMLCh* const
+        -:  672:                                    , const XMLSize_t)
+        -:  673:{
+    #####:  674:}
+        -:  675:
+function _ZN11xercesc_3_114DefaultHandler12notationDeclEPKtS2_S2_ called 0 returned 0% blocks executed 0%
+    #####:  676:inline void DefaultHandler::notationDecl(  const   XMLCh* const
+        -:  677:											, const XMLCh* const
+        -:  678:											, const XMLCh* const)
+        -:  679:{
+    #####:  680:}
+        -:  681:
+        -:  682:inline void
+function _ZN11xercesc_3_114DefaultHandler21processingInstructionEPKtS2_ called 0 returned 0% blocks executed 0%
+    #####:  683:DefaultHandler::processingInstruction( const   XMLCh* const
+        -:  684:										, const XMLCh* const)
+        -:  685:{
+    #####:  686:}
+        -:  687:
+function _ZN11xercesc_3_114DefaultHandler11resetErrorsEv called 0 returned 0% blocks executed 0%
+    #####:  688:inline void DefaultHandler::resetErrors()
+        -:  689:{
+    #####:  690:}
+        -:  691:
+function _ZN11xercesc_3_114DefaultHandler13resetDocumentEv called 0 returned 0% blocks executed 0%
+    #####:  692:inline void DefaultHandler::resetDocument()
+        -:  693:{
+    #####:  694:}
+        -:  695:
+function _ZN11xercesc_3_114DefaultHandler12resetDocTypeEv called 0 returned 0% blocks executed 0%
+    #####:  696:inline void DefaultHandler::resetDocType()
+        -:  697:{
+    #####:  698:}
+        -:  699:
+        -:  700:inline InputSource*
+function _ZN11xercesc_3_114DefaultHandler13resolveEntityEPKtS2_ called 0 returned 0% blocks executed 0%
+    #####:  701:DefaultHandler::resolveEntity( const   XMLCh* const
+        -:  702:								, const XMLCh* const)
+        -:  703:{
+    #####:  704:    return 0;
+        -:  705:}
+        -:  706:
+        -:  707:inline void
+function _ZN11xercesc_3_114DefaultHandler18unparsedEntityDeclEPKtS2_S2_S2_ called 0 returned 0% blocks executed 0%
+    #####:  708:DefaultHandler::unparsedEntityDecl(const   XMLCh* const
+        -:  709:									, const XMLCh* const
+        -:  710:									, const XMLCh* const
+        -:  711:									, const XMLCh* const)
+        -:  712:{
+    #####:  713:}
+        -:  714:
+function _ZN11xercesc_3_114DefaultHandler18setDocumentLocatorEPKNS_7LocatorE called 0 returned 0% blocks executed 0%
+    #####:  715:inline void DefaultHandler::setDocumentLocator(const Locator* const)
+        -:  716:{
+    #####:  717:}
+        -:  718:
+function _ZN11xercesc_3_114DefaultHandler13startDocumentEv called 0 returned 0% blocks executed 0%
+    #####:  719:inline void DefaultHandler::startDocument()
+        -:  720:{
+    #####:  721:}
+        -:  722:
+        -:  723:inline void
+function _ZN11xercesc_3_114DefaultHandler12startElementEPKtS2_S2_RKNS_10AttributesE called 0 returned 0% blocks executed 0%
+    #####:  724:DefaultHandler::startElement(  const     XMLCh* const
+        -:  725:								, const   XMLCh* const
+        -:  726:								, const   XMLCh* const
+        -:  727:								, const   Attributes&
+        -:  728:)
+        -:  729:{
+    #####:  730:}
+        -:  731:
+function _ZN11xercesc_3_114DefaultHandler7warningERKNS_17SAXParseExceptionE called 0 returned 0% blocks executed 0%
+    #####:  732:inline void DefaultHandler::warning(const SAXParseException&)
+        -:  733:{
+    #####:  734:}
+        -:  735:
+function _ZN11xercesc_3_114DefaultHandler18startPrefixMappingEPKtS2_ called 0 returned 0% blocks executed 0%
+    #####:  736:inline void DefaultHandler::startPrefixMapping ( const	XMLCh* const
+        -:  737:												,const	XMLCh* const)
+        -:  738:{
+    #####:  739:}
+        -:  740:
+function _ZN11xercesc_3_114DefaultHandler16endPrefixMappingEPKt called 0 returned 0% blocks executed 0%
+    #####:  741:inline void DefaultHandler::endPrefixMapping ( const	XMLCh* const)
+        -:  742:{
+    #####:  743:}
+        -:  744:
+function _ZN11xercesc_3_114DefaultHandler13skippedEntityEPKt called 0 returned 0% blocks executed 0%
+    #####:  745:inline void DefaultHandler::skippedEntity ( const	XMLCh* const)
+        -:  746:{
+    #####:  747:}
+        -:  748:
+function _ZN11xercesc_3_114DefaultHandler7commentEPKtm called 0 returned 0% blocks executed 0%
+    #####:  749:inline void DefaultHandler::comment(  const   XMLCh* const
+        -:  750:                                       , const XMLSize_t)
+        -:  751:{
+    #####:  752:}
+        -:  753:
+function _ZN11xercesc_3_114DefaultHandler8endCDATAEv called 0 returned 0% blocks executed 0%
+    #####:  754:inline void DefaultHandler::endCDATA ()
+        -:  755:{
+    #####:  756:}
+        -:  757:
+function _ZN11xercesc_3_114DefaultHandler6endDTDEv called 0 returned 0% blocks executed 0%
+    #####:  758:inline void DefaultHandler::endDTD ()
+        -:  759:{
+    #####:  760:}
+        -:  761:
+function _ZN11xercesc_3_114DefaultHandler9endEntityEPKt called 0 returned 0% blocks executed 0%
+    #####:  762:inline void DefaultHandler::endEntity (const XMLCh* const)
+        -:  763:{
+    #####:  764:}
+        -:  765:
+function _ZN11xercesc_3_114DefaultHandler10startCDATAEv called 0 returned 0% blocks executed 0%
+    #####:  766:inline void DefaultHandler::startCDATA ()
+        -:  767:{
+    #####:  768:}
+        -:  769:
+function _ZN11xercesc_3_114DefaultHandler8startDTDEPKtS2_S2_ called 0 returned 0% blocks executed 0%
+    #####:  770:inline void DefaultHandler::startDTD(  const   XMLCh* const
+        -:  771:                                        , const   XMLCh* const
+        -:  772:                                        , const   XMLCh* const)
+        -:  773:{
+    #####:  774:}
+        -:  775:
+function _ZN11xercesc_3_114DefaultHandler11startEntityEPKt called 0 returned 0% blocks executed 0%
+    #####:  776:inline void DefaultHandler::startEntity (const XMLCh* const)
+        -:  777:{
+    #####:  778:}
+        -:  779:
+function _ZN11xercesc_3_114DefaultHandler13attributeDeclEPKtS2_S2_S2_S2_ called 0 returned 0% blocks executed 0%
+    #####:  780:inline void DefaultHandler::attributeDecl(const XMLCh* const,
+        -:  781:                                          const XMLCh* const,
+        -:  782:                                          const XMLCh* const,
+        -:  783:                                          const XMLCh* const,
+        -:  784:                                          const XMLCh* const)
+        -:  785:{
+    #####:  786:}
+        -:  787:
+function _ZN11xercesc_3_114DefaultHandler11elementDeclEPKtS2_ called 0 returned 0% blocks executed 0%
+    #####:  788:inline void DefaultHandler::elementDecl(const XMLCh* const,
+        -:  789:                                        const XMLCh* const)
+        -:  790:{
+    #####:  791:}
+        -:  792:
+function _ZN11xercesc_3_114DefaultHandler18externalEntityDeclEPKtS2_S2_ called 0 returned 0% blocks executed 0%
+    #####:  793:inline void DefaultHandler::externalEntityDecl(const XMLCh* const,
+        -:  794:                                               const XMLCh* const,
+        -:  795:                                               const XMLCh* const)
+        -:  796:{
+    #####:  797:}
+        -:  798:
+function _ZN11xercesc_3_114DefaultHandler18internalEntityDeclEPKtS2_ called 0 returned 0% blocks executed 0%
+    #####:  799:inline void DefaultHandler::internalEntityDecl(const XMLCh* const,
+        -:  800:                                               const XMLCh* const)
+        -:  801:{
+    #####:  802:}
+        -:  803:
+        -:  804:XERCES_CPP_NAMESPACE_END
+        -:  805:
+        -:  806:#endif // ! DEFAULTHANDLER_HPP

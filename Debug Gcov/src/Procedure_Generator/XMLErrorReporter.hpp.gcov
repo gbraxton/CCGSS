@@ -1,0 +1,174 @@
+        -:    0:Source:/usr/local/include/xercesc/framework/XMLErrorReporter.hpp
+        -:    0:Graph:simulation_package_builder.gcno
+        -:    0:Data:simulation_package_builder.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: *
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: *
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18: /*
+        -:   19: * $Id: XMLErrorReporter.hpp 672273 2008-06-27 13:57:00Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_XMLERRORREPORTER_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_XMLERRORREPORTER_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XercesDefs.hpp>
+        -:   26:
+        -:   27:XERCES_CPP_NAMESPACE_BEGIN
+        -:   28:
+        -:   29:
+        -:   30:/**
+        -:   31: *  This abstract class defines a callback mechanism for the scanner. By
+        -:   32: *  creating a class that implements this interface and plugging an instance
+        -:   33: *  of that class into the scanner, the scanner will call back on the object's
+        -:   34: *  virtual methods to report error events. This class is also used with the
+        -:   35: *  validator, to allow it to report errors.
+        -:   36: *
+        -:   37: *  This class is primarily for use by those writing their own parser classes.
+        -:   38: *  If you use the standard parser classes, DOMParser and SAXParser, you won't
+        -:   39: *  use this API. You will instead use a similar mechanism defined by the SAX
+        -:   40: *  API, called ErrorHandler.
+        -:   41: */
+        -:   42:class XMLPARSER_EXPORT XMLErrorReporter
+        -:   43:{
+        -:   44:public:
+        -:   45:    // -----------------------------------------------------------------------
+        -:   46:    //  The types of errors we can issue
+        -:   47:    // -----------------------------------------------------------------------
+        -:   48:    enum ErrTypes
+        -:   49:    {
+        -:   50:        ErrType_Warning
+        -:   51:        , ErrType_Error
+        -:   52:        , ErrType_Fatal
+        -:   53:
+        -:   54:        , ErrTypes_Unknown
+        -:   55:    };
+        -:   56:
+        -:   57:
+        -:   58:    // -----------------------------------------------------------------------
+        -:   59:    //  Constructors are hidden, only the virtual destructor is exposed
+        -:   60:    // -----------------------------------------------------------------------
+        -:   61:
+        -:   62:    /** @name Destructor */
+        -:   63:    //@{
+        -:   64:
+        -:   65:    /**
+        -:   66:      *   Default destructor
+        -:   67:      */
+function _ZN11xercesc_3_116XMLErrorReporterD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_116XMLErrorReporterD2Ev called 0 returned 0% blocks executed 0%
+    #####:   68:    virtual ~XMLErrorReporter()
+    #####:   69:    {
+    #####:   70:    }
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   71:    //@}
+        -:   72:
+        -:   73:
+        -:   74:    // -----------------------------------------------------------------------
+        -:   75:    //  The error handler interface
+        -:   76:    // -----------------------------------------------------------------------
+        -:   77:
+        -:   78:    /** @name Error Handler interface */
+        -:   79:    //@{
+        -:   80:
+        -:   81:    /** Called to report errors from the scanner or validator
+        -:   82:      *
+        -:   83:      * This method is called back on by the scanner or validator (or any other
+        -:   84:      * internal parser component which might need to report an error in the
+        -:   85:      * future.) It contains all the information that the client code might
+        -:   86:      * need to report or log the error.
+        -:   87:      *
+        -:   88:      * @param  errCode     The error code of the error being reported. What
+        -:   89:      *                     this means is dependent on the domain it is from.
+        -:   90:      *
+        -:   91:      * @param  errDomain   The domain from which the error occured. The domain
+        -:   92:      *                     is a means of providing a hierarchical layering to
+        -:   93:      *                     the error system, so that a single set of error id
+        -:   94:      *                     numbers don't have to be split up.
+        -:   95:      *
+        -:   96:      * @param  type        The error type, which is defined mostly by XML which
+        -:   97:      *                     categorizes errors into warning, errors and validity
+        -:   98:      *                     constraints.
+        -:   99:      *
+        -:  100:      * @param  errorText   The actual text of the error. This is translatable,
+        -:  101:      *                     so can possibly be in the local language if a
+        -:  102:      *                     translation has been provided.
+        -:  103:      *
+        -:  104:      * @param  systemId    The system id of the entity where the error occured,
+        -:  105:      *                     fully qualified.
+        -:  106:      *
+        -:  107:      * @param  publicId    The optional public id of the entity were the error
+        -:  108:      *                     occured. It can be an empty string if non was provided.
+        -:  109:      *
+        -:  110:      * @param  lineNum     The line number within the source XML of the error.
+        -:  111:      *
+        -:  112:      * @param  colNum      The column number within the source XML of the error.
+        -:  113:      *                     Because of the parsing style, this is usually just
+        -:  114:      *                     after the actual offending text.
+        -:  115:      */
+        -:  116:    virtual void error
+        -:  117:    (
+        -:  118:        const   unsigned int        errCode
+        -:  119:        , const XMLCh* const        errDomain
+        -:  120:        , const ErrTypes            type
+        -:  121:        , const XMLCh* const        errorText
+        -:  122:        , const XMLCh* const        systemId
+        -:  123:        , const XMLCh* const        publicId
+        -:  124:        , const XMLFileLoc          lineNum
+        -:  125:        , const XMLFileLoc          colNum
+        -:  126:    ) = 0;
+        -:  127:
+        -:  128:    /** Called before a new parse event to allow the handler to reset
+        -:  129:      *
+        -:  130:      * This method is called by the scanner before a new parse event is
+        -:  131:      * about to start. It gives the error handler a chance to reset its
+        -:  132:      * internal state.
+        -:  133:      */
+        -:  134:    virtual void resetErrors() = 0;
+        -:  135:
+        -:  136:    //@}
+        -:  137:
+        -:  138:
+        -:  139:protected :
+        -:  140:
+        -:  141:    /** @name Constructor */
+        -:  142:    //@{
+        -:  143:
+        -:  144:    /**
+        -:  145:      *   Default constructor
+        -:  146:      */
+        -:  147:    XMLErrorReporter()
+        -:  148:    {
+        -:  149:    }
+        -:  150:    //@}
+        -:  151:
+        -:  152:private:
+        -:  153:    // -----------------------------------------------------------------------
+        -:  154:    //  Unimplemented constructors and destructor
+        -:  155:    // -----------------------------------------------------------------------
+        -:  156:    XMLErrorReporter(const XMLErrorReporter&);
+        -:  157:    XMLErrorReporter& operator=(const XMLErrorReporter&);
+        -:  158:};
+        -:  159:
+        -:  160:XERCES_CPP_NAMESPACE_END
+        -:  161:
+        -:  162:#endif

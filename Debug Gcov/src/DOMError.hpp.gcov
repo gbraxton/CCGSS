@@ -1,0 +1,185 @@
+        -:    0:Source:/usr/local/include/xercesc/dom/DOMError.hpp
+        -:    0:Graph:Test.gcno
+        -:    0:Data:Test.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: *
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: *
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: DOMError.hpp 671894 2008-06-26 13:29:21Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_DOMERROR_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_DOMERROR_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XercesDefs.hpp>
+        -:   26:
+        -:   27:XERCES_CPP_NAMESPACE_BEGIN
+        -:   28:
+        -:   29:class DOMLocator;
+        -:   30:
+        -:   31:
+        -:   32:/**
+        -:   33:  * DOMError is an interface that describes an error.
+        -:   34:  *
+        -:   35:  * @see DOMErrorHandler#handleError
+        -:   36:  * @since DOM Level 3
+        -:   37:  */
+        -:   38:
+        -:   39:class CDOM_EXPORT DOMError
+        -:   40:{
+        -:   41:protected:
+        -:   42:    // -----------------------------------------------------------------------
+        -:   43:    //  Hidden constructors
+        -:   44:    // -----------------------------------------------------------------------
+        -:   45:    /** @name Hidden constructors */
+        -:   46:    //@{
+        -:   47:    DOMError() {};
+        -:   48:    //@}
+        -:   49:
+        -:   50:private:
+        -:   51:    // -----------------------------------------------------------------------
+        -:   52:    // Unimplemented constructors and operators
+        -:   53:    // -----------------------------------------------------------------------
+        -:   54:    /** @name Unimplemented constructors and operators */
+        -:   55:    //@{
+        -:   56:    DOMError(const DOMError &);
+        -:   57:    DOMError & operator = (const DOMError &);
+        -:   58:    //@}
+        -:   59:
+        -:   60:public:
+        -:   61:    // -----------------------------------------------------------------------
+        -:   62:    //  All constructors are hidden, just the destructor is available
+        -:   63:    // -----------------------------------------------------------------------
+        -:   64:    /** @name Destructor */
+        -:   65:    //@{
+        -:   66:    /**
+        -:   67:     * Destructor
+        -:   68:     *
+        -:   69:     */
+function _ZN11xercesc_3_18DOMErrorD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_18DOMErrorD2Ev called 0 returned 0% blocks executed 0%
+    #####:   70:    virtual ~DOMError() {};
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   71:    //@}
+        -:   72:
+        -:   73:    // -----------------------------------------------------------------------
+        -:   74:    //  Class types
+        -:   75:    // -----------------------------------------------------------------------
+        -:   76:    /** @name Public constants */
+        -:   77:    //@{
+        -:   78:    /**
+        -:   79:     * The severity of the error described by the <code>DOMError</code>.
+        -:   80:     *
+        -:   81:     * <p><code>DOM_SEVERITY_ERROR:</code>
+        -:   82:     * The severity of the error described by the <code>DOMError</code> is error.
+        -:   83:     * A DOM_SEVERITY_ERROR may not cause the processing to stop if the error can
+        -:   84:     * be recovered, unless <code>DOMErrorHandler::handleError()</code> returns false.</p>
+        -:   85:     *
+        -:   86:     * <p><code>DOM_SEVERITY_FATAL_ERROR</code>
+        -:   87:     * The severity of the error described by the <code>DOMError</code> is fatal error.
+        -:   88:     * A DOM_SEVERITY_FATAL_ERROR will cause the normal processing to stop. The return
+        -:   89:     * value of <code>DOMErrorHandler::handleError()</code> is ignored unless the
+        -:   90:     * implementation chooses to continue, in which case the behavior becomes undefined.</p>
+        -:   91:     *
+        -:   92:     * <p><code>DOM_SEVERITY_WARNING</code>
+        -:   93:     * The severity of the error described by the <code>DOMError</code> is warning.
+        -:   94:     * A DOM_SEVERITY_WARNING will not cause the processing to stop, unless
+        -:   95:     * <code>DOMErrorHandler::handleError()</code> returns false.</p>
+        -:   96:     *
+        -:   97:     * @since DOM Level 3
+        -:   98:     */
+        -:   99:    enum ErrorSeverity
+        -:  100:    {
+        -:  101:        DOM_SEVERITY_WARNING     = 1,
+        -:  102:        DOM_SEVERITY_ERROR       = 2,
+        -:  103:        DOM_SEVERITY_FATAL_ERROR = 3
+        -:  104:    };
+        -:  105:    //@}
+        -:  106:
+        -:  107:
+        -:  108:    // -----------------------------------------------------------------------
+        -:  109:    //  Virtual DOMError interface
+        -:  110:    // -----------------------------------------------------------------------
+        -:  111:    /** @name Functions introduced in DOM Level 3 */
+        -:  112:    //@{
+        -:  113:    // -----------------------------------------------------------------------
+        -:  114:    //  Getter methods
+        -:  115:    // -----------------------------------------------------------------------
+        -:  116:    /**
+        -:  117:     * Get the severity of the error
+        -:  118:     *
+        -:  119:     * @see   setSeverity
+        -:  120:     * @since DOM Level 3
+        -:  121:     */
+        -:  122:    virtual ErrorSeverity getSeverity() const = 0;
+        -:  123:
+        -:  124:    /**
+        -:  125:     * Get the message describing the error that occured.
+        -:  126:     *
+        -:  127:     * @since DOM Level 3
+        -:  128:     */
+        -:  129:    virtual const XMLCh* getMessage() const = 0;
+        -:  130:
+        -:  131:    /**
+        -:  132:     * Get the location of the error
+        -:  133:     *
+        -:  134:     * @since DOM Level 3
+        -:  135:     */
+        -:  136:    virtual DOMLocator* getLocation() const = 0;
+        -:  137:
+        -:  138:    /**
+        -:  139:     * The related platform dependent exception if any.
+        -:  140:     *
+        -:  141:     * @since DOM Level 3
+        -:  142:     */
+        -:  143:    virtual void* getRelatedException() const = 0;
+        -:  144:
+        -:  145:    /**
+        -:  146:     * A <code>XMLCh*</code> indicating which related data is expected in
+        -:  147:     * relatedData. Users should refer to the specification of the error
+        -:  148:     * in order to find its <code>XMLCh*</code> type and relatedData
+        -:  149:     * definitions if any.
+        -:  150:     *
+        -:  151:     * Note: As an example, <code>DOMDocument::normalizeDocument()</code> does generate
+        -:  152:     * warnings when the "split-cdata-sections" parameter is in use. Therefore, the
+        -:  153:     * method generates a DOM_SEVERITY_WARNING with type "cdata-sections-splitted"
+        -:  154:     * and the first <code>DOMCDATASection</code> node in document order resulting from the split
+        -:  155:     * is returned by the relatedData attribute.
+        -:  156:     *
+        -:  157:     * @since DOM Level 3
+        -:  158:     */
+        -:  159:    virtual const XMLCh* getType() const = 0;
+        -:  160:
+        -:  161:    /**
+        -:  162:     * The related DOMError::getType dependent data if any.
+        -:  163:     *
+        -:  164:     * @since DOM Level 3
+        -:  165:     */
+        -:  166:    virtual void* getRelatedData() const = 0;
+        -:  167:    //@}
+        -:  168:
+        -:  169:};
+        -:  170:
+        -:  171:XERCES_CPP_NAMESPACE_END
+        -:  172:
+        -:  173:#endif

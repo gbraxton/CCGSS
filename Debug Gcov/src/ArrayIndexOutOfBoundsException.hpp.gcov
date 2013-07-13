@@ -1,0 +1,63 @@
+        -:    0:Source:/usr/local/include/xercesc/util/ArrayIndexOutOfBoundsException.hpp
+        -:    0:Graph:Test.gcno
+        -:    0:Data:Test.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: * 
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: * 
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: ArrayIndexOutOfBoundsException.hpp 527149 2007-04-10 14:56:39Z amassari $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_ARRAYINDEXOUTOFBOUNDSEXCEPTION_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_ARRAYINDEXOUTOFBOUNDSEXCEPTION_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XMLException.hpp>
+        -:   26:
+        -:   27:XERCES_CPP_NAMESPACE_BEGIN
+        -:   28:
+function _ZNK11xercesc_3_130ArrayIndexOutOfBoundsException7getTypeEv called 0 returned 0% blocks executed 0%
+function _ZNK11xercesc_3_130ArrayIndexOutOfBoundsException9duplicateEv called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_130ArrayIndexOutOfBoundsExceptionD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_130ArrayIndexOutOfBoundsExceptionD2Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_130ArrayIndexOutOfBoundsExceptionC2ERKS0_ called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_130ArrayIndexOutOfBoundsExceptionC2EPKcmNS_10XMLExcepts5CodesEPNS_13MemoryManagerE called 0 returned 0% blocks executed 0%
+    #####:   29:MakeXMLException(ArrayIndexOutOfBoundsException, XMLUTIL_EXPORT)
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+call    3 never executed
+call    4 never executed
+call    5 never executed
+call    6 never executed
+call    7 never executed
+call    8 never executed
+branch  9 never executed
+branch 10 never executed
+call   11 never executed
+call   12 never executed
+call   13 never executed
+branch 14 never executed
+branch 15 never executed
+call   16 never executed
+call   17 never executed
+call   18 never executed
+        -:   30:
+        -:   31:XERCES_CPP_NAMESPACE_END
+        -:   32:
+        -:   33:#endif

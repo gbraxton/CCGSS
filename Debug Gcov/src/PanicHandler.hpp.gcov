@@ -1,0 +1,124 @@
+        -:    0:Source:/usr/local/include/xercesc/util/PanicHandler.hpp
+        -:    0:Graph:Test.gcno
+        -:    0:Data:Test.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: * 
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: * 
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: PanicHandler.hpp 527149 2007-04-10 14:56:39Z amassari $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_PANICHANDLER_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_PANICHANDLER_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XMemory.hpp>
+        -:   26:
+        -:   27:XERCES_CPP_NAMESPACE_BEGIN
+        -:   28:
+        -:   29:/**
+        -:   30:  * Receive notification of panic.
+        -:   31:  *
+        -:   32:  * <p>This is the interface, through which the Xercesc reports
+        -:   33:  *    a panic to the application. 
+        -:   34:  * </p>
+        -:   35:  *
+        -:   36:  * <p>Application may implement this interface, instantiate an
+        -:   37:  *    object of the derivative, and plug it to Xercesc in the
+        -:   38:  *    invocation to XMLPlatformUtils::Initialize(), if it prefers 
+        -:   39:  *    to handling panic itself rather than Xercesc doing it.
+        -:   40:  * </p>
+        -:   41:  *
+        -:   42:  */
+        -:   43:
+        -:   44:class XMLUTIL_EXPORT PanicHandler
+        -:   45:{
+        -:   46:public:
+        -:   47:
+        -:   48:    /** @name Public Types */
+        -:   49:    //@{
+        -:   50:    enum PanicReasons
+        -:   51:    {
+        -:   52:          Panic_NoTransService
+        -:   53:        , Panic_NoDefTranscoder
+        -:   54:        , Panic_CantFindLib
+        -:   55:        , Panic_UnknownMsgDomain
+        -:   56:        , Panic_CantLoadMsgDomain
+        -:   57:        , Panic_SynchronizationErr
+        -:   58:        , Panic_SystemInit
+        -:   59:        , Panic_AllStaticInitErr
+        -:   60:        , Panic_MutexErr
+        -:   61:        , PanicReasons_Count
+        -:   62:    };
+        -:   63:    //@}
+        -:   64:
+        -:   65:protected:
+        -:   66:
+        -:   67:    /** @name hidden Constructors */
+        -:   68:    //@{
+        -:   69:    /** Default constructor */
+        -:   70:    PanicHandler(){};
+        -:   71:
+        -:   72:public:
+        -:   73:
+        -:   74:    /** Destructor */
+function _ZN11xercesc_3_112PanicHandlerD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_112PanicHandlerD2Ev called 0 returned 0% blocks executed 0%
+    #####:   75:    virtual ~PanicHandler(){};   
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   76:    //@}
+        -:   77:
+        -:   78:    /** @name The virtual panic handler interface */
+        -:   79:    //@{
+        -:   80:   /**
+        -:   81:    * Receive notification of panic
+        -:   82:    *
+        -:   83:    * This method is called when an unrecoverable error has occurred in the Xerces library.  
+        -:   84:    *
+        -:   85:    * This method must not return normally, otherwise, the results are undefined. 
+        -:   86:    * 
+        -:   87:    * Ways of handling this call could include throwing an exception or exiting the process.
+        -:   88:    *
+        -:   89:    * Once this method has been called, the results of calling any other Xerces API, 
+        -:   90:    * or using any existing Xerces objects are undefined.    
+        -:   91:    *
+        -:   92:    * @param reason The reason of panic
+        -:   93:    *
+        -:   94:    */
+        -:   95:    virtual void panic(const PanicHandler::PanicReasons reason) = 0;
+        -:   96:    //@}
+        -:   97:
+        -:   98:    static const char* getPanicReasonString(const PanicHandler::PanicReasons reason);
+        -:   99:    
+        -:  100:private:
+        -:  101:
+        -:  102:    /* Unimplemented Constructors and operators */
+        -:  103:    /* Copy constructor */
+        -:  104:    PanicHandler(const PanicHandler&);
+        -:  105:    
+        -:  106:    /** Assignment operator */
+        -:  107:    PanicHandler& operator=(const PanicHandler&);
+        -:  108:};
+        -:  109:
+        -:  110:XERCES_CPP_NAMESPACE_END
+        -:  111:
+        -:  112:#endif

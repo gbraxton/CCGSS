@@ -1,0 +1,438 @@
+        -:    0:Source:/usr/local/include/xercesc/framework/XMLValidator.hpp
+        -:    0:Graph:simulation_package_builder.gcno
+        -:    0:Data:simulation_package_builder.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: *
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: *
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18: /*
+        -:   19: * $Id: XMLValidator.hpp 932887 2010-04-11 13:04:59Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_XMLVALIDATOR_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_XMLVALIDATOR_HPP
+        -:   24:
+        -:   25:#include <xercesc/framework/XMLAttr.hpp>
+        -:   26:#include <xercesc/framework/XMLValidityCodes.hpp>
+        -:   27:
+        -:   28:XERCES_CPP_NAMESPACE_BEGIN
+        -:   29:
+        -:   30:class ReaderMgr;
+        -:   31:class XMLBufferMgr;
+        -:   32:class XMLElementDecl;
+        -:   33:class XMLScanner;
+        -:   34:class Grammar;
+        -:   35:
+        -:   36:
+        -:   37:/**
+        -:   38: *  This abstract class provides the interface for all validators. This is
+        -:   39: *  the simple amount of API that all validators must honor, in order for
+        -:   40: *  the scanner to use them to do validation. All validators will actually
+        -:   41: *  contain much more functionality than is accessible via this common API,
+        -:   42: *  but that functionality requires that you know what type of validator you
+        -:   43: *  are dealing with.
+        -:   44: *
+        -:   45: *  Basically, at this level, the primary concern is to be able to query
+        -:   46: *  core information about elements and attributes. Adding decls to the
+        -:   47: *  validator requires that you go through the derived interface because they
+        -:   48: *  all have their own decl types. At this level, we can return information
+        -:   49: *  via the base decl classes, from which each validator derives its own
+        -:   50: *  decl classes.
+        -:   51: */
+        -:   52:class XMLPARSER_EXPORT XMLValidator : public XMemory
+        -:   53:{
+        -:   54:public:
+        -:   55:    // -----------------------------------------------------------------------
+        -:   56:    //  Constructors are hidden, just the virtual destructor is exposed
+        -:   57:    // -----------------------------------------------------------------------
+        -:   58:
+        -:   59:    /** @name Destructor */
+        -:   60:    //@{
+        -:   61:
+        -:   62:    /**
+        -:   63:     *  The derived class should clean up its allocated data, then this class
+        -:   64:     *  will do the same for data allocated at this level.
+        -:   65:     */
+function _ZN11xercesc_3_112XMLValidatorD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_112XMLValidatorD2Ev called 0 returned 0% blocks executed 0%
+    #####:   66:    virtual ~XMLValidator()
+    #####:   67:    {
+    #####:   68:    }
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   69:    //@}
+        -:   70:
+        -:   71:
+        -:   72:    // -----------------------------------------------------------------------
+        -:   73:    //  The virtual validator interface
+        -:   74:    // -----------------------------------------------------------------------
+        -:   75:
+        -:   76:    /** @name Virtual validator interface */
+        -:   77:    //@{
+        -:   78:
+        -:   79:    /**
+        -:   80:      * The derived class should look up its declaration of the passed element
+        -:   81:      * from its element pool. It should then use the content model description
+        -:   82:      * contained in that element declaration to validate that the passed list
+        -:   83:      * of child elements are valid for that content model. The count can be
+        -:   84:      * zero, indicating no child elements.
+        -:   85:      *
+        -:   86:      * Note that whitespace and text content are not validated here. Those are
+        -:   87:      * handled by the scanner. So only element ids are provided here.
+        -:   88:      *
+        -:   89:      * @param  elemDecl    The element whose content is to be checked.
+        -:   90:      *
+        -:   91:      * @param  children    An array of element QName which represent the elements
+        -:   92:      *                     found within the parent element, i.e. the content
+        -:   93:      *                     to be validated.
+        -:   94:      *
+        -:   95:      * @param  childCount  The number of elements in the childIds array. It can
+        -:   96:      *                     be zero if the element had none.
+        -:   97:      *
+        -:   98:      * @param  indexFailingChild  On return, it will contain the index of the 
+        -:   99:      *                            children failing validation, if the retun value
+        -:  100:      *                            is false
+        -:  101:      *
+        -:  102:      */
+        -:  103:    virtual bool checkContent
+        -:  104:    (
+        -:  105:        XMLElementDecl* const   elemDecl
+        -:  106:        , QName** const         children
+        -:  107:        , XMLSize_t             childCount
+        -:  108:        , XMLSize_t*            indexFailingChild
+        -:  109:    ) = 0;
+        -:  110:
+        -:  111:    /**
+        -:  112:      * The derived class should fault in the passed XMLAttr value. It should
+        -:  113:      * use the passeed attribute definition (which is passed via the base
+        -:  114:      * type so it must often be downcast to the appropriate type for the
+        -:  115:      * derived validator class), to fill in the passed attribute. This is done
+        -:  116:      * as a performance enhancement since the derived class has more direct
+        -:  117:      * access to the information.
+        -:  118:      */
+        -:  119:    virtual void faultInAttr
+        -:  120:    (
+        -:  121:                XMLAttr&    toFill
+        -:  122:        , const XMLAttDef&  attDef
+        -:  123:    )   const = 0;
+        -:  124:
+        -:  125:    /**
+        -:  126:      * This method is called by the scanner after a Grammar is scanned.
+        -:  127:      */
+        -:  128:    virtual void preContentValidation(bool reuseGrammar,
+        -:  129:                                      bool validateDefAttr = false) = 0;
+        -:  130:
+        -:  131:    /**
+        -:  132:      * This method is called by the scanner after the parse has completed. It
+        -:  133:      * gives the validator a chance to check certain things that can only be
+        -:  134:      * checked after the whole document has been parsed, such as referential
+        -:  135:      * integrity of ID/IDREF pairs and so forth. The validator should just
+        -:  136:      * issue errors for any problems it finds.
+        -:  137:      */
+        -:  138:    virtual void postParseValidation() = 0;
+        -:  139:
+        -:  140:    /**
+        -:  141:      * This method is called by the scanner before a new document is about
+        -:  142:      * to start. It gives the validator a change to reset itself in preparation
+        -:  143:      * for another validation pass.
+        -:  144:      */
+        -:  145:    virtual void reset() = 0;
+        -:  146:
+        -:  147:    /**
+        -:  148:      * The derived class should return a boolean that indicates whether it
+        -:  149:      * requires namespace processing or not. Some do and some allow it to be
+        -:  150:      * optional. This flag is used to control whether the client code's
+        -:  151:      * requests to disable namespace processing can be honored or not.
+        -:  152:      */
+        -:  153:    virtual bool requiresNamespaces() const = 0;
+        -:  154:
+        -:  155:    /**
+        -:  156:      * The derived class should apply any rules to the passed attribute value
+        -:  157:      * that are above and beyond those defined by XML 1.0. The scanner itself
+        -:  158:      * will impose XML 1.0 rules, based on the type of the attribute. This
+        -:  159:      * will generally be used to check things such as range checks and other
+        -:  160:      * datatype related validation.
+        -:  161:      *
+        -:  162:      * If the value breaks any rules as defined by the derived class, it
+        -:  163:      * should just issue errors as usual.
+        -:  164:      */
+        -:  165:    virtual void validateAttrValue
+        -:  166:    (
+        -:  167:        const   XMLAttDef*                  attDef
+        -:  168:        , const XMLCh* const                attrValue
+        -:  169:        , bool                              preValidation = false
+        -:  170:        , const XMLElementDecl*             elemDecl = 0
+        -:  171:    ) = 0;
+        -:  172:
+        -:  173:    /**
+        -:  174:      * The derived class should apply any rules to the passed element decl
+        -:  175:      * that are above and beyond those defined by XML 1.0.
+        -:  176:      *
+        -:  177:      * If the value breaks any rules as defined by the derived class, it
+        -:  178:      * should just issue errors as usual.
+        -:  179:      */
+        -:  180:    virtual void validateElement
+        -:  181:    (
+        -:  182:        const   XMLElementDecl*             elemDef
+        -:  183:    ) = 0;
+        -:  184:
+        -:  185:    /**
+        -:  186:      * Retrieve the Grammar used
+        -:  187:      */
+        -:  188:    virtual Grammar* getGrammar() const =0;
+        -:  189:
+        -:  190:    /**
+        -:  191:      * Set the Grammar
+        -:  192:      */
+        -:  193:    virtual void setGrammar(Grammar* aGrammar) =0;
+        -:  194:
+        -:  195:
+        -:  196:    //@}
+        -:  197:
+        -:  198:    // -----------------------------------------------------------------------
+        -:  199:    //  Virtual DTD handler interface.
+        -:  200:    // -----------------------------------------------------------------------
+        -:  201:
+        -:  202:    /** @name Virtual DTD handler interface */
+        -:  203:    //@{
+        -:  204:
+        -:  205:    /**
+        -:  206:      * This method allows the scanner to ask the validator if it handles
+        -:  207:      * DTDs or not.
+        -:  208:      */
+        -:  209:    virtual bool handlesDTD() const = 0;
+        -:  210:
+        -:  211:    // -----------------------------------------------------------------------
+        -:  212:    //  Virtual Schema handler interface.
+        -:  213:    // -----------------------------------------------------------------------
+        -:  214:
+        -:  215:    /** @name Virtual Schema handler interface */
+        -:  216:
+        -:  217:    /**
+        -:  218:      * This method allows the scanner to ask the validator if it handles
+        -:  219:      * Schema or not.
+        -:  220:      */
+        -:  221:    virtual bool handlesSchema() const = 0;
+        -:  222:
+        -:  223:    //@}
+        -:  224:
+        -:  225:    // -----------------------------------------------------------------------
+        -:  226:    //  Setter methods
+        -:  227:    //
+        -:  228:    //  setScannerInfo() is called by the scanner to tell the validator
+        -:  229:    //  about the stuff it needs to have access to.
+        -:  230:    // -----------------------------------------------------------------------
+        -:  231:
+        -:  232:    /** @name Setter methods */
+        -:  233:    //@{
+        -:  234:
+        -:  235:    /**
+        -:  236:      * @param  owningScanner   This is a pointer to the scanner to which the
+        -:  237:      *                         validator belongs. The validator will often
+        -:  238:      *                         need to query state data from the scanner.
+        -:  239:      *
+        -:  240:      * @param  readerMgr       This is a pointer to the reader manager that is
+        -:  241:      *                         being used by the scanner.
+        -:  242:      *
+        -:  243:      * @param  bufMgr          This is the buffer manager of the scanner. This
+        -:  244:      *                         is provided as a convenience so that the validator
+        -:  245:      *                         doesn't have to create its own buffer manager
+        -:  246:      *                         during the parse process.
+        -:  247:      */
+        -:  248:    void setScannerInfo
+        -:  249:    (
+        -:  250:        XMLScanner* const           owningScanner
+        -:  251:        , ReaderMgr* const          readerMgr
+        -:  252:        , XMLBufferMgr* const       bufMgr
+        -:  253:    );
+        -:  254:
+        -:  255:    /**
+        -:  256:      * This method is called to set an error reporter on the validator via
+        -:  257:      * which it will report any errors it sees during parsing or validation.
+        -:  258:      * This is generally called by the owning scanner.
+        -:  259:      *
+        -:  260:      * @param  errorReporter   A pointer to the error reporter to use. This
+        -:  261:      *                         is not adopted, just referenced so the caller
+        -:  262:      *                         remains responsible for its cleanup, if any.
+        -:  263:      */
+        -:  264:    void setErrorReporter
+        -:  265:    (
+        -:  266:        XMLErrorReporter* const errorReporter
+        -:  267:    );
+        -:  268:
+        -:  269:    //@}
+        -:  270:
+        -:  271:
+        -:  272:    // -----------------------------------------------------------------------
+        -:  273:    //  Error emitter methods
+        -:  274:    // -----------------------------------------------------------------------
+        -:  275:
+        -:  276:    /** @name Error emittor methods */
+        -:  277:    //@{
+        -:  278:
+        -:  279:    /**
+        -:  280:     *  This call is a convenience by which validators can emit errors. Most
+        -:  281:     *  of the grunt work of loading the text, getting the current source
+        -:  282:     *  location, ect... is handled here.
+        -:  283:     *
+        -:  284:     *  If the loaded text has replacement parameters, then text strings can be
+        -:  285:     *  passed. These will be used to replace the tokens {0}, {1}, {2}, and {3}
+        -:  286:     *  in the order passed. So text1 will replace {0}, text2 will replace {1},
+        -:  287:     *  and so forth.
+        -:  288:     *
+        -:  289:     *  textX   Up to four replacement parameters. They can be provided
+        -:  290:     *          as either XMLCh strings, or local code page strings which
+        -:  291:     *          will be transcoded internally.
+        -:  292:     *
+        -:  293:     *  @param toEmit   The error code to emit. it must be one of the defined
+        -:  294:     *                  validator error codes.
+        -:  295:     *
+        -:  296:     */
+        -:  297:    void emitError(const XMLValid::Codes toEmit);
+        -:  298:    void emitError
+        -:  299:    (
+        -:  300:        const   XMLValid::Codes toEmit
+        -:  301:        , const XMLCh* const    text1
+        -:  302:        , const XMLCh* const    text2 = 0
+        -:  303:        , const XMLCh* const    text3 = 0
+        -:  304:        , const XMLCh* const    text4 = 0
+        -:  305:    );
+        -:  306:    void emitError
+        -:  307:    (
+        -:  308:        const   XMLValid::Codes toEmit
+        -:  309:        , const char* const     text1
+        -:  310:        , const char* const     text2 = 0
+        -:  311:        , const char* const     text3 = 0
+        -:  312:        , const char* const     text4 = 0
+        -:  313:    );
+        -:  314:    void emitError
+        -:  315:    (
+        -:  316:        const   XMLValid::Codes toEmit
+        -:  317:        , const XMLExcepts::Codes   originalErrorCode
+        -:  318:        , const XMLCh* const        text1 = 0
+        -:  319:        , const XMLCh* const        text2 = 0
+        -:  320:        , const XMLCh* const        text3 = 0
+        -:  321:        , const XMLCh* const        text4 = 0
+        -:  322:
+        -:  323:    );
+        -:  324:
+        -:  325:    //@}
+        -:  326:
+        -:  327:protected :
+        -:  328:    // -----------------------------------------------------------------------
+        -:  329:    //  Hidden constructors
+        -:  330:    // -----------------------------------------------------------------------
+        -:  331:    XMLValidator
+        -:  332:    (
+        -:  333:        XMLErrorReporter* const errReporter = 0
+        -:  334:    );
+        -:  335:
+        -:  336:
+        -:  337:    // -----------------------------------------------------------------------
+        -:  338:    //  Protected getters
+        -:  339:    // -----------------------------------------------------------------------
+        -:  340:    const XMLBufferMgr* getBufMgr() const;
+        -:  341:    XMLBufferMgr* getBufMgr();
+        -:  342:    const ReaderMgr* getReaderMgr() const;
+        -:  343:    ReaderMgr* getReaderMgr();
+        -:  344:    const XMLScanner* getScanner() const;
+        -:  345:    XMLScanner* getScanner();
+        -:  346:
+        -:  347:
+        -:  348:private :
+        -:  349:    // -----------------------------------------------------------------------
+        -:  350:    //  Unimplemented Constructors and Operators
+        -:  351:    // -----------------------------------------------------------------------
+        -:  352:    XMLValidator(const XMLValidator&);
+        -:  353:    XMLValidator& operator=(const XMLValidator&);
+        -:  354:
+        -:  355:
+        -:  356:    // -----------------------------------------------------------------------
+        -:  357:    //  Private data members
+        -:  358:    //
+        -:  359:    //  fErrorReporter
+        -:  360:    //      The error reporter we are to use, if any.
+        -:  361:    //
+        -:  362:    // -----------------------------------------------------------------------
+        -:  363:    XMLBufferMgr*       fBufMgr;
+        -:  364:    XMLErrorReporter*   fErrorReporter;
+        -:  365:    ReaderMgr*          fReaderMgr;
+        -:  366:    XMLScanner*         fScanner;
+        -:  367:};
+        -:  368:
+        -:  369:
+        -:  370:// -----------------------------------------------------------------------
+        -:  371://  Setter methods
+        -:  372:// -----------------------------------------------------------------------
+        -:  373:inline void
+        -:  374:XMLValidator::setScannerInfo(XMLScanner* const      owningScanner
+        -:  375:                            , ReaderMgr* const      readerMgr
+        -:  376:                            , XMLBufferMgr* const   bufMgr)
+        -:  377:{
+        -:  378:    // We don't own any of these, we just reference them
+        -:  379:    fScanner = owningScanner;
+        -:  380:    fReaderMgr = readerMgr;
+        -:  381:    fBufMgr = bufMgr;
+        -:  382:}
+        -:  383:
+        -:  384:inline void
+        -:  385:XMLValidator::setErrorReporter(XMLErrorReporter* const errorReporter)
+        -:  386:{
+        -:  387:    fErrorReporter = errorReporter;
+        -:  388:}
+        -:  389:
+        -:  390:
+        -:  391:// ---------------------------------------------------------------------------
+        -:  392://  XMLValidator: Protected getter
+        -:  393:// ---------------------------------------------------------------------------
+        -:  394:inline const XMLBufferMgr* XMLValidator::getBufMgr() const
+        -:  395:{
+        -:  396:    return fBufMgr;
+        -:  397:}
+        -:  398:
+        -:  399:inline XMLBufferMgr* XMLValidator::getBufMgr()
+        -:  400:{
+        -:  401:    return fBufMgr;
+        -:  402:}
+        -:  403:
+        -:  404:inline const ReaderMgr* XMLValidator::getReaderMgr() const
+        -:  405:{
+        -:  406:    return fReaderMgr;
+        -:  407:}
+        -:  408:
+        -:  409:inline ReaderMgr* XMLValidator::getReaderMgr()
+        -:  410:{
+        -:  411:    return fReaderMgr;
+        -:  412:}
+        -:  413:
+        -:  414:inline const XMLScanner* XMLValidator::getScanner() const
+        -:  415:{
+        -:  416:    return fScanner;
+        -:  417:}
+        -:  418:
+        -:  419:inline XMLScanner* XMLValidator::getScanner()
+        -:  420:{
+        -:  421:    return fScanner;
+        -:  422:}
+        -:  423:
+        -:  424:XERCES_CPP_NAMESPACE_END
+        -:  425:
+        -:  426:#endif

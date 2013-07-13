@@ -1,0 +1,217 @@
+        -:    0:Source:/usr/local/include/xercesc/validators/common/Grammar.hpp
+        -:    0:Graph:simulation_package_builder.gcno
+        -:    0:Data:simulation_package_builder.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: * 
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: * 
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: Grammar.hpp 676911 2008-07-15 13:27:32Z amassari $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_GRAMMAR_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_GRAMMAR_HPP
+        -:   24:
+        -:   25:#include <limits.h>
+        -:   26:
+        -:   27:#include <xercesc/framework/XMLElementDecl.hpp>
+        -:   28:#include <xercesc/framework/XMLEntityDecl.hpp>
+        -:   29:#include <xercesc/framework/XMLNotationDecl.hpp>
+        -:   30:
+        -:   31:#include <xercesc/internal/XSerializable.hpp>
+        -:   32:
+        -:   33:XERCES_CPP_NAMESPACE_BEGIN
+        -:   34:
+        -:   35:class XMLGrammarDescription;
+        -:   36:
+        -:   37://
+        -:   38:// This abstract class specifies the interface for a Grammar
+        -:   39://
+        -:   40:
+        -:   41:class VALIDATORS_EXPORT Grammar : public XSerializable, public XMemory
+        -:   42:{
+        -:   43:public:
+        -:   44:
+        -:   45:    // -----------------------------------------------------------------------
+        -:   46:    //  Class Specific Types
+        -:   47:    //
+        -:   48:    //  DTDGrammarType    - Indicate this Grammar is built from a DTD.
+        -:   49:    //  SchemaGrammarType - Indicate this Grammar is built from a Schema.
+        -:   50:    //
+        -:   51:    //  TOP_LEVEL_SCOPE - outermost scope level (i.e. global) of a declaration.
+        -:   52:    //                    For DTD, all element decls and attribute decls always
+        -:   53:    //                    have TOP_LEVEL_SCOPE.  For schema, it may vary if
+        -:   54:    //                    it is inside a complex type.
+        -:   55:    //
+        -:   56:    //  UNKNOWN_SCOPE   - unknown scope level.  None of the decls should have this.
+        -:   57:    //
+        -:   58:    // -----------------------------------------------------------------------
+        -:   59:    enum GrammarType {
+        -:   60:        DTDGrammarType
+        -:   61:      , SchemaGrammarType
+        -:   62:      , UnKnown
+        -:   63:    };
+        -:   64:
+        -:   65:    enum {
+        -:   66:    	// These are well-known values that must simply be larger
+        -:   67:    	// than any reasonable scope
+        -:   68:		 UNKNOWN_SCOPE		= UINT_MAX - 0
+        -:   69:	   , TOP_LEVEL_SCOPE	= UINT_MAX - 1
+        -:   70:    };
+        -:   71:
+        -:   72:    // -----------------------------------------------------------------------
+        -:   73:    //  Constructors and Destructor
+        -:   74:    // -----------------------------------------------------------------------
+function _ZN11xercesc_3_17GrammarD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_17GrammarD2Ev called 0 returned 0% blocks executed 0%
+    #####:   75:    virtual ~Grammar(){};
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed
+branch  4 never executed
+call    5 never executed
+        -:   76:
+        -:   77:    // -----------------------------------------------------------------------
+        -:   78:    //  Virtual Getter methods
+        -:   79:    // -----------------------------------------------------------------------
+        -:   80:    virtual GrammarType getGrammarType() const =0;
+        -:   81:    virtual const XMLCh* getTargetNamespace() const =0;
+        -:   82:    virtual bool getValidated() const = 0;
+        -:   83:
+        -:   84:    // Element Decl
+        -:   85:
+        -:   86:    // this method should only be used while the grammar is being
+        -:   87:    // constructed, not while it is being used
+        -:   88:    // in a validation episode!
+        -:   89:    virtual XMLElementDecl* findOrAddElemDecl
+        -:   90:    (
+        -:   91:        const   unsigned int    uriId
+        -:   92:        , const XMLCh* const    baseName
+        -:   93:        , const XMLCh* const    prefixName
+        -:   94:        , const XMLCh* const    qName
+        -:   95:        , unsigned int          scope
+        -:   96:        ,       bool&           wasAdded
+        -:   97:    ) = 0;
+        -:   98:
+        -:   99:    virtual XMLSize_t getElemId
+        -:  100:    (
+        -:  101:        const   unsigned int    uriId
+        -:  102:        , const XMLCh* const    baseName
+        -:  103:        , const XMLCh* const    qName
+        -:  104:        , unsigned int          scope
+        -:  105:    )   const = 0;
+        -:  106:
+        -:  107:    virtual const XMLElementDecl* getElemDecl
+        -:  108:    (
+        -:  109:        const   unsigned int    uriId
+        -:  110:        , const XMLCh* const    baseName
+        -:  111:        , const XMLCh* const    qName
+        -:  112:        , unsigned int          scope
+        -:  113:    )   const = 0;
+        -:  114:
+        -:  115:    virtual XMLElementDecl* getElemDecl
+        -:  116:    (
+        -:  117:        const   unsigned int    uriId
+        -:  118:        , const XMLCh* const    baseName
+        -:  119:        , const XMLCh* const    qName
+        -:  120:        , unsigned int          scope
+        -:  121:    ) = 0;
+        -:  122:
+        -:  123:    virtual const XMLElementDecl* getElemDecl
+        -:  124:    (
+        -:  125:        const   unsigned int    elemId
+        -:  126:    )   const = 0;
+        -:  127:
+        -:  128:    virtual XMLElementDecl* getElemDecl
+        -:  129:    (
+        -:  130:        const   unsigned int    elemId
+        -:  131:    ) = 0;
+        -:  132:
+        -:  133:    // Notation
+        -:  134:    virtual const XMLNotationDecl* getNotationDecl
+        -:  135:    (
+        -:  136:        const   XMLCh* const    notName
+        -:  137:    )   const=0;
+        -:  138:
+        -:  139:    virtual XMLNotationDecl* getNotationDecl
+        -:  140:    (
+        -:  141:        const   XMLCh* const    notName
+        -:  142:    )=0;
+        -:  143:
+        -:  144:    // -----------------------------------------------------------------------
+        -:  145:    //  Virtual Setter methods
+        -:  146:    // -----------------------------------------------------------------------
+        -:  147:    virtual XMLElementDecl* putElemDecl
+        -:  148:    (
+        -:  149:        const   unsigned int    uriId
+        -:  150:        , const XMLCh* const    baseName
+        -:  151:        , const XMLCh* const    prefixName
+        -:  152:        , const XMLCh* const    qName
+        -:  153:        , unsigned int          scope
+        -:  154:        , const bool            notDeclared = false
+        -:  155:    ) = 0;
+        -:  156:
+        -:  157:    virtual XMLSize_t putElemDecl
+        -:  158:    (
+        -:  159:        XMLElementDecl* const elemDecl
+        -:  160:        , const bool          notDeclared = false
+        -:  161:    )   = 0;
+        -:  162:
+        -:  163:    virtual XMLSize_t putNotationDecl
+        -:  164:    (
+        -:  165:        XMLNotationDecl* const notationDecl
+        -:  166:    )   const=0;
+        -:  167:
+        -:  168:    virtual void setValidated(const bool newState) = 0;
+        -:  169:
+        -:  170:    // -----------------------------------------------------------------------
+        -:  171:    //  Virtual methods
+        -:  172:    // -----------------------------------------------------------------------
+        -:  173:    virtual void reset()=0;
+        -:  174:
+        -:  175:    virtual void                    setGrammarDescription( XMLGrammarDescription*) = 0;
+        -:  176:    virtual XMLGrammarDescription*  getGrammarDescription() const = 0;
+        -:  177:
+        -:  178:    /***
+        -:  179:     * Support for Serialization/De-serialization
+        -:  180:     ***/
+        -:  181:    DECL_XSERIALIZABLE(Grammar)
+        -:  182:
+        -:  183:	static void     storeGrammar(XSerializeEngine&        serEng
+        -:  184:                               , Grammar* const           grammar);
+        -:  185:
+        -:  186:	static Grammar* loadGrammar(XSerializeEngine& serEng);
+        -:  187:
+        -:  188:protected :
+        -:  189:    // -----------------------------------------------------------------------
+        -:  190:    //  Hidden constructors
+        -:  191:    // -----------------------------------------------------------------------
+        -:  192:    Grammar(){};
+        -:  193:
+        -:  194:private:
+        -:  195:    // -----------------------------------------------------------------------
+        -:  196:    //  Unimplemented constructors and operators
+        -:  197:    // -----------------------------------------------------------------------
+        -:  198:    Grammar(const Grammar&);
+        -:  199:    Grammar& operator=(const Grammar&);
+        -:  200:};
+        -:  201:
+        -:  202:XERCES_CPP_NAMESPACE_END
+        -:  203:
+        -:  204:#endif

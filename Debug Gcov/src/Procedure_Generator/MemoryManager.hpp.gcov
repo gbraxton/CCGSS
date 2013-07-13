@@ -1,0 +1,137 @@
+        -:    0:Source:/usr/local/include/xercesc/framework/MemoryManager.hpp
+        -:    0:Graph:simulation_package_builder.gcno
+        -:    0:Data:simulation_package_builder.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: *
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: *
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18: /*
+        -:   19: * $Id: MemoryManager.hpp 673975 2008-07-04 09:23:56Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:
+        -:   23:#if !defined(XERCESC_INCLUDE_GUARD_MEMORYMANAGER_HPP)
+        -:   24:#define XERCESC_INCLUDE_GUARD_MEMORYMANAGER_HPP
+        -:   25:
+        -:   26:#include <xercesc/util/XercesDefs.hpp>
+        -:   27:#include <stdlib.h>
+        -:   28:
+        -:   29:
+        -:   30:XERCES_CPP_NAMESPACE_BEGIN
+        -:   31:
+        -:   32:
+        -:   33:/**
+        -:   34: *  Configurable memory manager
+        -:   35: *
+        -:   36: *  <p>This interface allows outside applications to plug in their own memory
+        -:   37: *  manager to be used by Xerces for memory allocation/deallocation.</p>
+        -:   38: */
+        -:   39:class XMLPARSER_EXPORT MemoryManager
+        -:   40:{
+        -:   41:public:
+        -:   42:    // -----------------------------------------------------------------------
+        -:   43:    //  Constructors are hidden, only the virtual destructor is exposed
+        -:   44:    // -----------------------------------------------------------------------
+        -:   45:
+        -:   46:    /** @name Destructor */
+        -:   47:    //@{
+        -:   48:
+        -:   49:    /**
+        -:   50:      * Default destructor
+        -:   51:      */
+function _ZN11xercesc_3_113MemoryManagerD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_113MemoryManagerD2Ev called 0 returned 0% blocks executed 0%
+    #####:   52:    virtual ~MemoryManager()
+    #####:   53:    {
+    #####:   54:    }
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   55:    //@}
+        -:   56:
+        -:   57:
+        -:   58:    /**
+        -:   59:      * This method is called to obtain the memory manager that should be
+        -:   60:      * used to allocate memory used in exceptions. If the same memory
+        -:   61:      * manager can be used, simply return 'this' from this function.
+        -:   62:      * Note, however, that if there is a possibility that an exception
+        -:   63:      * thrown can outlive the memory manager (for example, because the
+        -:   64:      * memory manager object is allocated on the stack or is managed by
+        -:   65:      * a stack-bound object), it is recommended that you return
+        -:   66:      * XMLPlatformUtils::fgMemoryManager.
+        -:   67:      *
+        -:   68:      * @return A pointer to the memory manager
+        -:   69:      */
+        -:   70:    virtual MemoryManager* getExceptionMemoryManager() = 0;
+        -:   71:
+        -:   72:
+        -:   73:    // -----------------------------------------------------------------------
+        -:   74:    //  The virtual memory manager interface
+        -:   75:    // -----------------------------------------------------------------------
+        -:   76:    /** @name The pure virtual methods in this interface. */
+        -:   77:    //@{
+        -:   78:
+        -:   79:    /**
+        -:   80:      * This method allocates requested memory.
+        -:   81:      *
+        -:   82:      * @param size The requested memory size
+        -:   83:      *
+        -:   84:      * @return A pointer to the allocated memory
+        -:   85:      */
+        -:   86:    virtual void* allocate(XMLSize_t size) = 0;
+        -:   87:
+        -:   88:    /**
+        -:   89:      * This method deallocates memory
+        -:   90:      *
+        -:   91:      * @param p The pointer to the allocated memory to be deleted
+        -:   92:      */
+        -:   93:    virtual void deallocate(void* p) = 0;
+        -:   94:
+        -:   95:    //@}
+        -:   96:
+        -:   97:
+        -:   98:protected :
+        -:   99:    // -----------------------------------------------------------------------
+        -:  100:    //  Hidden Constructors
+        -:  101:    // -----------------------------------------------------------------------
+        -:  102:    /** @name Constructor */
+        -:  103:    //@{
+        -:  104:
+        -:  105:    /**
+        -:  106:      * Protected default constructor
+        -:  107:      */
+        -:  108:    MemoryManager()
+        -:  109:    {
+        -:  110:    }
+        -:  111:    //@}
+        -:  112:
+        -:  113:
+        -:  114:
+        -:  115:private:
+        -:  116:    // -----------------------------------------------------------------------
+        -:  117:    //  Unimplemented constructors and operators
+        -:  118:    // -----------------------------------------------------------------------
+        -:  119:    MemoryManager(const MemoryManager&);
+        -:  120:    MemoryManager& operator=(const MemoryManager&);
+        -:  121:};
+        -:  122:
+        -:  123:XERCES_CPP_NAMESPACE_END
+        -:  124:
+        -:  125:#endif

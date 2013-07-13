@@ -1,0 +1,75 @@
+        -:    0:Source:/usr/local/include/xercesc/util/XMLFileMgr.hpp
+        -:    0:Graph:Test.gcno
+        -:    0:Data:Test.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: * 
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: * 
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: XMLFileMgr.hpp 527149 2007-04-10 14:56:39Z amassari $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_XMLFILEMGR_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_XMLFILEMGR_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XercesDefs.hpp>
+        -:   26:#include <xercesc/util/XMemory.hpp>
+        -:   27:
+        -:   28:XERCES_CPP_NAMESPACE_BEGIN
+        -:   29:
+        -:   30:typedef void* FileHandle;
+        -:   31:#define XERCES_Invalid_File_Handle 0
+        -:   32:
+        -:   33://	Abstract class for files. This is be used to allow multiple file handling implementations.
+        -:   34:class XMLFileMgr : public XMemory
+        -:   35:{
+        -:   36:    public:
+        -:   37:        XMLFileMgr() {}
+function _ZN11xercesc_3_110XMLFileMgrD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_110XMLFileMgrD2Ev called 0 returned 0% blocks executed 0%
+    #####:   38:        virtual ~XMLFileMgr() {}
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   39:
+        -:   40:		// File access
+        -:   41:        virtual FileHandle	fileOpen(const XMLCh* path, bool toWrite, MemoryManager* const manager) = 0;
+        -:   42:        virtual FileHandle	fileOpen(const char* path, bool toWrite, MemoryManager* const manager) = 0;
+        -:   43:        virtual FileHandle	openStdIn(MemoryManager* const manager) = 0;
+        -:   44:        
+        -:   45:        virtual void		fileClose(FileHandle f, MemoryManager* const manager) = 0;
+        -:   46:        virtual void		fileReset(FileHandle f, MemoryManager* const manager) = 0;
+        -:   47:
+        -:   48:        virtual XMLFilePos	curPos(FileHandle f, MemoryManager* const manager) = 0;
+        -:   49:        virtual XMLFilePos	fileSize(FileHandle f, MemoryManager* const manager) = 0;
+        -:   50:
+        -:   51:        virtual XMLSize_t	fileRead(FileHandle f, XMLSize_t byteCount, XMLByte* buffer, MemoryManager* const manager) = 0;
+        -:   52:        virtual void		fileWrite(FileHandle f, XMLSize_t byteCount, const XMLByte* buffer, MemoryManager* const manager) = 0;
+        -:   53:        
+        -:   54:        // Ancillary path handling routines
+        -:   55:        virtual XMLCh*		getFullPath(const XMLCh* const srcPath, MemoryManager* const manager) = 0;
+        -:   56:        virtual XMLCh*		getCurrentDirectory(MemoryManager* const manager) = 0;
+        -:   57:        virtual bool		isRelative(const XMLCh* const toCheck, MemoryManager* const manager) = 0;
+        -:   58:};
+        -:   59:
+        -:   60:XERCES_CPP_NAMESPACE_END
+        -:   61:
+        -:   62:#endif
+        -:   63:

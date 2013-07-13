@@ -1,0 +1,869 @@
+        -:    0:Source:/usr/local/include/xercesc/util/PlatformUtils.hpp
+        -:    0:Graph:simulation_package_builder.gcno
+        -:    0:Data:simulation_package_builder.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: *
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: *
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: PlatformUtils.hpp 932887 2010-04-11 13:04:59Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_PLATFORMUTILS_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_PLATFORMUTILS_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XercesDefs.hpp>
+        -:   26:#include <xercesc/util/XMLException.hpp>
+        -:   27:#include <xercesc/util/PanicHandler.hpp>
+        -:   28:
+        -:   29:#include <xercesc/util/XMLFileMgr.hpp>
+        -:   30:#include <xercesc/util/XMLMutexMgr.hpp>
+        -:   31:
+        -:   32:XERCES_CPP_NAMESPACE_BEGIN
+        -:   33:
+        -:   34:class XMLMsgLoader;
+        -:   35:class XMLNetAccessor;
+        -:   36:class XMLTransService;
+        -:   37:class MemoryManager;
+        -:   38:class XMLMutex;
+        -:   39:
+        -:   40://
+        -:   41://  For internal use only
+        -:   42://
+        -:   43://  This class provides a simple abstract API via which lazily evaluated
+        -:   44://  data can be cleaned up.
+        -:   45://
+        -:   46:class XMLUTIL_EXPORT XMLDeleter
+        -:   47:{
+        -:   48:public :
+        -:   49:    virtual ~XMLDeleter();
+        -:   50:
+        -:   51:protected :
+        -:   52:    XMLDeleter();
+        -:   53:
+        -:   54:private :
+        -:   55:    XMLDeleter(const XMLDeleter&);
+        -:   56:    XMLDeleter& operator=(const XMLDeleter&);
+        -:   57:};
+        -:   58:
+        -:   59:
+        -:   60:/**
+        -:   61:  * Utilities that must be implemented in a platform-specific way.
+        -:   62:  *
+        -:   63:  * This class contains methods that must be implemented in a platform
+        -:   64:  * specific manner. The actual implementations of these methods are
+        -:   65:  * available in the per-platform files inside <code>src/util/Platforms
+        -:   66:  * </code>.
+        -:   67:  */
+        -:   68:class XMLUTIL_EXPORT XMLPlatformUtils
+        -:   69:{
+        -:   70:public :
+        -:   71:
+        -:   72:    /** @name Public Static Data */
+        -:   73:    //@{
+        -:   74:
+        -:   75:    /** The network accessor
+        -:   76:      *
+        -:   77:      * This is provided by the per-platform driver, so each platform can
+        -:   78:      * choose what actual implementation it wants to use. The object must
+        -:   79:      * be dynamically allocated.
+        -:   80:      *
+        -:   81:      * <i>Note that you may optionally, if your platform driver does not
+        -:   82:      * install a network accessor, set it manually from your client code
+        -:   83:      * after calling Initialize(). This works because this object is
+        -:   84:      * not required during initialization, and only comes into play during
+        -:   85:      * actual XML parsing.</i>
+        -:   86:      */
+        -:   87:    static XMLNetAccessor*      fgNetAccessor;
+        -:   88:
+        -:   89:    /** The transcoding service.
+        -:   90:      *
+        -:   91:      * This is provided by the per platform driver, so each platform can
+        -:   92:      * choose what implementation it wants to use. When the platform
+        -:   93:      * independent initialization code needs to get a transcoding service
+        -:   94:      * object, it will call <code>makeTransService()</code> to ask the
+        -:   95:      * per-platform code to create one. Only one transcoding service
+        -:   96:      * object is requested per-process, so it is shared and synchronized
+        -:   97:      * among parser instances within that process.
+        -:   98:      */
+        -:   99:    static XMLTransService*     fgTransService;
+        -:  100:#ifdef OS390
+        -:  101:    static XMLTransService*     fgTransService2;
+        -:  102:#endif
+        -:  103:
+        -:  104:    /** The Panic Handler
+        -:  105:      *
+        -:  106:      *   This is the application provided panic handler.
+        -:  107:      */
+        -:  108:    static PanicHandler*        fgUserPanicHandler;
+        -:  109:
+        -:  110:    /** The Panic Handler
+        -:  111:      *
+        -:  112:      *   This is the default panic handler.
+        -:  113:      */
+        -:  114:    static PanicHandler*        fgDefaultPanicHandler;
+        -:  115:
+        -:  116:    /** The configurable memory manager
+        -:  117:      *
+        -:  118:      *   This is the pluggable memory manager. If it is not provided by an
+        -:  119:      *   application, a default implementation is used.
+        -:  120:      */
+        -:  121:    static MemoryManager*       fgMemoryManager;
+        -:  122:
+        -:  123:    static XMLFileMgr*          fgFileMgr;
+        -:  124:    static XMLMutexMgr*         fgMutexMgr;
+        -:  125:
+        -:  126:    /** Global mutex for fast or infrequent operations.
+        -:  127:      *
+        -:  128:      *   Use this mutex only for fast (e.g., increment an integer,
+        -:  129:      *   check flag, etc.) or infrequent (e.g., once-off initialization)
+        -:  130:      *   operations.
+        -:  131:      */
+        -:  132:    static XMLMutex*            fgAtomicMutex;
+        -:  133:
+        -:  134:    static bool                 fgXMLChBigEndian;
+        -:  135:    static bool                 fgSSE2ok;
+        -:  136:    //@}
+        -:  137:
+        -:  138:
+        -:  139:    /** @name Initialization and Panic methods */
+        -:  140:    //@{
+        -:  141:
+        -:  142:    /** Perform per-process parser initialization
+        -:  143:      *
+        -:  144:      * Initialization <b>must</b> be called first in any client code.
+        -:  145:      *
+        -:  146:      * @param locale The locale to use for messages.
+        -:  147:      *
+        -:  148:      * The locale is set iff the Initialize() is invoked for the very first time,
+        -:  149:      * to ensure that each and every message loader, in the process space, share
+        -:  150:      * the same locale.
+        -:  151:      *
+        -:  152:      * All subsequent invocations of Initialize(), with a different locale, have
+        -:  153:      * no effect on the message loaders, either instantiated, or to be instantiated.
+        -:  154:      *
+        -:  155:      * To set to a different locale, client application needs to Terminate() (or
+        -:  156:      * multiple Terminate() in the case where multiple Initialize() have been invoked
+        -:  157:      * before), followed by Initialize(new_locale).
+        -:  158:      *
+        -:  159:      * The default locale is "en_US".
+        -:  160:      *
+        -:  161:      * @param nlsHome User specified location where MsgLoader retrieves error message files.
+        -:  162:      *                the discussion above with regard to locale, applies to nlsHome as well.
+        -:  163:      *
+        -:  164:      * @param panicHandler Application's panic handler, application owns this handler.
+        -:  165:      *                     Application shall make sure that the plugged panic handler persists
+        -:  166:      *                     through the call to XMLPlatformUtils::Terminate().
+        -:  167:      *
+        -:  168:      * @param memoryManager Plugged-in memory manager which is owned by the
+        -:  169:      *                      application. Applications must make sure that the
+        -:  170:      *                      plugged-in memory manager persist through the call to
+        -:  171:      *                      XMLPlatformUtils::Terminate()
+        -:  172:      */
+        -:  173:    static void Initialize(const char*          const locale = XMLUni::fgXercescDefaultLocale
+        -:  174:                         , const char*          const nlsHome = 0
+        -:  175:                         ,       PanicHandler*  const panicHandler = 0
+        -:  176:                         ,       MemoryManager* const memoryManager = 0);
+        -:  177:
+        -:  178:      /** Perform per-process parser initialization
+        -:  179:      *
+        -:  180:      * Initialization <b>must</b> be called first in any client code.
+        -:  181:      *
+        -:  182:      * @param initialDOMHeapAllocSize The size of the first memory block
+        -:  183:      * allocated by the DOMDocument heap. Note that changing this parameter
+        -:  184:      * may result in poor performance and/or excessive memory usage. For
+        -:  185:      * the default value refer to dom/impl/DOMDocumentImpl.cpp.
+        -:  186:      *
+        -:  187:      * @param maxDOMHeapAllocSize The maximum size of the memory block
+        -:  188:      * allocated by the DOMDocument heap. As the document grows, the
+        -:  189:      * allocated by the heap memory blocks grow from initialDOMHeapAllocSize
+        -:  190:      * to maxDOMHeapAllocSize. Note that changing this parameter may result
+        -:  191:      * in poor performance and/or excessive memory usage. For the default
+        -:  192:      * value refer to dom/impl/DOMDocumentImpl.cpp.
+        -:  193:      *
+        -:  194:      * @param maxDOMSubAllocationSize The maximum size of the memory block
+        -:  195:      * requested that is handled by the DOMDocument heap. A request for a
+        -:  196:      * larger block is handled directly by the memory manager. Note that
+        -:  197:      * changing this parameter may result in poor performance and/or
+        -:  198:      * excessive memory usage. For the default value refer to
+        -:  199:      * dom/impl/DOMDocumentImpl.cpp.
+        -:  200:      *
+        -:  201:      * @param locale The locale to use for messages.
+        -:  202:      *
+        -:  203:      * The locale is set iff the Initialize() is invoked for the very first time,
+        -:  204:      * to ensure that each and every message loader, in the process space, share
+        -:  205:      * the same locale.
+        -:  206:      *
+        -:  207:      * All subsequent invocations of Initialize(), with a different locale, have
+        -:  208:      * no effect on the message loaders, either instantiated, or to be instantiated.
+        -:  209:      *
+        -:  210:      * To set to a different locale, client application needs to Terminate() (or
+        -:  211:      * multiple Terminate() in the case where multiple Initialize() have been invoked
+        -:  212:      * before), followed by Initialize(new_locale).
+        -:  213:      *
+        -:  214:      * The default locale is "en_US".
+        -:  215:      *
+        -:  216:      * @param nlsHome User specified location where MsgLoader retrieves error message files.
+        -:  217:      * the discussion above with regard to locale, applies to nlsHome as well.
+        -:  218:      *
+        -:  219:      * @param panicHandler Application's panic handler, application owns this handler.
+        -:  220:      * Application shall make sure that the plugged panic handler persists
+        -:  221:      * through the call to XMLPlatformUtils::Terminate().
+        -:  222:      *
+        -:  223:      * @param memoryManager Plugged-in memory manager which is owned by the
+        -:  224:      * application. Applications must make sure that the plugged-in memory
+        -:  225:      * manager persist through the call to XMLPlatformUtils::Terminate()
+        -:  226:      */
+        -:  227:    static void Initialize(XMLSize_t initialDOMHeapAllocSize
+        -:  228:                         , XMLSize_t maxDOMHeapAllocSize
+        -:  229:                         , XMLSize_t maxDOMSubAllocationSize
+        -:  230:                         , const char*          const locale = XMLUni::fgXercescDefaultLocale
+        -:  231:                         , const char*          const nlsHome = 0
+        -:  232:                         ,       PanicHandler*  const panicHandler = 0
+        -:  233:                         ,       MemoryManager* const memoryManager = 0);
+        -:  234:
+        -:  235:    /** Perform per-process parser termination
+        -:  236:      *
+        -:  237:      * The termination call is currently optional, to aid those dynamically
+        -:  238:      * loading the parser to clean up before exit, or to avoid spurious
+        -:  239:      * reports from leak detectors.
+        -:  240:      */
+        -:  241:    static void Terminate();
+        -:  242:
+        -:  243:    /** The panic mechanism.
+        -:  244:      *
+        -:  245:      * If, during initialization, we cannot even get far enough along
+        -:  246:      * to get transcoding up or get message loading working, we call
+        -:  247:      * this method.</p>
+        -:  248:      *
+        -:  249:      * Each platform can implement it however they want. This method will
+        -:  250:      * delegate the panic handling to a user specified panic handler or
+        -:  251:      * in the absence of it, the default panic handler.
+        -:  252:      *
+        -:  253:      * In case the default panic handler does not support a particular
+        -:  254:      * platform, the platform specific panic handling shall be implemented
+        -:  255:      * here </p>.
+        -:  256:      *
+        -:  257:      * @param reason The enumeration that defines the cause of the failure
+        -:  258:      */
+        -:  259:    static void panic
+        -:  260:    (
+        -:  261:        const   PanicHandler::PanicReasons    reason
+        -:  262:    );
+        -:  263:
+        -:  264:    //@}
+        -:  265:
+        -:  266:    /** @name File Methods */
+        -:  267:    //@{
+        -:  268:
+        -:  269:    /** Make a new file object appropriate for the platform.
+        -:  270:      *
+        -:  271:      * @param manager The MemoryManager to use to allocate objects
+        -:  272:      */
+        -:  273:    static XMLFileMgr* makeFileMgr(MemoryManager* const manager);
+        -:  274:
+        -:  275:    /** Get the current file position
+        -:  276:      *
+        -:  277:      * This must be implemented by the per-platform driver, which should
+        -:  278:      * use local file services to determine the current position within
+        -:  279:      * the passed file.
+        -:  280:      *
+        -:  281:      * Since the file API provided here only reads, if the host platform
+        -:  282:      * supports separate read/write positions, only the read position is
+        -:  283:      * of any interest, and hence should be the one returned.
+        -:  284:      *
+        -:  285:      * @param theFile The file handle
+        -:  286:      * @param manager The MemoryManager to use to allocate objects
+        -:  287:      */
+        -:  288:    static XMLFilePos curFilePos(FileHandle theFile
+        -:  289:        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
+        -:  290:
+        -:  291:    /** Closes the file handle
+        -:  292:      *
+        -:  293:      * This must be implemented by the per-platform driver, which should
+        -:  294:      * use local file services to close the passed file handle, and to
+        -:  295:      * destroy the passed file handle and any allocated data or system
+        -:  296:      * resources it contains.
+        -:  297:      *
+        -:  298:      * @param theFile The file handle to close
+        -:  299:      * @param manager The MemoryManager to use to allocate objects
+        -:  300:      */
+        -:  301:    static void closeFile(FileHandle theFile
+        -:  302:        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
+        -:  303:
+        -:  304:    /** Returns the file size
+        -:  305:      *
+        -:  306:      * This must be implemented by the per-platform driver, which should
+        -:  307:      * use local file services to determine the current size of the file
+        -:  308:      * represented by the passed handle.
+        -:  309:      *
+        -:  310:      * @param theFile The file handle whose size you want
+        -:  311:      * @param manager The MemoryManager to use to allocate objects
+        -:  312:      * @return Returns the size of the file in bytes
+        -:  313:      */
+        -:  314:    static XMLFilePos fileSize(FileHandle theFile
+        -:  315:        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
+        -:  316:
+        -:  317:    /** Opens the file
+        -:  318:      *
+        -:  319:      * This must be implemented by the per-platform driver, which should
+        -:  320:      * use local file services to open passed file. If it fails, a
+        -:  321:      * null handle pointer should be returned.
+        -:  322:      *
+        -:  323:      * @param fileName The string containing the name of the file
+        -:  324:      * @param manager The MemoryManager to use to allocate objects
+        -:  325:      * @return The file handle of the opened file
+        -:  326:      */
+        -:  327:    static FileHandle openFile(const char* const fileName
+        -:  328:        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
+        -:  329:
+        -:  330:    /** Opens a named file
+        -:  331:      *
+        -:  332:      * This must be implemented by the per-platform driver, which should
+        -:  333:      * use local file services to open the passed file. If it fails, a
+        -:  334:      * null handle pointer should be returned.
+        -:  335:      *
+        -:  336:      * @param fileName The string containing the name of the file
+        -:  337:      * @param manager The MemoryManager to use to allocate objects
+        -:  338:      * @return The file handle of the opened file
+        -:  339:      */
+        -:  340:    static FileHandle openFile(const XMLCh* const fileName
+        -:  341:        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
+        -:  342:
+        -:  343:    /** Open a named file to write
+        -:  344:      *
+        -:  345:      * This must be implemented by the per-platform driver, which should
+        -:  346:      * use local file services to open passed file. If it fails, a
+        -:  347:      * null handle pointer should be returned.
+        -:  348:      *
+        -:  349:      * @param fileName The string containing the name of the file
+        -:  350:      * @param manager The MemoryManager to use to allocate objects
+        -:  351:      * @return The file handle of the opened file
+        -:  352:      */
+        -:  353:    static FileHandle openFileToWrite(const char* const fileName
+        -:  354:        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
+        -:  355:
+        -:  356:    /** Open a named file to write
+        -:  357:      *
+        -:  358:      * This must be implemented by the per-platform driver, which should
+        -:  359:      * use local file services to open the passed file. If it fails, a
+        -:  360:      * null handle pointer should be returned.
+        -:  361:      *
+        -:  362:      * @param fileName The string containing the name of the file
+        -:  363:      * @param manager The MemoryManager to use to allocate objects
+        -:  364:      * @return The file handle of the opened file
+        -:  365:      */
+        -:  366:    static FileHandle openFileToWrite(const XMLCh* const fileName
+        -:  367:        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
+        -:  368:
+        -:  369:    /** Opens the standard input as a file
+        -:  370:      *
+        -:  371:      * This must be implemented by the per-platform driver, which should
+        -:  372:      * use local file services to open a handle to the standard input.
+        -:  373:      * It should be a copy of the standard input handle, since it will
+        -:  374:      * be closed later!
+        -:  375:      *
+        -:  376:      * @param manager The MemoryManager to use to allocate objects
+        -:  377:      * @return The file handle of the standard input stream
+        -:  378:      */
+        -:  379:    static FileHandle openStdInHandle(MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
+        -:  380:
+        -:  381:    /** Reads the file buffer
+        -:  382:      *
+        -:  383:      * This must be implemented by the per-platform driver, which should
+        -:  384:      * use local file services to read up to 'toRead' bytes of data from
+        -:  385:      * the passed file, and return those bytes in the 'toFill' buffer. It
+        -:  386:      * is not an error not to read the requested number of bytes. When the
+        -:  387:      * end of file is reached, zero should be returned.
+        -:  388:      *
+        -:  389:      * @param theFile The file handle to be read from.
+        -:  390:      * @param toRead The maximum number of byte to read from the current
+        -:  391:      * position
+        -:  392:      * @param toFill The byte buffer to fill
+        -:  393:      * @param manager The MemoryManager to use to allocate objects
+        -:  394:      *
+        -:  395:      * @return Returns the number of bytes read from the stream or file
+        -:  396:      */
+        -:  397:    static XMLSize_t readFileBuffer
+        -:  398:    (
+        -:  399:                FileHandle      theFile
+        -:  400:        , const XMLSize_t       toRead
+        -:  401:        ,       XMLByte* const  toFill
+        -:  402:        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager
+        -:  403:    );
+        -:  404:
+        -:  405:    /** Writes the buffer to the file
+        -:  406:      *
+        -:  407:      * This must be implemented by the per-platform driver, which should
+        -:  408:      * use local file services to write up to 'toWrite' bytes of data to
+        -:  409:      * the passed file. Unless exception raised by local file services,
+        -:  410:      * 'toWrite' bytes of data is to be written to the passed file.
+        -:  411:      *
+        -:  412:      * @param theFile The file handle to be written to.
+        -:  413:      * @param toWrite The maximum number of byte to write from the current
+        -:  414:      * position
+        -:  415:      * @param toFlush The byte buffer to flush
+        -:  416:      * @param manager The MemoryManager to use to allocate objects
+        -:  417:      * @return void
+        -:  418:      */
+        -:  419:    static void writeBufferToFile
+        -:  420:    (
+        -:  421:          FileHandle     const  theFile
+        -:  422:        , XMLSize_t             toWrite
+        -:  423:        , const XMLByte* const  toFlush
+        -:  424:        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager
+        -:  425:    );
+        -:  426:
+        -:  427:    /** Resets the file handle
+        -:  428:      *
+        -:  429:      * This must be implemented by the per-platform driver which will use
+        -:  430:      * local file services to reset the file position to the start of the
+        -:  431:      * the file.
+        -:  432:      *
+        -:  433:      * @param theFile The file handle that you want to reset
+        -:  434:      * @param manager The MemoryManager to use to allocate objects
+        -:  435:      */
+        -:  436:    static void resetFile(FileHandle theFile
+        -:  437:        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
+        -:  438:
+        -:  439:    //@}
+        -:  440:
+        -:  441:
+        -:  442:    /** @name File System Methods */
+        -:  443:    //@{
+        -:  444:    /** Gets the full path from a relative path
+        -:  445:      *
+        -:  446:      * This must be implemented by the per-platform driver. It should
+        -:  447:      * complete a relative path using the 'current directory', or whatever
+        -:  448:      * the local equivalent of a current directory is. If the passed
+        -:  449:      * source path is actually fully qualified, then a straight copy of it
+        -:  450:      * will be returned.
+        -:  451:      *
+        -:  452:      * @param srcPath The path of the file for which you want the full path
+        -:  453:      *
+        -:  454:      * @param manager Pointer to the memory manager to be used to
+        -:  455:      *                allocate objects.
+        -:  456:      *
+        -:  457:      * @return Returns the fully qualified path of the file name including
+        -:  458:      *         the file name. This is dyanmically allocated and must be
+        -:  459:      *         deleted  by the caller when its no longer needed! The memory
+        -:  460:      *         returned will beallocated using the static memory manager, if
+        -:  461:      *         user do not supply a memory manager. Users then need to make
+        -:  462:      *         sure to use either the default or user specific memory manager
+        -:  463:      *         to deallocate the memory.
+        -:  464:      */
+        -:  465:    static XMLCh* getFullPath
+        -:  466:    (
+        -:  467:        const XMLCh* const srcPath
+        -:  468:        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+        -:  469:    );
+        -:  470:
+        -:  471:    /** Gets the current working directory
+        -:  472:      *
+        -:  473:      * This must be implemented by the per-platform driver. It returns
+        -:  474:      * the current working directory is.
+        -:  475:      * @param manager The MemoryManager to use to allocate objects
+        -:  476:      * @return Returns the current working directory.
+        -:  477:      *         This is dyanmically allocated and must be deleted
+        -:  478:      *         by the caller when its no longer needed! The memory returned
+        -:  479:      *         will be allocated using the static memory manager, if users
+        -:  480:      *         do not supply a memory manager. Users then need to make sure
+        -:  481:      *         to use either the default or user specific memory manager to
+        -:  482:      *         deallocate the memory.
+        -:  483:      */
+        -:  484:    static XMLCh* getCurrentDirectory
+        -:  485:    (
+        -:  486:        MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+        -:  487:    );
+        -:  488:
+        -:  489:    /** Check if a character is a slash
+        -:  490:      *
+        -:  491:      * This must be implemented by the per-platform driver.
+        -:  492:      *
+        -:  493:      * @param c the character to be examined
+        -:  494:      *
+        -:  495:      * @return true  if the character examined is a slash
+        -:  496:      *         false otherwise
+        -:  497:      */
+        -:  498:    static inline bool isAnySlash(XMLCh c);
+        -:  499:
+        -:  500:    /** Remove occurrences of the pair of dot slash
+        -:  501:      *
+        -:  502:      * To remove the sequence, dot slash if it is part of the sequence,
+        -:  503:      * slash dot slash.
+        -:  504:      *
+        -:  505:      * @param srcPath The path for which you want to remove the dot slash sequence.
+        -:  506:      * @param manager The MemoryManager to use to allocate objects
+        -:  507:      * @return
+        -:  508:      */
+        -:  509:    static void   removeDotSlash(XMLCh* const srcPath
+        -:  510:        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+        -:  511:
+        -:  512:    /** Remove occurrences of the dot dot slash
+        -:  513:      *
+        -:  514:      * To remove the sequence, slash dot dot slash and its preceding path segment
+        -:  515:      * if and only if the preceding path segment is not slash dot dot slash.
+        -:  516:      *
+        -:  517:      * @param srcPath The path for which you want to remove the slash dot
+        -:  518:      *        dot slash sequence and its preceding path segment.
+        -:  519:      * @param manager The MemoryManager to use to allocate objects
+        -:  520:      * @return
+        -:  521:      */
+        -:  522:    static void   removeDotDotSlash(XMLCh* const srcPath
+        -:  523:        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+        -:  524:
+        -:  525:    /** Determines if a path is relative or absolute
+        -:  526:      *
+        -:  527:      * This must be implemented by the per-platform driver, which should
+        -:  528:      * determine whether the passed path is relative or not. The concept
+        -:  529:      * of relative and absolute might be... well relative on different
+        -:  530:      * platforms. But, as long as the determination is made consistently
+        -:  531:      * and in coordination with the weavePaths() method, it should work
+        -:  532:      * for any platform.
+        -:  533:      *
+        -:  534:      * @param toCheck The file name which you want to check
+        -:  535:      * @param manager The MemoryManager to use to allocate objects
+        -:  536:      * @return Returns true if the filename appears to be relative
+        -:  537:      */
+        -:  538:    static bool isRelative(const XMLCh* const toCheck
+        -:  539:        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+        -:  540:        );
+        -:  541:
+        -:  542:    /** Utility to join two paths
+        -:  543:      *
+        -:  544:      * This must be implemented by the per-platform driver, and should
+        -:  545:      * weave the relative path part together with the base part and return
+        -:  546:      * a new path that represents this combination.
+        -:  547:      *
+        -:  548:      * If the relative part turns out to be fully qualified, it will be
+        -:  549:      * returned as is. If it is not, then it will be woven onto the
+        -:  550:      * passed base path, by removing one path component for each leading
+        -:  551:      * "../" (or whatever is the equivalent in the local system) in the
+        -:  552:      * relative path.
+        -:  553:      *
+        -:  554:      * @param basePath The string containing the base path
+        -:  555:      * @param relativePath The string containing the relative path
+        -:  556:      * @param manager The MemoryManager to use to allocate objects
+        -:  557:      * @return Returns a string containing the 'woven' path. It should
+        -:  558:      * be dynamically allocated and becomes the responsibility of the
+        -:  559:      * caller to delete.
+        -:  560:      */
+        -:  561:    static XMLCh* weavePaths
+        -:  562:    (
+        -:  563:        const   XMLCh* const    basePath
+        -:  564:        , const XMLCh* const    relativePath
+        -:  565:        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+        -:  566:    );
+        -:  567:    //@}
+        -:  568:
+        -:  569:    /** @name Timing Methods */
+        -:  570:    //@{
+        -:  571:
+        -:  572:    /** Gets the system time in milliseconds
+        -:  573:      *
+        -:  574:      * This must be implemented by the per-platform driver, which should
+        -:  575:      * use local services to return the current value of a running
+        -:  576:      * millisecond timer. Note that the value returned is only as accurate
+        -:  577:      * as the millisecond time of the underlying host system.
+        -:  578:      *
+        -:  579:      * @return Returns the system time as an unsigned long
+        -:  580:      */
+        -:  581:    static unsigned long getCurrentMillis();
+        -:  582:    //@}
+        -:  583:
+        -:  584:    /** @name Mutex Methods */
+        -:  585:    //@{
+        -:  586:
+        -:  587:    /** Factory method for creating MutexMgr object.
+        -:  588:      *
+        -:  589:      * This factory method creates a mutexmgr that will be used
+        -:  590:      * on the particular platform.
+        -:  591:      *
+        -:  592:      * @param manager The MemoryManager to use to allocate objects
+        -:  593:      */
+        -:  594:    static XMLMutexMgr* makeMutexMgr(MemoryManager* const manager);
+        -:  595:
+        -:  596:    /** Closes a mutex handle
+        -:  597:      *
+        -:  598:      * Each per-platform driver must implement this. Only it knows what
+        -:  599:      * the actual content of the passed mutex handle is.
+        -:  600:      *
+        -:  601:      * @param mtxHandle The mutex handle that you want to close
+        -:  602:      * @param manager The MemoryManager used to allocate the object
+        -:  603:      */
+        -:  604:    static void closeMutex(void* const mtxHandle, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+        -:  605:
+        -:  606:    /** Locks a mutex handle
+        -:  607:      *
+        -:  608:      * Each per-platform driver must implement this. Only it knows what
+        -:  609:      * the actual content of the passed mutex handle is.
+        -:  610:      *
+        -:  611:      * @param mtxHandle The mutex handle that you want to lock
+        -:  612:      */
+        -:  613:    static void lockMutex(void* const mtxHandle);
+        -:  614:
+        -:  615:    /** Make a new mutex
+        -:  616:      *
+        -:  617:      * Each per-platform driver must implement this. Only it knows what
+        -:  618:      * the actual content of the passed mutex handle is. The returned
+        -:  619:      * handle pointer will be eventually passed to closeMutex() which is
+        -:  620:      * also implemented by the platform driver.
+        -:  621:      *
+        -:  622:      * @param manager The MemoryManager to use to allocate objects
+        -:  623:      */
+        -:  624:    static void* makeMutex(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+        -:  625:
+        -:  626:    /** Unlocks a mutex
+        -:  627:      *
+        -:  628:      * Each per-platform driver must implement this. Only it knows what
+        -:  629:      * the actual content of the passed mutex handle is.
+        -:  630:      *
+        -:  631:      * Note that, since the underlying system synchronization services
+        -:  632:      * are used, Xerces cannot guarantee that lock/unlock operations are
+        -:  633:      * correctly enforced on a per-thread basis or that incorrect nesting
+        -:  634:      * of lock/unlock operations will be caught.
+        -:  635:      *
+        -:  636:      * @param mtxHandle The mutex handle that you want to unlock
+        -:  637:      */
+        -:  638:    static void unlockMutex(void* const mtxHandle);
+        -:  639:
+        -:  640:    //@}
+        -:  641:
+        -:  642:
+        -:  643:    /** @name External Message Support */
+        -:  644:    //@{
+        -:  645:
+        -:  646:    /** Loads the message set from among the available domains
+        -:  647:      *
+        -:  648:      * The returned object must be dynamically allocated and the caller
+        -:  649:      * becomes responsible for cleaning it up.
+        -:  650:      *
+        -:  651:      * @param msgDomain The message domain which you want to load
+        -:  652:      */
+        -:  653:    static XMLMsgLoader* loadMsgSet(const XMLCh* const msgDomain);
+        -:  654:
+        -:  655:    //@}
+        -:  656:
+        -:  657:
+        -:  658:    /** @name NEL Character Handling  */
+        -:  659:    //@{
+        -:  660:    /**
+        -:  661:      * This function enables the recognition of NEL(0x85) char and LSEP (0x2028) as newline chars
+        -:  662:      * which is disabled by default.
+        -:  663:      * It is only called once per process. Once it is set, any subsequent calls
+        -:  664:      * will result in exception being thrown.
+        -:  665:      *
+        -:  666:      * Note: 1. Turning this option on will make the parser non compliant to XML 1.0.
+        -:  667:      *       2. This option has no effect to document conforming to XML 1.1 compliant,
+        -:  668:      *          which always recognize these two chars (0x85 and 0x2028) as newline characters.
+        -:  669:      *
+        -:  670:      */
+        -:  671:    static void recognizeNEL(bool state
+        -:  672:        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
+        -:  673:
+        -:  674:    /**
+        -:  675:      * Return the value of fgNEL flag.
+        -:  676:      */
+        -:  677:    static bool isNELRecognized();
+        -:  678:    //@}
+        -:  679:
+        -:  680:    /** @name Strict IANA Encoding Checking */
+        -:  681:    //@{
+        -:  682:    /**
+        -:  683:      * This function enables/disables strict IANA encoding names checking.
+        -:  684:      *
+        -:  685:      * The strict checking is disabled by default.
+        -:  686:      *
+        -:  687:      * @param state If true, a strict IANA encoding name check is performed,
+        -:  688:      *              otherwise, no checking.
+        -:  689:      *
+        -:  690:      */
+        -:  691:    static void strictIANAEncoding(const bool state);
+        -:  692:
+        -:  693:    /**
+        -:  694:      * Returns whether a strict IANA encoding name check is enabled or
+        -:  695:      * disabled.
+        -:  696:      */
+        -:  697:    static bool isStrictIANAEncoding();
+        -:  698:    //@}
+        -:  699:
+        -:  700:    /**
+        -:  701:      * Aligns the specified pointer per platform block allocation
+        -:  702:      * requirements.
+        -:  703:      *
+        -:  704:      * The results of this function may be altered by defining
+        -:  705:      * XML_PLATFORM_NEW_BLOCK_ALIGNMENT.
+        -:  706:      */
+        -:  707:    static inline XMLSize_t alignPointerForNewBlockAllocation(XMLSize_t ptrSize);
+        -:  708:
+        -:  709:private :
+        -:  710:    // -----------------------------------------------------------------------
+        -:  711:    //  Unimplemented constructors and operators
+        -:  712:    // -----------------------------------------------------------------------
+        -:  713:    XMLPlatformUtils();
+        -:  714:
+        -:  715:    /** @name Private static methods */
+        -:  716:    //@{
+        -:  717:
+        -:  718:    /** Loads a message set from the available domains
+        -:  719:      *
+        -:  720:      * @param msgDomain The message domain containing the message to be
+        -:  721:      * loaded
+        -:  722:      */
+        -:  723:    static XMLMsgLoader* loadAMsgSet(const XMLCh* const msgDomain);
+        -:  724:
+        -:  725:    /** Creates a net accessor object.
+        -:  726:      *
+        -:  727:      * Each per-platform driver must implement this method. However,
+        -:  728:      * having a Net Accessor is optional and this method can return a
+        -:  729:      * null pointer if remote access via HTTP and FTP URLs is not required.
+        -:  730:      *
+        -:  731:      * @return An object derived from XMLNetAccessor. It must be dynamically
+        -:  732:      *         allocated, since it will be deleted later.
+        -:  733:      */
+        -:  734:    static XMLNetAccessor* makeNetAccessor();
+        -:  735:
+        -:  736:    /** Creates a Transcoding service
+        -:  737:      *
+        -:  738:      * Each per-platform driver must implement this method and return some
+        -:  739:      * derivative of the XMLTransService class. This object serves as the
+        -:  740:      * transcoder factory for this process. The object must be dynamically
+        -:  741:      * allocated and the caller is responsible for cleaning it up.
+        -:  742:      *
+        -:  743:      * @return A dynamically allocated object of some class derived from
+        -:  744:      *         the XMLTransService class.
+        -:  745:      */
+        -:  746:    static XMLTransService* makeTransService();
+        -:  747:
+        -:  748:    /** Search for sequence, slash dot dot slash
+        -:  749:      *
+        -:  750:      * @param srcPath the path to search
+        -:  751:      *
+        -:  752:      * @return   the position of the first occurrence of slash dot dot slash
+        -:  753:      *            -1 if no such sequence is found
+        -:  754:      */
+        -:  755:    static int  searchSlashDotDotSlash(XMLCh* const srcPath);
+        -:  756:
+        -:  757:    //@}
+        -:  758:
+        -:  759:    /** @name Private static methods */
+        -:  760:    //@{
+        -:  761:
+        -:  762:    /**
+        -:  763:      * Indicates whether the memory manager was supplied by the user
+        -:  764:      * or not. Users own the memory manager, and if none is supplied,
+        -:  765:      * Xerces uses a default one that it owns and is responsible for
+        -:  766:      * deleting in Terminate().
+        -:  767:      */
+        -:  768:    static bool fgMemMgrAdopted;
+        -:  769:
+        -:  770:    //@}
+        -:  771:};
+        -:  772:
+        -:  773:
+function _ZNK11xercesc_3_125XMLPlatformUtilsException7getTypeEv called 0 returned 0% blocks executed 0%
+function _ZNK11xercesc_3_125XMLPlatformUtilsException9duplicateEv called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_125XMLPlatformUtilsExceptionD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_125XMLPlatformUtilsExceptionD2Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_125XMLPlatformUtilsExceptionC2ERKS0_ called 0 returned 0% blocks executed 0%
+    #####:  774:MakeXMLException(XMLPlatformUtilsException, XMLUTIL_EXPORT)
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+call    3 never executed
+call    4 never executed
+call    5 never executed
+call    6 never executed
+call    7 never executed
+call    8 never executed
+branch  9 never executed
+branch 10 never executed
+call   11 never executed
+call   12 never executed
+        -:  775:
+        -:  776:
+        -:  777:// ---------------------------------------------------------------------------
+        -:  778://  XMLPlatformUtils: alignPointerForNewBlockAllocation
+        -:  779:// ---------------------------------------------------------------------------
+        -:  780://  Calculate alignment required by platform for a new
+        -:  781://  block allocation. We use this in our custom allocators
+        -:  782://  to ensure that returned blocks are properly aligned.
+        -:  783://  Note that, although this will take a pointer and return the position
+        -:  784://  at which it should be placed for correct alignment, in our code
+        -:  785://  we normally use XMLSize_t parameters to discover what the alignment
+        -:  786://  of header blocks should be.  Thus, if this is to be
+        -:  787://  used for the former purpose, to make compilers happy
+        -:  788://  some casting will be necessary - neilg.
+        -:  789://
+        -:  790://  Note: XML_PLATFORM_NEW_BLOCK_ALIGNMENT may be specified on a
+        -:  791://        per-architecture basis to dictate the alignment requirements
+        -:  792://        of the architecture. In the absense of this specification,
+        -:  793://        this routine guesses at the correct alignment value.
+        -:  794://
+        -:  795://        A XML_PLATFORM_NEW_BLOCK_ALIGNMENT value of zero is illegal.
+        -:  796://        If a platform requires absolutely no alignment, a value
+        -:  797://        of 1 should be specified ("align pointers on 1 byte boundaries").
+        -:  798://
+        -:  799:inline XMLSize_t
+        -:  800:XMLPlatformUtils::alignPointerForNewBlockAllocation(XMLSize_t ptrSize)
+        -:  801:{
+        -:  802:    //    Macro XML_PLATFORM_NEW_BLOCK_ALIGNMENT may be defined
+        -:  803:    //    as needed to dictate alignment requirements on a
+        -:  804:    //    per-architecture basis. In the absense of that we
+        -:  805:    //    take an educated guess.
+        -:  806:#ifdef XML_PLATFORM_NEW_BLOCK_ALIGNMENT
+        -:  807:    static const XMLSize_t alignment = XML_PLATFORM_NEW_BLOCK_ALIGNMENT;
+        -:  808:#else
+        -:  809:    static const XMLSize_t alignment = (sizeof(void*) >= sizeof(double)) ? sizeof(void*) : sizeof(double);
+        -:  810:#endif
+        -:  811:
+        -:  812:    //    Calculate current alignment of pointer
+        -:  813:    XMLSize_t current = ptrSize % alignment;
+        -:  814:
+        -:  815:    //    Adjust pointer alignment as needed
+        -:  816:    return (current == 0)
+        -:  817:         ? ptrSize
+        -:  818:         : (ptrSize + alignment - current);
+        -:  819:}
+        -:  820:
+        -:  821:
+        -:  822:
+        -:  823:// ---------------------------------------------------------------------------
+        -:  824://  XMLDeleter: Public Destructor
+        -:  825:// ---------------------------------------------------------------------------
+function _ZN11xercesc_3_110XMLDeleterD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_110XMLDeleterD2Ev called 0 returned 0% blocks executed 0%
+    #####:  826:inline XMLDeleter::~XMLDeleter()
+        -:  827:{
+    #####:  828:}
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:  829:
+        -:  830:// ---------------------------------------------------------------------------
+        -:  831://  XMLDeleter: Hidden constructors and operators
+        -:  832:// ---------------------------------------------------------------------------
+        -:  833:inline XMLDeleter::XMLDeleter()
+        -:  834:{
+        -:  835:}
+        -:  836:
+        -:  837:XERCES_CPP_NAMESPACE_END
+        -:  838:
+        -:  839:#endif

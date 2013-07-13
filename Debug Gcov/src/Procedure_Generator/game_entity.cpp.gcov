@@ -1,0 +1,47 @@
+        -:    0:Source:../src/Procedure_Generator/game_entity.cpp
+        -:    0:Graph:game_entity.gcno
+        -:    0:Data:game_entity.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*EOF*/
+        -:    2:/*EOF*/
+        -:    3:/*EOF*/
+        -:    4:/*EOF*/
+        -:    5:/*EOF*/
+        -:    6:/*EOF*/
+        -:    7:/*EOF*/
+        -:    8:/*EOF*/
+        -:    9:/*EOF*/
+        -:   10:/*EOF*/
+        -:   11:/*EOF*/
+        -:   12:/*EOF*/
+        -:   13:/*EOF*/
+        -:   14:/*EOF*/
+        -:   15:/*EOF*/
+        -:   16:/*EOF*/
+        -:   17:/*EOF*/
+        -:   18:/*EOF*/
+        -:   19:/*EOF*/
+        -:   20:/*EOF*/
+        -:   21:/*EOF*/
+        -:   22:/*EOF*/
+        -:   23:/*EOF*/
+        -:   24:/*EOF*/
+        -:   25:/*EOF*/
+        -:   26:/*EOF*/
+function _ZN10GameEntityC2EPKcPKSt4listISt4pairIS1_S1_ESaIS4_EE called 3 returned 100% blocks executed 100%
+        3:   27:/*EOF*/
+        3:   28:/*EOF*/
+        -:   29:/*EOF*/
+function _ZN10GameEntityD0Ev called 0 returned 0% blocks executed 0%
+function _ZN10GameEntityD2Ev called 0 returned 0% blocks executed 0%
+    #####:   30:/*EOF*/
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   31:/*EOF*/
+function _ZN10GameEntity13getEntityNameEv called 0 returned 0% blocks executed 0%
+    #####:   32:/*EOF*/
+    #####:   33:/*EOF*/

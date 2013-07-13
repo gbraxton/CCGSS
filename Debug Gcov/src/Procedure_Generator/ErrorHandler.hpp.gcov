@@ -1,0 +1,180 @@
+        -:    0:Source:/usr/local/include/xercesc/sax/ErrorHandler.hpp
+        -:    0:Graph:simulation_package_builder.gcno
+        -:    0:Data:simulation_package_builder.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: * 
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: * 
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: ErrorHandler.hpp 932887 2010-04-11 13:04:59Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_ERRORHANDLER_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_ERRORHANDLER_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XercesDefs.hpp>
+        -:   26:
+        -:   27:XERCES_CPP_NAMESPACE_BEGIN
+        -:   28:
+        -:   29:class SAXParseException;
+        -:   30:
+        -:   31:
+        -:   32:/**
+        -:   33:  * Basic interface for SAX error handlers.
+        -:   34:  *
+        -:   35:  * <p>If a SAX application needs to implement customized error
+        -:   36:  * handling, it must implement this interface and then register an
+        -:   37:  * instance with the SAX parser using the parser's setErrorHandler
+        -:   38:  * method.  The parser will then report all errors and warnings
+        -:   39:  * through this interface.</p>
+        -:   40:  *
+        -:   41:  * <p> The parser shall use this interface instead of throwing an
+        -:   42:  * exception: it is up to the application whether to throw an
+        -:   43:  * exception for different types of errors and warnings.  Note,
+        -:   44:  * however, that there is no requirement that the parser continue to
+        -:   45:  * provide useful information after a call to fatalError (in other
+        -:   46:  * words, a SAX driver class could catch an exception and report a
+        -:   47:  * fatalError).</p>
+        -:   48:  *
+        -:   49:  * <p>The HandlerBase class provides a default implementation of this
+        -:   50:  * interface, ignoring warnings and recoverable errors and throwing a
+        -:   51:  * SAXParseException for fatal errors.  An application may extend
+        -:   52:  * that class rather than implementing the complete interface
+        -:   53:  * itself.</p>
+        -:   54:  *
+        -:   55:  * @see Parser#setErrorHandler
+        -:   56:  * @see SAXParseException#SAXParseException
+        -:   57:  * @see HandlerBase#HandlerBase
+        -:   58:  */
+        -:   59:
+        -:   60:class SAX_EXPORT ErrorHandler
+        -:   61:{
+        -:   62:public:
+        -:   63:    /** @name Constructors and Destructor */
+        -:   64:    //@{
+        -:   65:    /** Default constructor */
+        -:   66:    ErrorHandler()
+        -:   67:    {
+        -:   68:    }
+        -:   69:
+        -:   70:    /** Destructor */
+function _ZN11xercesc_3_112ErrorHandlerD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_112ErrorHandlerD2Ev called 0 returned 0% blocks executed 0%
+    #####:   71:    virtual ~ErrorHandler()
+    #####:   72:    {
+    #####:   73:    }
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   74:    //@}
+        -:   75:
+        -:   76:    /** @name The error handler interface */
+        -:   77:    //@{
+        -:   78:   /**
+        -:   79:    * Receive notification of a warning.
+        -:   80:    *
+        -:   81:    * <p>SAX parsers will use this method to report conditions that
+        -:   82:    * are not errors or fatal errors as defined by the XML 1.0
+        -:   83:    * recommendation.  The default behaviour is to take no action.</p>
+        -:   84:    *
+        -:   85:    * <p>The SAX parser must continue to provide normal parsing events
+        -:   86:    * after invoking this method: it should still be possible for the
+        -:   87:    * application to process the document through to the end.</p>
+        -:   88:    *
+        -:   89:    * @param exc The warning information encapsulated in a
+        -:   90:    *            SAX parse exception.
+        -:   91:    * @exception SAXException Any SAX exception, possibly
+        -:   92:    *            wrapping another exception.
+        -:   93:    * @see SAXParseException#SAXParseException
+        -:   94:    */
+        -:   95:    virtual void warning(const SAXParseException& exc) = 0;
+        -:   96:
+        -:   97:  /**
+        -:   98:    * Receive notification of a recoverable error.
+        -:   99:    *
+        -:  100:    * <p>This corresponds to the definition of "error" in section 1.2
+        -:  101:    * of the W3C XML 1.0 Recommendation.  For example, a validating
+        -:  102:    * parser would use this callback to report the violation of a
+        -:  103:    * validity constraint.  The default behaviour is to take no
+        -:  104:    * action.</p>
+        -:  105:    *
+        -:  106:    * <p>The SAX parser must continue to provide normal parsing events
+        -:  107:    * after invoking this method: it should still be possible for the
+        -:  108:    * application to process the document through to the end.  If the
+        -:  109:    * application cannot do so, then the parser should report a fatal
+        -:  110:    * error even if the XML 1.0 recommendation does not require it to
+        -:  111:    * do so.</p>
+        -:  112:    *
+        -:  113:    * @param exc The error information encapsulated in a
+        -:  114:    *            SAX parse exception.
+        -:  115:    * @exception SAXException Any SAX exception, possibly
+        -:  116:    *            wrapping another exception.
+        -:  117:    * @see SAXParseException#SAXParseException
+        -:  118:    */
+        -:  119:    virtual void error(const SAXParseException& exc) = 0;
+        -:  120:
+        -:  121:  /**
+        -:  122:    * Receive notification of a non-recoverable error.
+        -:  123:    *
+        -:  124:    * <p>This corresponds to the definition of "fatal error" in
+        -:  125:    * section 1.2 of the W3C XML 1.0 Recommendation.  For example, a
+        -:  126:    * parser would use this callback to report the violation of a
+        -:  127:    * well-formedness constraint.</p>
+        -:  128:    *
+        -:  129:    * <p>The application must assume that the document is unusable
+        -:  130:    * after the parser has invoked this method, and should continue
+        -:  131:    * (if at all) only for the sake of collecting addition error
+        -:  132:    * messages: in fact, SAX parsers are free to stop reporting any
+        -:  133:    * other events once this method has been invoked.</p>
+        -:  134:    *
+        -:  135:    * @param exc The error information encapsulated in a
+        -:  136:    *            SAX parse exception.
+        -:  137:    * @exception SAXException Any SAX exception, possibly
+        -:  138:    *            wrapping another exception.
+        -:  139:    * @see SAXParseException#SAXParseException
+        -:  140:    */
+        -:  141:    virtual void fatalError(const SAXParseException& exc) = 0;
+        -:  142:
+        -:  143:    /**
+        -:  144:    * Reset the Error handler object on its reuse
+        -:  145:    *
+        -:  146:    * <p>This method helps in reseting the Error handler object
+        -:  147:    * implementation defaults each time the Error handler is begun.</p>
+        -:  148:    *
+        -:  149:    */
+        -:  150:    virtual void resetErrors() = 0;
+        -:  151:
+        -:  152:
+        -:  153:    //@}
+        -:  154:
+        -:  155:private :
+        -:  156:    /* Unimplemented constructors and operators */
+        -:  157:
+        -:  158:    /* Copy constructor */
+        -:  159:    ErrorHandler(const ErrorHandler&);
+        -:  160:
+        -:  161:    /* Assignment operator */
+        -:  162:    ErrorHandler& operator=(const ErrorHandler&);
+        -:  163:
+        -:  164:};
+        -:  165:
+        -:  166:XERCES_CPP_NAMESPACE_END
+        -:  167:
+        -:  168:#endif

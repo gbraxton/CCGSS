@@ -1,0 +1,282 @@
+        -:    0:Source:/usr/local/include/xercesc/util/XMLException.hpp
+        -:    0:Graph:simulation_package_builder.gcno
+        -:    0:Data:simulation_package_builder.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: *
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: *
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: XMLException.hpp 673960 2008-07-04 08:50:12Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_XMLEXCEPTION_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_XMLEXCEPTION_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XercesDefs.hpp>
+        -:   26:#include <xercesc/util/XMemory.hpp>
+        -:   27:#include <xercesc/util/XMLExceptMsgs.hpp>
+        -:   28:#include <xercesc/util/XMLUni.hpp>
+        -:   29:#include <xercesc/framework/XMLErrorReporter.hpp>
+        -:   30:
+        -:   31:XERCES_CPP_NAMESPACE_BEGIN
+        -:   32:
+        -:   33:// ---------------------------------------------------------------------------
+        -:   34://  This is the base class from which all the XML parser exceptions are
+        -:   35://  derived. The virtual interface is very simple and most of the functionality
+        -:   36://  is in this class.
+        -:   37://
+        -:   38://  Because all derivatives are EXACTLY the same except for the static
+        -:   39://  string that is used to hold the name of the class, a macro is provided
+        -:   40://  below via which they are all created.
+        -:   41:// ---------------------------------------------------------------------------
+        -:   42:class XMLUTIL_EXPORT XMLException : public XMemory
+        -:   43:{
+        -:   44:public:
+        -:   45:    // -----------------------------------------------------------------------
+        -:   46:    //  Virtual Destructor
+        -:   47:    // -----------------------------------------------------------------------
+        -:   48:    virtual ~XMLException();
+        -:   49:
+        -:   50:
+        -:   51:    // -----------------------------------------------------------------------
+        -:   52:    //  The XML exception virtual interface
+        -:   53:    // -----------------------------------------------------------------------
+        -:   54:    virtual const XMLCh* getType() const = 0;
+        -:   55:
+        -:   56:
+        -:   57:    // -----------------------------------------------------------------------
+        -:   58:    //  Getter methods
+        -:   59:    // -----------------------------------------------------------------------
+        -:   60:    XMLExcepts::Codes getCode() const;
+        -:   61:    const XMLCh* getMessage() const;
+        -:   62:    const char* getSrcFile() const;
+        -:   63:    XMLFileLoc getSrcLine() const;
+        -:   64:    XMLErrorReporter::ErrTypes getErrorType() const;
+        -:   65:
+        -:   66:
+        -:   67:    // -----------------------------------------------------------------------
+        -:   68:    //  Setter methods
+        -:   69:    // -----------------------------------------------------------------------
+        -:   70:    void setPosition(const char* const file, const XMLFileLoc line);
+        -:   71:
+        -:   72:
+        -:   73:    // -----------------------------------------------------------------------
+        -:   74:    //  Hidden constructors and operators
+        -:   75:    //
+        -:   76:    //  NOTE:   Technically, these should be protected, since this is a
+        -:   77:    //          base class that is never used directly. However, VC++ 6.0 will
+        -:   78:    //          fail to catch via a reference to base class if the ctors are
+        -:   79:    //          not public!! This seems to have been caused by the install
+        -:   80:    //          of IE 5.0.
+        -:   81:    // -----------------------------------------------------------------------
+        -:   82:    XMLException();
+        -:   83:    XMLException(const char* const srcFile, const XMLFileLoc srcLine, MemoryManager* const memoryManager = 0);
+        -:   84:    XMLException(const XMLException& toCopy);
+        -:   85:    XMLException& operator=(const XMLException& toAssign);
+        -:   86:
+        -:   87:protected :
+        -:   88:    // -----------------------------------------------------------------------
+        -:   89:    //  Protected methods
+        -:   90:    // -----------------------------------------------------------------------
+        -:   91:    void loadExceptText
+        -:   92:    (
+        -:   93:        const   XMLExcepts::Codes toLoad
+        -:   94:    );
+        -:   95:    void loadExceptText
+        -:   96:    (
+        -:   97:        const   XMLExcepts::Codes toLoad
+        -:   98:        , const XMLCh* const        text1
+        -:   99:        , const XMLCh* const        text2 = 0
+        -:  100:        , const XMLCh* const        text3 = 0
+        -:  101:        , const XMLCh* const        text4 = 0
+        -:  102:    );
+        -:  103:    void loadExceptText
+        -:  104:    (
+        -:  105:        const   XMLExcepts::Codes toLoad
+        -:  106:        , const char* const         text1
+        -:  107:        , const char* const         text2 = 0
+        -:  108:        , const char* const         text3 = 0
+        -:  109:        , const char* const         text4 = 0
+        -:  110:    );
+        -:  111:
+        -:  112:
+        -:  113:private :
+        -:  114:    // -----------------------------------------------------------------------
+        -:  115:    //  Data members
+        -:  116:    //
+        -:  117:    //  fCode
+        -:  118:    //      The error code that this exception represents.
+        -:  119:    //
+        -:  120:    //  fSrcFile
+        -:  121:    //  fSrcLine
+        -:  122:    //      These are the file and line information from the source where the
+        -:  123:    //      exception was thrown from.
+        -:  124:    //
+        -:  125:    //  fMsg
+        -:  126:    //      The loaded message text for this exception.
+        -:  127:    // -----------------------------------------------------------------------
+        -:  128:    XMLExcepts::Codes       fCode;
+        -:  129:    char*                   fSrcFile;
+        -:  130:    XMLFileLoc              fSrcLine;
+        -:  131:    XMLCh*                  fMsg;
+        -:  132:
+        -:  133:protected:
+        -:  134:    MemoryManager*          fMemoryManager;
+        -:  135:};
+        -:  136:
+        -:  137:// ---------------------------------------------------------------------------
+        -:  138://  XMLException: Getter methods
+        -:  139:// ---------------------------------------------------------------------------
+        -:  140:inline XMLExcepts::Codes XMLException::getCode() const
+        -:  141:{
+        -:  142:    return fCode;
+        -:  143:}
+        -:  144:
+function _ZNK11xercesc_3_112XMLException10getMessageEv called 0 returned 0% blocks executed 0%
+    #####:  145:inline const XMLCh* XMLException::getMessage() const
+        -:  146:{
+    #####:  147:    return fMsg;
+        -:  148:}
+        -:  149:
+        -:  150:inline const char* XMLException::getSrcFile() const
+        -:  151:{
+        -:  152:    if (!fSrcFile)
+        -:  153:        return "";
+        -:  154:    return fSrcFile;
+        -:  155:}
+        -:  156:
+        -:  157:inline XMLFileLoc XMLException::getSrcLine() const
+        -:  158:{
+        -:  159:    return fSrcLine;
+        -:  160:}
+        -:  161:
+        -:  162:inline XMLErrorReporter::ErrTypes XMLException::getErrorType() const
+        -:  163:{
+        -:  164:   if ((fCode >= XMLExcepts::W_LowBounds) && (fCode <= XMLExcepts::W_HighBounds))
+        -:  165:       return XMLErrorReporter::ErrType_Warning;
+        -:  166:   else if ((fCode >= XMLExcepts::F_LowBounds) && (fCode <= XMLExcepts::F_HighBounds))
+        -:  167:        return XMLErrorReporter::ErrType_Fatal;
+        -:  168:   else if ((fCode >= XMLExcepts::E_LowBounds) && (fCode <= XMLExcepts::E_HighBounds))
+        -:  169:        return XMLErrorReporter::ErrType_Error;
+        -:  170:   return XMLErrorReporter::ErrTypes_Unknown;
+        -:  171:}
+        -:  172:
+        -:  173:// ---------------------------------------------------------------------------
+        -:  174://  This macro is used to create derived classes. They are all identical
+        -:  175://  except the name of the exception, so it crazy to type them in over and
+        -:  176://  over.
+        -:  177:// ---------------------------------------------------------------------------
+        -:  178:#define MakeXMLException(theType, expKeyword) \
+        -:  179:class expKeyword theType : public XMLException \
+        -:  180:{ \
+        -:  181:public: \
+        -:  182: \
+        -:  183:    theType(const   char* const         srcFile \
+        -:  184:            , const XMLFileLoc          srcLine \
+        -:  185:            , const XMLExcepts::Codes toThrow \
+        -:  186:            , MemoryManager*            memoryManager = 0) : \
+        -:  187:        XMLException(srcFile, srcLine, memoryManager) \
+        -:  188:    { \
+        -:  189:        loadExceptText(toThrow); \
+        -:  190:    } \
+        -:  191: \
+        -:  192:    theType(const theType& toCopy) : \
+        -:  193: \
+        -:  194:        XMLException(toCopy) \
+        -:  195:    { \
+        -:  196:    } \
+        -:  197:  \
+        -:  198:    theType(const   char* const         srcFile \
+        -:  199:            , const XMLFileLoc          srcLine \
+        -:  200:            , const XMLExcepts::Codes   toThrow \
+        -:  201:            , const XMLCh* const        text1 \
+        -:  202:            , const XMLCh* const        text2 = 0 \
+        -:  203:            , const XMLCh* const        text3 = 0 \
+        -:  204:            , const XMLCh* const        text4 = 0 \
+        -:  205:            , MemoryManager*            memoryManager = 0) : \
+        -:  206:        XMLException(srcFile, srcLine, memoryManager) \
+        -:  207:    { \
+        -:  208:        loadExceptText(toThrow, text1, text2, text3, text4); \
+        -:  209:    } \
+        -:  210: \
+        -:  211:    theType(const   char* const         srcFile \
+        -:  212:            , const XMLFileLoc          srcLine \
+        -:  213:            , const XMLExcepts::Codes   toThrow \
+        -:  214:            , const char* const         text1 \
+        -:  215:            , const char* const         text2 = 0 \
+        -:  216:            , const char* const         text3 = 0 \
+        -:  217:            , const char* const         text4 = 0 \
+        -:  218:            , MemoryManager*            memoryManager = 0) : \
+        -:  219:        XMLException(srcFile, srcLine, memoryManager) \
+        -:  220:    { \
+        -:  221:        loadExceptText(toThrow, text1, text2, text3, text4); \
+        -:  222:    } \
+        -:  223: \
+        -:  224:    virtual ~theType() {} \
+        -:  225: \
+        -:  226:    theType& operator=(const theType& toAssign) \
+        -:  227:    { \
+        -:  228:        XMLException::operator=(toAssign); \
+        -:  229:        return *this; \
+        -:  230:    } \
+        -:  231: \
+        -:  232:    virtual XMLException* duplicate() const \
+        -:  233:    { \
+        -:  234:        return new (fMemoryManager) theType(*this); \
+        -:  235:    } \
+        -:  236: \
+        -:  237:    virtual const XMLCh* getType() const \
+        -:  238:    { \
+        -:  239:        return XMLUni::fg##theType##_Name; \
+        -:  240:    } \
+        -:  241: \
+        -:  242:private : \
+        -:  243:    theType(); \
+        -:  244:};
+        -:  245:
+        -:  246:
+        -:  247:
+        -:  248:// ---------------------------------------------------------------------------
+        -:  249://  This macros is used to actually throw an exception. It is used in order
+        -:  250://  to make sure that source code line/col info is stored correctly, and to
+        -:  251://  give flexibility for other stuff in the future.
+        -:  252:// ---------------------------------------------------------------------------
+        -:  253:
+        -:  254:#define ThrowXML(type,code) throw type(__FILE__, __LINE__, code)
+        -:  255:
+        -:  256:#define ThrowXML1(type,code,p1) throw type(__FILE__, __LINE__, code, p1)
+        -:  257:
+        -:  258:#define ThrowXML2(type,code,p1,p2) throw type(__FILE__, __LINE__, code, p1, p2)
+        -:  259:
+        -:  260:#define ThrowXML3(type,code,p1,p2,p3) throw type(__FILE__, __LINE__, code, p1, p2, p3)
+        -:  261:
+        -:  262:#define ThrowXML4(type,code,p1,p2,p3,p4) throw type(__FILE__, __LINE__, code, p1, p2, p3, p4)
+        -:  263:
+        -:  264:#define ThrowXMLwithMemMgr(type,code,memMgr) throw type(__FILE__, __LINE__, code, memMgr)
+        -:  265:
+        -:  266:#define ThrowXMLwithMemMgr1(type,code,p1,memMgr) throw type(__FILE__, __LINE__, code, p1, 0, 0, 0, memMgr)
+        -:  267:
+        -:  268:#define ThrowXMLwithMemMgr2(type,code,p1,p2,memMgr) throw type(__FILE__, __LINE__, code, p1, p2, 0, 0, memMgr)
+        -:  269:
+        -:  270:#define ThrowXMLwithMemMgr3(type,code,p1,p2,p3,memMgr) throw type(__FILE__, __LINE__, code, p1, p2, p3, 0, memMgr)
+        -:  271:
+        -:  272:#define ThrowXMLwithMemMgr4(type,code,p1,p2,p3,p4,memMgr) throw type(__FILE__, __LINE__, code, p1, p2, p3, p4, memMgr)
+        -:  273:
+        -:  274:XERCES_CPP_NAMESPACE_END
+        -:  275:
+        -:  276:#endif

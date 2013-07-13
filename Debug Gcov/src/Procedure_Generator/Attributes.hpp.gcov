@@ -1,0 +1,325 @@
+        -:    0:Source:/usr/local/include/xercesc/sax2/Attributes.hpp
+        -:    0:Graph:simulation_package_builder.gcno
+        -:    0:Data:simulation_package_builder.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: *
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: *
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: Attributes.hpp 932887 2010-04-11 13:04:59Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_ATTRIBUTES_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_ATTRIBUTES_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XercesDefs.hpp>
+        -:   26:
+        -:   27:XERCES_CPP_NAMESPACE_BEGIN
+        -:   28:
+        -:   29:/**
+        -:   30:  * Interface for an element's attribute specifications.
+        -:   31:  *
+        -:   32:  * The SAX2 parser implements this interface and passes an instance
+        -:   33:  * to the SAX2 application as the last argument of each startElement
+        -:   34:  * event.
+        -:   35:  *
+        -:   36:  * The instance provided will return valid results only during the
+        -:   37:  * scope of the startElement invocation (to save it for future
+        -:   38:  * use, the application must make a copy: the AttributesImpl
+        -:   39:  * helper class provides a convenient constructor for doing so).
+        -:   40:  *
+        -:   41:  * An Attributes includes only attributes that have been
+        -:   42:  * specified or defaulted: \#IMPLIED attributes will not be included.
+        -:   43:  *
+        -:   44:  * There are two ways for the SAX application to obtain information
+        -:   45:  * from the Attributes.  First, it can iterate through the entire
+        -:   46:  * list:
+        -:   47:  *
+        -:   48:  * <code>
+        -:   49:  * public void startElement (String uri, String localpart, String qName, Attributes atts) {<br>
+        -:   50:  * &nbsp;for (XMLSize_t i = 0; i < atts.getLength(); i++) {<br>
+        -:   51:  * &nbsp;&nbsp;String Qname = atts.getQName(i);<br>
+        -:   52:  * &nbsp;&nbsp;String URI   = atts.getURI(i)<br>
+        -:   53:  * &nbsp;&nbsp;String local = atts.GetLocalName(i)<br>
+        -:   54:  * &nbsp;&nbsp;String type  = atts.getType(i);<br>
+        -:   55:  * &nbsp;&nbsp;String value = atts.getValue(i);<br>
+        -:   56:  * &nbsp;&nbsp;[...]<br>
+        -:   57:  * &nbsp;}<br>
+        -:   58:  * }
+        -:   59:  * </code>
+        -:   60:  *
+        -:   61:  * (Note that the result of getLength() will be zero if there
+        -:   62:  * are no attributes.)
+        -:   63:  *
+        -:   64:  * As an alternative, the application can request the value or
+        -:   65:  * type of specific attributes:
+        -:   66:  *
+        -:   67:  * <code>
+        -:   68:  * public void startElement (String uri, String localpart, String qName, Attributes atts) {<br>
+        -:   69:  * &nbsp;String identifier = atts.getValue("id");<br>
+        -:   70:  * &nbsp;String label = atts.getValue("label");<br>
+        -:   71:  * &nbsp;[...]<br>
+        -:   72:  * }
+        -:   73:  * </code>
+        -:   74:  *
+        -:   75:  * The AttributesImpl helper class provides a convenience
+        -:   76:  * implementation for use by parser or application writers.
+        -:   77:  *
+        -:   78:  * @see Sax2DocumentHandler#startElement
+        -:   79:  * @see AttributesImpl#AttributesImpl
+        -:   80:  */
+        -:   81:
+        -:   82:class SAX2_EXPORT Attributes
+        -:   83:{
+        -:   84:public:
+        -:   85:    // -----------------------------------------------------------------------
+        -:   86:    //  Constructors and Destructor
+        -:   87:    // -----------------------------------------------------------------------
+        -:   88:    /** @name Constructors and Destructor */
+        -:   89:    //@{
+        -:   90:    /** Default constructor */
+        -:   91:    Attributes()
+        -:   92:    {
+        -:   93:    }
+        -:   94:
+        -:   95:    /** Destructor */
+function _ZN11xercesc_3_110AttributesD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_110AttributesD2Ev called 0 returned 0% blocks executed 0%
+    #####:   96:    virtual ~Attributes()
+    #####:   97:    {
+    #####:   98:    }
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   99:    //@}
+        -:  100:
+        -:  101:    /** @name The virtual attribute list interface */
+        -:  102:    //@{
+        -:  103:  /**
+        -:  104:    * Return the number of attributes in this list.
+        -:  105:    *
+        -:  106:    * The SAX parser may provide attributes in any
+        -:  107:    * arbitrary order, regardless of the order in which they were
+        -:  108:    * declared or specified.  The number of attributes may be
+        -:  109:    * zero.
+        -:  110:    *
+        -:  111:    * @return The number of attributes in the list.
+        -:  112:    */
+        -:  113:    virtual XMLSize_t getLength() const = 0;
+        -:  114:
+        -:  115:  /**
+        -:  116:    * Return the namespace URI of an attribute in this list (by position).
+        -:  117:    *
+        -:  118:    * The QNames must be unique: the SAX parser shall not include the
+        -:  119:    * same attribute twice.  Attributes without values (those declared
+        -:  120:    * \#IMPLIED without a value specified in the start tag) will be
+        -:  121:    * omitted from the list.
+        -:  122:    *
+        -:  123:    * @param index The index of the attribute in the list (starting at 0).
+        -:  124:    * @return The URI of the indexed attribute, or null
+        -:  125:    *         if the index is out of range.
+        -:  126:    * @see #getLength
+        -:  127:    */
+        -:  128:    virtual const XMLCh* getURI(const XMLSize_t index) const = 0;
+        -:  129:
+        -:  130:  /**
+        -:  131:    * Return the local name of an attribute in this list (by position).
+        -:  132:    *
+        -:  133:    * The QNames must be unique: the SAX parser shall not include the
+        -:  134:    * same attribute twice.  Attributes without values (those declared
+        -:  135:    * \#IMPLIED without a value specified in the start tag) will be
+        -:  136:    * omitted from the list.
+        -:  137:    *
+        -:  138:    * @param index The index of the attribute in the list (starting at 0).
+        -:  139:    * @return The local name of the indexed attribute, or null
+        -:  140:    *         if the index is out of range.
+        -:  141:    * @see #getLength
+        -:  142:    */
+        -:  143:    virtual const XMLCh* getLocalName(const XMLSize_t index) const = 0;
+        -:  144:
+        -:  145:  /**
+        -:  146:    * Return the qName of an attribute in this list (by position).
+        -:  147:    *
+        -:  148:    * The QNames must be unique: the SAX parser shall not include the
+        -:  149:    * same attribute twice.  Attributes without values (those declared
+        -:  150:    * \#IMPLIED without a value specified in the start tag) will be
+        -:  151:    * omitted from the list.
+        -:  152:    *
+        -:  153:    * @param index The index of the attribute in the list (starting at 0).
+        -:  154:    * @return The qName of the indexed attribute, or null
+        -:  155:    *         if the index is out of range.
+        -:  156:    * @see #getLength
+        -:  157:    */
+        -:  158:    virtual const XMLCh* getQName(const XMLSize_t index) const = 0;
+        -:  159:
+        -:  160:  /**
+        -:  161:    * Return the type of an attribute in the list (by position).
+        -:  162:    *
+        -:  163:    * The attribute type is one of the strings "CDATA", "ID",
+        -:  164:    * "IDREF", "IDREFS", "NMTOKEN", "NMTOKENS", "ENTITY", "ENTITIES",
+        -:  165:    * or "NOTATION" (always in upper case).
+        -:  166:    *
+        -:  167:    * If the parser has not read a declaration for the attribute,
+        -:  168:    * or if the parser does not report attribute types, then it must
+        -:  169:    * return the value "CDATA" as stated in the XML 1.0 Recommendation
+        -:  170:    * (clause 3.3.3, "Attribute-Value Normalization").
+        -:  171:    *
+        -:  172:    * For an enumerated attribute that is not a notation, the
+        -:  173:    * parser will report the type as "NMTOKEN".
+        -:  174:    *
+        -:  175:    * @param index The index of the attribute in the list (starting at 0).
+        -:  176:    * @return The attribute type as a string, or
+        -:  177:    *         null if the index is out of range.
+        -:  178:    * @see #getLength
+        -:  179:    * @see #getType
+        -:  180:    */
+        -:  181:    virtual const XMLCh* getType(const XMLSize_t index) const = 0;
+        -:  182:
+        -:  183:  /**
+        -:  184:    * Return the value of an attribute in the list (by position).
+        -:  185:    *
+        -:  186:    * If the attribute value is a list of tokens (IDREFS,
+        -:  187:    * ENTITIES, or NMTOKENS), the tokens will be concatenated
+        -:  188:    * into a single string separated by whitespace.
+        -:  189:    *
+        -:  190:    * @param index The index of the attribute in the list (starting at 0).
+        -:  191:    * @return The attribute value as a string, or
+        -:  192:    *         null if the index is out of range.
+        -:  193:    * @see #getLength
+        -:  194:    * @see #getValue
+        -:  195:    */
+        -:  196:    virtual const XMLCh* getValue(const XMLSize_t index) const = 0;
+        -:  197:
+        -:  198:    ////////////////////////////////////////////////////////////////////
+        -:  199:    // Name-based query.
+        -:  200:    ////////////////////////////////////////////////////////////////////
+        -:  201:
+        -:  202:   /**
+        -:  203:     * Look up the index of an attribute by Namespace name. Non-standard
+        -:  204:     * extension.
+        -:  205:     *
+        -:  206:     * @param uri The Namespace URI, or the empty string if
+        -:  207:     *        the name has no Namespace URI.
+        -:  208:     * @param localPart The attribute's local name.
+        -:  209:     * @param index Reference to the variable where the index will be stored.
+        -:  210:     * @return true if the attribute is found and false otherwise.
+        -:  211:     */
+        -:  212:    virtual bool getIndex(const XMLCh* const uri,
+        -:  213:                          const XMLCh* const localPart,
+        -:  214:                          XMLSize_t& index) const = 0 ;
+        -:  215:
+        -:  216:   /**
+        -:  217:     * Look up the index of an attribute by Namespace name.
+        -:  218:     *
+        -:  219:     * @param uri The Namespace URI, or the empty string if
+        -:  220:     *        the name has no Namespace URI.
+        -:  221:     * @param localPart The attribute's local name.
+        -:  222:     * @return The index of the attribute, or -1 if it does not
+        -:  223:     *         appear in the list.
+        -:  224:     */
+        -:  225:    virtual int getIndex(const XMLCh* const uri,
+        -:  226:                         const XMLCh* const localPart ) const = 0 ;
+        -:  227:
+        -:  228:    /**
+        -:  229:     * Look up the index of an attribute by XML 1.0 qualified name.
+        -:  230:     * Non-standard extension.
+        -:  231:     *
+        -:  232:     * @param qName The qualified (prefixed) name.
+        -:  233:     * @param index Reference to the variable where the index will be stored.
+        -:  234:     * @return true if the attribute is found and false otherwise.
+        -:  235:     */
+        -:  236:    virtual bool getIndex(const XMLCh* const qName,
+        -:  237:                          XMLSize_t& index) const = 0 ;
+        -:  238:
+        -:  239:   /**
+        -:  240:     * Look up the index of an attribute by XML 1.0 qualified name.
+        -:  241:     *
+        -:  242:     * @param qName The qualified (prefixed) name.
+        -:  243:     * @return The index of the attribute, or -1 if it does not
+        -:  244:     *         appear in the list.
+        -:  245:     */
+        -:  246:    virtual int getIndex(const XMLCh* const qName ) const = 0 ;
+        -:  247:
+        -:  248:   /**
+        -:  249:     * Look up an attribute's type by Namespace name.
+        -:  250:     *
+        -:  251:     * <p>See #getType for a description of the possible types.</p>
+        -:  252:     *
+        -:  253:     * @param uri The Namespace URI, or the empty String if the
+        -:  254:     *        name has no Namespace URI.
+        -:  255:     * @param localPart The local name of the attribute.
+        -:  256:     * @return The attribute type as a string, or null if the
+        -:  257:     *         attribute is not in the list or if Namespace
+        -:  258:     *         processing is not being performed.
+        -:  259:     */
+        -:  260:    virtual const XMLCh* getType(const XMLCh* const uri,
+        -:  261:                                 const XMLCh* const localPart ) const = 0 ;
+        -:  262:
+        -:  263:   /**
+        -:  264:     * Look up an attribute's type by XML 1.0 qualified name.
+        -:  265:     *
+        -:  266:     * <p>See #getType for a description of the possible types.</p>
+        -:  267:     *
+        -:  268:     * @param qName The XML 1.0 qualified name.
+        -:  269:     * @return The attribute type as a string, or null if the
+        -:  270:     *         attribute is not in the list or if qualified names
+        -:  271:     *         are not available.
+        -:  272:     */
+        -:  273:    virtual const XMLCh* getType(const XMLCh* const qName) const = 0;
+        -:  274:
+        -:  275:   /**
+        -:  276:     * Look up an attribute's value by Namespace name.
+        -:  277:     *
+        -:  278:     * <p>See #getValue for a description of the possible values.</p>
+        -:  279:     *
+        -:  280:     * @param uri The Namespace URI, or the empty String if the
+        -:  281:     *        name has no Namespace URI.
+        -:  282:     * @param localPart The local name of the attribute.
+        -:  283:     * @return The attribute value as a string, or null if the
+        -:  284:     *         attribute is not in the list.
+        -:  285:     */
+        -:  286:    virtual const XMLCh* getValue(const XMLCh* const uri, const XMLCh* const localPart ) const = 0 ;
+        -:  287:
+        -:  288:   /**
+        -:  289:     * Look up an attribute's value by XML 1.0 qualified name.
+        -:  290:     *
+        -:  291:     * <p>See #getValue for a description of the possible values.</p>
+        -:  292:     *
+        -:  293:     * @param qName The XML 1.0 qualified name.
+        -:  294:     * @return The attribute value as a string, or null if the
+        -:  295:     *         attribute is not in the list or if qualified names
+        -:  296:     *         are not available.
+        -:  297:     */
+        -:  298:    virtual const XMLCh* getValue(const XMLCh* const qName) const = 0;
+        -:  299:
+        -:  300:    //@}
+        -:  301:
+        -:  302:private :
+        -:  303:    /* Constructors and operators */
+        -:  304:    /* Copy constructor */
+        -:  305:    Attributes(const Attributes&);
+        -:  306:    /* Assignment operator */
+        -:  307:    Attributes& operator=(const Attributes&);
+        -:  308:
+        -:  309:};
+        -:  310:
+        -:  311:XERCES_CPP_NAMESPACE_END
+        -:  312:
+        -:  313:#endif

@@ -1,0 +1,293 @@
+        -:    0:Source:/usr/local/include/xercesc/framework/XMLBuffer.hpp
+        -:    0:Graph:Test.gcno
+        -:    0:Data:Test.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: *
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: *
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: XMLBuffer.hpp 932887 2010-04-11 13:04:59Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_XMLBUFFER_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_XMLBUFFER_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XMemory.hpp>
+        -:   26:#include <xercesc/util/PlatformUtils.hpp>
+        -:   27:#include <xercesc/framework/MemoryManager.hpp>
+        -:   28:#include <string.h>
+        -:   29:
+        -:   30:XERCES_CPP_NAMESPACE_BEGIN
+        -:   31:
+        -:   32:class XMLBufferFullHandler;
+        -:   33:
+        -:   34:/**
+        -:   35: *  XMLBuffer is a lightweight, expandable Unicode text buffer. Since XML is
+        -:   36: *  inherently theoretically unbounded in terms of the sizes of things, we
+        -:   37: *  very often need to have expandable buffers. The primary concern here is
+        -:   38: *  that appends of characters and other buffers or strings be very fast, so
+        -:   39: *  it always maintains the current buffer size.
+        -:   40: *
+        -:   41: *  The buffer is not null terminated until some asks to see the raw buffer
+        -:   42: *  contents. This also avoids overhead during append operations.
+        -:   43: */
+        -:   44:class XMLPARSER_EXPORT XMLBuffer : public XMemory
+        -:   45:{
+        -:   46:public :
+        -:   47:    // -----------------------------------------------------------------------
+        -:   48:    //  Constructors and Destructor
+        -:   49:    // -----------------------------------------------------------------------
+        -:   50:
+        -:   51:    /** @name Constructor */
+        -:   52:    //@{
+        -:   53:    XMLBuffer(const XMLSize_t capacity = 1023
+        -:   54:              , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
+        -:   55:
+        -:   56:        fIndex(0)
+        -:   57:        , fCapacity(capacity)
+        -:   58:        , fFullSize(0)
+        -:   59:        , fUsed(false)
+        -:   60:        , fMemoryManager(manager)
+        -:   61:        , fFullHandler(0)
+        -:   62:        , fBuffer(0)
+        -:   63:    {
+        -:   64:        // Buffer is one larger than capacity, to allow for zero term
+        -:   65:        fBuffer = (XMLCh*) manager->allocate((capacity+1) * sizeof(XMLCh)); //new XMLCh[fCapacity+1];
+        -:   66:
+        -:   67:        // Keep it null terminated
+        -:   68:        fBuffer[0] = XMLCh(0);
+        -:   69:    }
+        -:   70:    //@}
+        -:   71:
+        -:   72:    /** @name Destructor */
+        -:   73:    //@{
+        -:   74:    ~XMLBuffer()
+        -:   75:    {
+        -:   76:        fMemoryManager->deallocate(fBuffer); //delete [] fBuffer;
+        -:   77:    }
+        -:   78:    //@}
+        -:   79:
+        -:   80:    // -----------------------------------------------------------------------
+        -:   81:    //  Buffer Full Handler Management
+        -:   82:    // -----------------------------------------------------------------------
+        -:   83:    void setFullHandler(XMLBufferFullHandler* handler, const XMLSize_t fullSize)
+        -:   84:    {
+        -:   85:        if (handler && fullSize) {
+        -:   86:            fFullHandler = handler;
+        -:   87:            fFullSize = fullSize;
+        -:   88:
+        -:   89:            // Need to consider the case that the fullsize is less than the current capacity.
+        -:   90:            // For example, say fullSize = 100 and fCapacity is 1023 (the default).
+        -:   91:            // If the fIndex is less than the fullSize, then no problem.  We can just carry
+        -:   92:            // on by resetting fCapacity to fullsize and proceed business as usual.
+        -:   93:            // If the fIndex is already bigger than the fullSize then we call ensureCapacity
+        -:   94:            // to see if it can handle emptying the current buffer (it will throw an
+        -:   95:            // exception if it can't).
+        -:   96:            if (fullSize < fCapacity) {
+        -:   97:                fCapacity = fullSize;
+        -:   98:                if (fIndex >= fullSize) {
+        -:   99:                    ensureCapacity(0);
+        -:  100:                }
+        -:  101:            }
+        -:  102:        }
+        -:  103:        else {
+        -:  104:            // reset fFullHandler to zero because setFullHandler had bad input
+        -:  105:            fFullHandler = 0;
+        -:  106:        }
+        -:  107:    }
+        -:  108:
+        -:  109:    // -----------------------------------------------------------------------
+        -:  110:    //  Buffer Management
+        -:  111:    // -----------------------------------------------------------------------
+        -:  112:    void append(const XMLCh toAppend)
+        -:  113:    {
+        -:  114:        // Put in char and bump the index
+        -:  115:        if (fIndex == fCapacity)
+        -:  116:            ensureCapacity(1);
+        -:  117:        fBuffer[fIndex++] = toAppend;
+        -:  118:    }
+        -:  119:
+        -:  120:    void append (const XMLCh* const chars, const XMLSize_t count)
+        -:  121:    {
+        -:  122:        if (count) {
+        -:  123:            if (fIndex + count >= fCapacity) {
+        -:  124:                ensureCapacity(count);
+        -:  125:            }
+        -:  126:            memcpy(&fBuffer[fIndex], chars, count * sizeof(XMLCh));
+        -:  127:            fIndex += count;
+        -:  128:        }
+        -:  129:        else {
+        -:  130:            append(chars);
+        -:  131:        }
+        -:  132:    }
+        -:  133:
+        -:  134:    void append (const XMLCh* const chars)
+        -:  135:    {
+        -:  136:        if (chars != 0 && *chars != 0) {
+        -:  137:            // get length of chars
+        -:  138:            XMLSize_t count = 0;
+        -:  139:            for (; *(chars+count); count++ ) /*noop*/;
+        -:  140:
+        -:  141:            if (fIndex + count >= fCapacity) {
+        -:  142:                ensureCapacity(count);
+        -:  143:            }
+        -:  144:            memcpy(&fBuffer[fIndex], chars, count * sizeof(XMLCh));
+        -:  145:            fIndex += count;
+        -:  146:        }
+        -:  147:    }
+        -:  148:
+        -:  149:    void set (const XMLCh* const chars, const XMLSize_t count)
+        -:  150:    {
+        -:  151:        fIndex = 0;
+        -:  152:        append(chars, count);
+        -:  153:    }
+        -:  154:
+        -:  155:    void set (const XMLCh* const chars)
+        -:  156:    {
+        -:  157:        fIndex = 0;
+        -:  158:        if (chars != 0 && *chars != 0)
+        -:  159:            append(chars);
+        -:  160:    }
+        -:  161:
+        -:  162:    const XMLCh* getRawBuffer() const
+        -:  163:    {
+        -:  164:        fBuffer[fIndex] = 0;
+        -:  165:        return fBuffer;
+        -:  166:    }
+        -:  167:
+        -:  168:    XMLCh* getRawBuffer()
+        -:  169:    {
+        -:  170:        fBuffer[fIndex] = 0;
+        -:  171:        return fBuffer;
+        -:  172:    }
+        -:  173:
+        -:  174:    void reset()
+        -:  175:    {
+        -:  176:        fIndex = 0;
+        -:  177:    }
+        -:  178:
+        -:  179:    // -----------------------------------------------------------------------
+        -:  180:    //  Getters
+        -:  181:    // -----------------------------------------------------------------------
+        -:  182:    bool getInUse() const
+        -:  183:    {
+        -:  184:        return fUsed;
+        -:  185:    }
+        -:  186:
+        -:  187:    XMLSize_t getLen() const
+        -:  188:    {
+        -:  189:        return fIndex;
+        -:  190:    }
+        -:  191:
+        -:  192:    bool isEmpty() const
+        -:  193:    {
+        -:  194:        return (fIndex == 0);
+        -:  195:    }
+        -:  196:
+        -:  197:    // -----------------------------------------------------------------------
+        -:  198:    //  Setters
+        -:  199:    // -----------------------------------------------------------------------
+        -:  200:    void setInUse(const bool newValue)
+        -:  201:    {
+        -:  202:        fUsed = newValue;
+        -:  203:    }
+        -:  204:
+        -:  205:private :
+        -:  206:    // -----------------------------------------------------------------------
+        -:  207:    //  Unimplemented constructors and operators
+        -:  208:    // -----------------------------------------------------------------------
+        -:  209:    XMLBuffer(const XMLBuffer&);
+        -:  210:    XMLBuffer& operator=(const XMLBuffer&);
+        -:  211:
+        -:  212:    // -----------------------------------------------------------------------
+        -:  213:    //  Declare our friends
+        -:  214:    // -----------------------------------------------------------------------
+        -:  215:    friend class XMLBufBid;
+        -:  216:
+        -:  217:    // -----------------------------------------------------------------------
+        -:  218:    //  Private helpers
+        -:  219:    // -----------------------------------------------------------------------
+        -:  220:    void ensureCapacity(const XMLSize_t extraNeeded);
+        -:  221:
+        -:  222:
+        -:  223:    // -----------------------------------------------------------------------
+        -:  224:    //  Private data members
+        -:  225:    //
+        -:  226:    //  fBuffer
+        -:  227:    //      The pointer to the buffer data. Its grown as needed. Its always
+        -:  228:    //      one larger than fCapacity, to leave room for the null terminator.
+        -:  229:    //
+        -:  230:    //  fIndex
+        -:  231:    //      The current index into the buffer, as characters are appended
+        -:  232:    //      to it. If its zero, then the buffer is empty.
+        -:  233:    //
+        -:  234:    //  fCapacity
+        -:  235:    //      The current capacity of the buffer. Its actually always one
+        -:  236:    //      larger, to leave room for the null terminator.
+        -:  237:    //
+        -:  238:    //  fUsed
+        -:  239:    //      Indicates whether this buffer is in use or not.
+        -:  240:    //
+        -:  241:    //  fFullHandler, fFullSize
+        -:  242:    //      If fFullHandler is non-null, the buffer has a maximum size
+        -:  243:    //      indicated by fFullSize. If writing to the buffer would exceed the
+        -:  244:    //      buffer's maximum size, fFullHandler's bufferFull callback is
+        -:  245:    //      invoked, to empty the buffer.
+        -:  246:    // -----------------------------------------------------------------------
+        -:  247:    XMLSize_t                   fIndex;
+        -:  248:    XMLSize_t                   fCapacity;
+        -:  249:    XMLSize_t                   fFullSize;
+        -:  250:    bool                        fUsed;
+        -:  251:    MemoryManager* const        fMemoryManager;
+        -:  252:    XMLBufferFullHandler*       fFullHandler;
+        -:  253:    XMLCh*                      fBuffer;
+        -:  254:};
+        -:  255:
+        -:  256:/**
+        -:  257: *  XMLBufferFullHandler is a callback interface for clients of
+        -:  258: *  XMLBuffers that impose a size restriction (e.g. XMLScanner).
+        -:  259: *  Note that this is intended solely as a mix-in for internal
+        -:  260: *  use, and therefore does not derive from XMemory (to avoid
+        -:  261: *  the ambiguous base class problem).
+        -:  262: */
+        -:  263:class XMLPARSER_EXPORT XMLBufferFullHandler
+        -:  264:{
+        -:  265:public :
+        -:  266:
+function _ZN11xercesc_3_120XMLBufferFullHandlerD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_120XMLBufferFullHandlerD2Ev called 0 returned 0% blocks executed 0%
+    #####:  267:    virtual ~XMLBufferFullHandler() {}
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:  268:
+        -:  269:    /**
+        -:  270:     * Callback method, intended to allow clients of an XMLBuffer which has
+        -:  271:     * become full to empty it appropriately.
+        -:  272:     * @return true if the handler was able to empty the buffer (either
+        -:  273:     * partially or completely), otherwise false to indicate an error.
+        -:  274:     */
+        -:  275:    virtual bool bufferFull(XMLBuffer&) = 0;
+        -:  276:
+        -:  277:};
+        -:  278:
+        -:  279:XERCES_CPP_NAMESPACE_END
+        -:  280:
+        -:  281:#endif

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rules>
+  <device name="deck">
+      <deck class="deck" type="std52deck"/>
+  </device>
+  <object name="purse">
+      <value class="value" />
+  </object>
+  <object name="bet">
+      <value class="value"/>
+  </object>
+  <object name="player_hand">
+    <cards class="cards" />
+    <value class="value" />
+    <value class="status"/>
+    <boolean class="contains_ace" />
+  </object>
+  <object name="dealer_hand">
+    <cards class="cards" type="cards" />
+    <value class="value" />
+    <boolean class="contains_ace" />
+  </object>
+  <procedure name="procedure">
+    <shuffle target_id="deck" />
+    <stage id="initial_bet">
+      <decision type="bet" target_class="player_bet" />
+    </stage>
+    <stage id="deal_initial">
+      <action type="deal_card" source_id="deck" destination_class="player_hand" />
+      <action type="deal_card" source_id="deck" destination_class="dealer_hand" />
+      <action type="deal_card" source_id="deck" destination_class="player_hand" />
+      <action type="deal_card" source_id="deck" destination_class="dealer_hand" />
+      <evaluate comparison="equal_val" value="11" target1="player_hand value" >
+          <case target="player_hand contains_ace">
+              <action type="set_val" value="1" />
+          </case>
+      </evaluate> 
+    </stage>
+  </procedure>
+</rules>
+

@@ -1,0 +1,252 @@
+        -:    0:Source:/usr/local/include/xercesc/sax/SAXException.hpp
+        -:    0:Graph:Test.gcno
+        -:    0:Data:Test.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: * 
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: * 
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: SAXException.hpp 527149 2007-04-10 14:56:39Z amassari $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_SAXEXCEPTION_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_SAXEXCEPTION_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XMLString.hpp>
+        -:   26:#include <xercesc/util/XMLUni.hpp>
+        -:   27:#include <xercesc/util/XMemory.hpp>
+        -:   28:
+        -:   29:XERCES_CPP_NAMESPACE_BEGIN
+        -:   30:
+        -:   31:
+        -:   32:/**
+        -:   33:  * Encapsulate a general SAX error or warning.
+        -:   34:  *
+        -:   35:  * <p>This class can contain basic error or warning information from
+        -:   36:  * either the XML SAX parser or the application: a parser writer or
+        -:   37:  * application writer can subclass it to provide additional
+        -:   38:  * functionality.  SAX handlers may throw this exception or
+        -:   39:  * any exception subclassed from it.</p>
+        -:   40:  *
+        -:   41:  * <p>If the application needs to pass through other types of
+        -:   42:  * exceptions, it must wrap those exceptions in a SAXException
+        -:   43:  * or an exception derived from a SAXException.</p>
+        -:   44:  *
+        -:   45:  * <p>If the parser or application needs to include information
+        -:   46:  * about a specific location in an XML document, it should use the
+        -:   47:  * SAXParseException subclass.</p>
+        -:   48:  *
+        -:   49:  * @see SAXParseException#SAXParseException
+        -:   50:  */
+        -:   51:class SAX_EXPORT SAXException : public XMemory
+        -:   52:{
+        -:   53:public:
+        -:   54:    /** @name Constructors and Destructor */
+        -:   55:    //@{
+        -:   56:    /** Default constructor
+        -:   57:     * @param manager    Pointer to the memory manager to be used to
+        -:   58:     *                   allocate objects.
+        -:   59:     */
+        -:   60:    SAXException(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
+        -:   61:
+        -:   62:        fMsg(XMLString::replicate(XMLUni::fgZeroLenString, manager))
+        -:   63:        , fMemoryManager(manager)
+        -:   64:    {
+        -:   65:    }
+        -:   66:
+        -:   67:  /**
+        -:   68:    * Create a new SAXException.
+        -:   69:    *
+        -:   70:    * @param msg The error or warning message.
+        -:   71:    * @param manager    Pointer to the memory manager to be used to
+        -:   72:    *                   allocate objects.
+        -:   73:    */
+        -:   74:    SAXException(const XMLCh* const msg,
+        -:   75:                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
+        -:   76:
+        -:   77:        fMsg(XMLString::replicate(msg, manager))
+        -:   78:        , fMemoryManager(manager)
+        -:   79:    {
+        -:   80:    }
+        -:   81:
+        -:   82:  /**
+        -:   83:    * Create a new SAXException.
+        -:   84:    *
+        -:   85:    * @param msg The error or warning message.
+        -:   86:    * @param manager    Pointer to the memory manager to be used to
+        -:   87:    *                   allocate objects.
+        -:   88:    */
+        -:   89:    SAXException(const char* const msg,
+        -:   90:                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
+        -:   91:
+        -:   92:        fMsg(XMLString::transcode(msg, manager))
+        -:   93:        , fMemoryManager(manager)
+        -:   94:    {
+        -:   95:    }
+        -:   96:
+        -:   97:  /**
+        -:   98:    * Copy constructor
+        -:   99:    *
+        -:  100:    * @param toCopy The exception to be copy constructed
+        -:  101:    */
+        -:  102:    SAXException(const SAXException& toCopy) :
+        -:  103:        XMemory(toCopy)
+        -:  104:        , fMsg(XMLString::replicate(toCopy.fMsg, toCopy.fMemoryManager))
+        -:  105:        , fMemoryManager(toCopy.fMemoryManager)
+        -:  106:    {
+        -:  107:    }
+        -:  108:
+        -:  109:    /** Destructor */
+function _ZN11xercesc_3_112SAXExceptionD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_112SAXExceptionD2Ev called 0 returned 0% blocks executed 0%
+    #####:  110:    virtual ~SAXException()
+    #####:  111:    {
+    #####:  112:        fMemoryManager->deallocate(fMsg);//delete [] fMsg;
+call    0 never executed
+    #####:  113:    }
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:  114:
+        -:  115:    //@}
+        -:  116:
+        -:  117:
+        -:  118:    /** @name Public Operators */
+        -:  119:    //@{
+        -:  120:    /**
+        -:  121:      * Assignment operator
+        -:  122:      *
+        -:  123:      * @param toCopy The object to be copied
+        -:  124:      */
+        -:  125:    SAXException& operator=(const SAXException& toCopy)
+        -:  126:    {
+        -:  127:        if (this == &toCopy)
+        -:  128:            return *this;
+        -:  129:
+        -:  130:        fMemoryManager->deallocate(fMsg);//delete [] fMsg;
+        -:  131:        fMsg = XMLString::replicate(toCopy.fMsg, toCopy.fMemoryManager);
+        -:  132:        fMemoryManager = toCopy.fMemoryManager;
+        -:  133:        return *this;
+        -:  134:    }
+        -:  135:    //@}
+        -:  136:
+        -:  137:    /** @name Getter Methods */
+        -:  138:    //@{
+        -:  139:    /**
+        -:  140:      * Get the contents of the message
+        -:  141:      *
+        -:  142:      */
+function _ZNK11xercesc_3_112SAXException10getMessageEv called 0 returned 0% blocks executed 0%
+    #####:  143:    virtual const XMLCh* getMessage() const
+        -:  144:    {
+    #####:  145:        return fMsg;
+        -:  146:    }
+        -:  147:    //@}
+        -:  148:
+        -:  149:
+        -:  150:protected :
+        -:  151:    // -----------------------------------------------------------------------
+        -:  152:    //  Protected data members
+        -:  153:    //
+        -:  154:    //  fMsg
+        -:  155:    //      This is the text of the error that is being thrown.
+        -:  156:    // -----------------------------------------------------------------------
+        -:  157:    XMLCh*  fMsg;
+        -:  158:    MemoryManager* fMemoryManager;
+        -:  159:};
+        -:  160:
+function _ZN11xercesc_3_124SAXNotSupportedExceptionD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_124SAXNotSupportedExceptionD2Ev called 0 returned 0% blocks executed 0%
+    #####:  161:class SAX_EXPORT SAXNotSupportedException : public SAXException
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed
+branch  4 never executed
+call    5 never executed
+        -:  162:{
+        -:  163:
+        -:  164:public:
+        -:  165:	SAXNotSupportedException(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+        -:  166:
+        -:  167:  /**
+        -:  168:    * Create a new SAXException.
+        -:  169:    *
+        -:  170:    * @param msg The error or warning message.
+        -:  171:    * @param manager    Pointer to the memory manager to be used to
+        -:  172:    *                   allocate objects.
+        -:  173:    */
+        -:  174:    SAXNotSupportedException(const XMLCh* const msg,
+        -:  175:                             MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+        -:  176:
+        -:  177:  /**
+        -:  178:    * Create a new SAXException.
+        -:  179:    *
+        -:  180:    * @param msg The error or warning message.
+        -:  181:    * @param manager    Pointer to the memory manager to be used to
+        -:  182:    *                   allocate objects.
+        -:  183:    */
+        -:  184:    SAXNotSupportedException(const char* const msg,
+        -:  185:                             MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+        -:  186:
+        -:  187:  /**
+        -:  188:    * Copy constructor
+        -:  189:    *
+        -:  190:    * @param toCopy The exception to be copy constructed
+        -:  191:    */
+        -:  192:    SAXNotSupportedException(const SAXException& toCopy);
+        -:  193:};
+        -:  194:
+        -:  195:class SAX_EXPORT SAXNotRecognizedException : public SAXException
+        -:  196:{
+        -:  197:public:
+        -:  198:	SAXNotRecognizedException(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+        -:  199:
+        -:  200:  /**
+        -:  201:    * Create a new SAXException.
+        -:  202:    *
+        -:  203:    * @param msg The error or warning message.
+        -:  204:    * @param manager    Pointer to the memory manager to be used to
+        -:  205:    *                   allocate objects.
+        -:  206:    */
+        -:  207:    SAXNotRecognizedException(const XMLCh* const msg,
+        -:  208:                              MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+        -:  209:
+        -:  210:  /**
+        -:  211:    * Create a new SAXException.
+        -:  212:    *
+        -:  213:    * @param msg The error or warning message.
+        -:  214:    * @param manager    Pointer to the memory manager to be used to
+        -:  215:    *                   allocate objects.
+        -:  216:    */
+        -:  217:    SAXNotRecognizedException(const char* const msg,
+        -:  218:                              MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+        -:  219:
+        -:  220:  /**
+        -:  221:    * Copy constructor
+        -:  222:    *
+        -:  223:    * @param toCopy The exception to be copy constructed
+        -:  224:    */
+        -:  225:    SAXNotRecognizedException(const SAXException& toCopy);
+        -:  226:};
+        -:  227:
+        -:  228:XERCES_CPP_NAMESPACE_END
+        -:  229:
+        -:  230:#endif

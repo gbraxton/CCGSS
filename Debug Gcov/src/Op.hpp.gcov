@@ -1,0 +1,378 @@
+        -:    0:Source:/usr/local/include/xercesc/util/regx/Op.hpp
+        -:    0:Graph:Test.gcno
+        -:    0:Data:Test.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: * 
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: * 
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: Op.hpp 932887 2010-04-11 13:04:59Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_OP_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_OP_HPP
+        -:   24:
+        -:   25:// ---------------------------------------------------------------------------
+        -:   26://  Includes
+        -:   27:// ---------------------------------------------------------------------------
+        -:   28:#include <xercesc/util/RefVectorOf.hpp>
+        -:   29:#include <xercesc/util/RuntimeException.hpp>
+        -:   30:
+        -:   31:XERCES_CPP_NAMESPACE_BEGIN
+        -:   32:
+        -:   33:// ---------------------------------------------------------------------------
+        -:   34://  Forward Declaration
+        -:   35:// ---------------------------------------------------------------------------
+        -:   36:class Token;
+        -:   37:
+        -:   38:
+        -:   39:class XMLUTIL_EXPORT Op : public XMemory
+        -:   40:{
+        -:   41:public:
+        -:   42:
+        -:   43:    typedef enum {
+        -:   44:        O_DOT                       = 0,
+        -:   45:        O_CHAR                      = 1,
+        -:   46:        O_RANGE                     = 3,
+        -:   47:        O_NRANGE                    = 4,
+        -:   48:        O_ANCHOR                    = 5,
+        -:   49:        O_STRING                    = 6,
+        -:   50:        O_CLOSURE                   = 7,
+        -:   51:        O_NONGREEDYCLOSURE          = 8,
+        -:   52:        O_FINITE_CLOSURE            = 9,
+        -:   53:        O_FINITE_NONGREEDYCLOSURE   = 10,
+        -:   54:        O_QUESTION                  = 11,
+        -:   55:        O_NONGREEDYQUESTION         = 12,
+        -:   56:        O_UNION                     = 13,
+        -:   57:        O_CAPTURE                   = 15,
+        -:   58:        O_BACKREFERENCE             = 16
+        -:   59:    } opType;
+        -:   60:
+        -:   61:    // -----------------------------------------------------------------------
+        -:   62:    //  Public Constructors and Destructor
+        -:   63:    // -----------------------------------------------------------------------
+function _ZN11xercesc_3_12OpD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_12OpD2Ev called 0 returned 0% blocks executed 0%
+    #####:   64:    virtual ~Op() { }
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   65:
+        -:   66:    // -----------------------------------------------------------------------
+        -:   67:    // Getter functions
+        -:   68:    // -----------------------------------------------------------------------
+        -:   69:            opType       getOpType() const;
+        -:   70:            const Op*    getNextOp() const;
+        -:   71:    virtual XMLInt32     getData() const;
+        -:   72:    virtual XMLInt32     getData2() const;
+        -:   73:    virtual XMLSize_t    getSize() const;
+        -:   74:    virtual const Op*    elementAt(XMLSize_t index) const;
+        -:   75:    virtual const Op*    getChild() const;
+        -:   76:    virtual const Token* getToken() const;
+        -:   77:    virtual const XMLCh* getLiteral() const;
+        -:   78:
+        -:   79:    // -----------------------------------------------------------------------
+        -:   80:    // Setter functions
+        -:   81:    // -----------------------------------------------------------------------
+        -:   82:    void setOpType(const opType type);
+        -:   83:    void setNextOp(const Op* const next);
+        -:   84:
+        -:   85:protected:
+        -:   86:    // -----------------------------------------------------------------------
+        -:   87:    //  Protected Constructors
+        -:   88:    // -----------------------------------------------------------------------
+        -:   89:    Op(const opType type, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+        -:   90:    friend class OpFactory;
+        -:   91:
+        -:   92:    MemoryManager* const fMemoryManager;
+        -:   93:
+        -:   94:private:
+        -:   95:    // -----------------------------------------------------------------------
+        -:   96:    //  Unimplemented constructors and operators
+        -:   97:    // -----------------------------------------------------------------------
+        -:   98:    Op(const Op&);
+        -:   99:    Op& operator=(const Op&);
+        -:  100:
+        -:  101:    // -----------------------------------------------------------------------
+        -:  102:    //  Private data members
+        -:  103:    //
+        -:  104:    //  fOpType
+        -:  105:    //      Indicates the type of operation
+        -:  106:    //
+        -:  107:    //  fNextOp
+        -:  108:    //      Points to the next operation in the chain
+        -:  109:    // -----------------------------------------------------------------------
+        -:  110:    opType      fOpType;
+        -:  111:    const Op*   fNextOp;
+        -:  112:};
+        -:  113:
+        -:  114:
+        -:  115:class XMLUTIL_EXPORT CharOp: public Op {
+        -:  116:public:
+        -:  117:    // -----------------------------------------------------------------------
+        -:  118:    //  Public Constructors and Destructor
+        -:  119:    // -----------------------------------------------------------------------
+        -:  120:    CharOp(const opType type, const XMLInt32 charData, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+function _ZN11xercesc_3_16CharOpD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_16CharOpD2Ev called 0 returned 0% blocks executed 0%
+    #####:  121:    ~CharOp() {}
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed
+branch  4 never executed
+call    5 never executed
+        -:  122:
+        -:  123:    // -----------------------------------------------------------------------
+        -:  124:    // Getter functions
+        -:  125:    // -----------------------------------------------------------------------
+        -:  126:    XMLInt32 getData() const;
+        -:  127:
+        -:  128:private:
+        -:  129:    // Private data members
+        -:  130:    XMLInt32 fCharData;
+        -:  131:
+        -:  132:    // -----------------------------------------------------------------------
+        -:  133:    //  Unimplemented constructors and operators
+        -:  134:    // -----------------------------------------------------------------------
+        -:  135:    CharOp(const CharOp&);
+        -:  136:    CharOp& operator=(const CharOp&);
+        -:  137:};
+        -:  138:
+        -:  139:class XMLUTIL_EXPORT UnionOp : public Op {
+        -:  140:public:
+        -:  141:    // -----------------------------------------------------------------------
+        -:  142:    //  Public Constructors and Destructor
+        -:  143:    // -----------------------------------------------------------------------
+        -:  144:    UnionOp(const opType type, const XMLSize_t size,
+        -:  145:            MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+function _ZN11xercesc_3_17UnionOpD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_17UnionOpD2Ev called 0 returned 0% blocks executed 0%
+    #####:  146:    ~UnionOp() { delete fBranches; }
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+branch  4 never executed
+branch  5 never executed
+call    6 never executed
+call    7 never executed
+branch  8 never executed
+branch  9 never executed
+call   10 never executed
+call   11 never executed
+call   12 never executed
+        -:  147:
+        -:  148:    // -----------------------------------------------------------------------
+        -:  149:    // Getter functions
+        -:  150:    // -----------------------------------------------------------------------
+        -:  151:    XMLSize_t getSize() const;
+        -:  152:    const Op* elementAt(XMLSize_t index) const;
+        -:  153:
+        -:  154:    // -----------------------------------------------------------------------
+        -:  155:    // Setter functions
+        -:  156:    // -----------------------------------------------------------------------
+        -:  157:    void addElement(Op* const op);
+        -:  158:
+        -:  159:private:
+        -:  160:    // Private Data members
+        -:  161:    RefVectorOf<Op>* fBranches;
+        -:  162:
+        -:  163:    // -----------------------------------------------------------------------
+        -:  164:    //  Unimplemented constructors and operators
+        -:  165:    // -----------------------------------------------------------------------
+        -:  166:    UnionOp(const UnionOp&);
+        -:  167:    UnionOp& operator=(const UnionOp&);
+        -:  168:};
+        -:  169:
+        -:  170:
+        -:  171:class XMLUTIL_EXPORT ChildOp: public Op {
+        -:  172:public:
+        -:  173:    // -----------------------------------------------------------------------
+        -:  174:    //  Public Constructors and Destructor
+        -:  175:    // -----------------------------------------------------------------------
+        -:  176:    ChildOp(const opType type, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+function _ZN11xercesc_3_17ChildOpD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_17ChildOpD2Ev called 0 returned 0% blocks executed 0%
+    #####:  177:    ~ChildOp() {}
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed
+branch  4 never executed
+call    5 never executed
+        -:  178:
+        -:  179:    // -----------------------------------------------------------------------
+        -:  180:    // Getter functions
+        -:  181:    // -----------------------------------------------------------------------
+        -:  182:    const Op* getChild() const;
+        -:  183:
+        -:  184:    // -----------------------------------------------------------------------
+        -:  185:    // Setter functions
+        -:  186:    // -----------------------------------------------------------------------
+        -:  187:    void setChild(const Op* const child);
+        -:  188:
+        -:  189:private:
+        -:  190:    // Private data members
+        -:  191:    const Op* fChild;
+        -:  192:
+        -:  193:    // -----------------------------------------------------------------------
+        -:  194:    //  Unimplemented constructors and operators
+        -:  195:    // -----------------------------------------------------------------------
+        -:  196:    ChildOp(const ChildOp&);
+        -:  197:    ChildOp& operator=(const ChildOp&);
+        -:  198:};
+        -:  199:
+        -:  200:class XMLUTIL_EXPORT ModifierOp: public ChildOp {
+        -:  201:public:
+        -:  202:    // -----------------------------------------------------------------------
+        -:  203:    //  Public Constructors and Destructor
+        -:  204:    // -----------------------------------------------------------------------
+        -:  205:    ModifierOp(const opType type, const XMLInt32 v1, const XMLInt32 v2, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+function _ZN11xercesc_3_110ModifierOpD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_110ModifierOpD2Ev called 0 returned 0% blocks executed 0%
+    #####:  206:    ~ModifierOp() {}
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed
+branch  4 never executed
+call    5 never executed
+        -:  207:
+        -:  208:    // -----------------------------------------------------------------------
+        -:  209:    // Getter functions
+        -:  210:    // -----------------------------------------------------------------------
+        -:  211:    XMLInt32 getData() const;
+        -:  212:    XMLInt32 getData2() const;
+        -:  213:
+        -:  214:private:
+        -:  215:    // Private data members
+        -:  216:    XMLInt32 fVal1;
+        -:  217:    XMLInt32 fVal2;
+        -:  218:
+        -:  219:    // -----------------------------------------------------------------------
+        -:  220:    //  Unimplemented constructors and operators
+        -:  221:    // -----------------------------------------------------------------------
+        -:  222:    ModifierOp(const ModifierOp&);
+        -:  223:    ModifierOp& operator=(const ModifierOp&);
+        -:  224:};
+        -:  225:
+        -:  226:class XMLUTIL_EXPORT RangeOp: public Op {
+        -:  227:public:
+        -:  228:    // -----------------------------------------------------------------------
+        -:  229:    //  Public Constructors and Destructor
+        -:  230:    // -----------------------------------------------------------------------
+        -:  231:    RangeOp(const opType type, const Token* const token, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+function _ZN11xercesc_3_17RangeOpD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_17RangeOpD2Ev called 0 returned 0% blocks executed 0%
+    #####:  232:    ~RangeOp() {}
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed
+branch  4 never executed
+call    5 never executed
+        -:  233:
+        -:  234:    // -----------------------------------------------------------------------
+        -:  235:    // Getter functions
+        -:  236:    // -----------------------------------------------------------------------
+        -:  237:    const Token* getToken() const;
+        -:  238:
+        -:  239:private:
+        -:  240:    // Private data members
+        -:  241:    const Token* fToken;
+        -:  242:
+        -:  243:    // -----------------------------------------------------------------------
+        -:  244:    //  Unimplemented constructors and operators
+        -:  245:    // -----------------------------------------------------------------------
+        -:  246:    RangeOp(const RangeOp&);
+        -:  247:    RangeOp& operator=(const RangeOp&);
+        -:  248:};
+        -:  249:
+        -:  250:class XMLUTIL_EXPORT StringOp: public Op {
+        -:  251:public:
+        -:  252:    // -----------------------------------------------------------------------
+        -:  253:    //  Public Constructors and Destructor
+        -:  254:    // -----------------------------------------------------------------------
+        -:  255:    StringOp(const opType type, const XMLCh* const literal, MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+function _ZN11xercesc_3_18StringOpD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_18StringOpD2Ev called 0 returned 0% blocks executed 0%
+    #####:  256:    ~StringOp() { fMemoryManager->deallocate(fLiteral);}
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+call    5 never executed
+branch  6 never executed
+branch  7 never executed
+call    8 never executed
+call    9 never executed
+call   10 never executed
+        -:  257:
+        -:  258:    // -----------------------------------------------------------------------
+        -:  259:    // Getter functions
+        -:  260:    // -----------------------------------------------------------------------
+        -:  261:    const XMLCh* getLiteral() const;
+        -:  262:
+        -:  263:private:
+        -:  264:    // Private data members
+        -:  265:    XMLCh* fLiteral;
+        -:  266:
+        -:  267:    // -----------------------------------------------------------------------
+        -:  268:    //  Unimplemented constructors and operators
+        -:  269:    // -----------------------------------------------------------------------
+        -:  270:    StringOp(const StringOp&);
+        -:  271:    StringOp& operator=(const StringOp&);
+        -:  272:};
+        -:  273:
+        -:  274:// ---------------------------------------------------------------------------
+        -:  275://  Op: getter methods
+        -:  276:// ---------------------------------------------------------------------------
+        -:  277:inline Op::opType Op::getOpType() const {
+        -:  278:
+        -:  279:    return fOpType;
+        -:  280:}
+        -:  281:
+        -:  282:inline const Op* Op::getNextOp() const {
+        -:  283:
+        -:  284:    return fNextOp;
+        -:  285:}
+        -:  286:
+        -:  287:// ---------------------------------------------------------------------------
+        -:  288://  Op: setter methods
+        -:  289:// ---------------------------------------------------------------------------
+        -:  290:inline void Op::setOpType(const Op::opType type) {
+        -:  291:
+        -:  292:    fOpType = type;
+        -:  293:}
+        -:  294:
+        -:  295:inline void Op::setNextOp(const Op* const nextOp) {
+        -:  296:    
+        -:  297:    fNextOp = nextOp;
+        -:  298:}
+        -:  299:
+        -:  300:XERCES_CPP_NAMESPACE_END
+        -:  301:
+        -:  302:#endif
+        -:  303:
+        -:  304:/**
+        -:  305:  * End of file Op.hpp
+        -:  306:  */

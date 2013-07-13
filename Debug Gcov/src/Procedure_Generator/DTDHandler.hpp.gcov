@@ -1,0 +1,171 @@
+        -:    0:Source:/usr/local/include/xercesc/sax/DTDHandler.hpp
+        -:    0:Graph:simulation_package_builder.gcno
+        -:    0:Data:simulation_package_builder.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: * 
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: * 
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: DTDHandler.hpp 932887 2010-04-11 13:04:59Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_DTDHANDLER_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_DTDHANDLER_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XercesDefs.hpp>
+        -:   26:
+        -:   27:XERCES_CPP_NAMESPACE_BEGIN
+        -:   28:
+        -:   29:/**
+        -:   30:  * Receive notification of basic DTD-related events.
+        -:   31:  *
+        -:   32:  * <p>If a SAX application needs information about notations and
+        -:   33:  * unparsed entities, then the application implements this
+        -:   34:  * interface and registers an instance with the SAX parser using
+        -:   35:  * the parser's setDTDHandler method.  The parser uses the
+        -:   36:  * instance to report notation and unparsed entity declarations to
+        -:   37:  * the application.</p>
+        -:   38:  *
+        -:   39:  * <p>The SAX parser may report these events in any order, regardless
+        -:   40:  * of the order in which the notations and unparsed entities were
+        -:   41:  * declared; however, all DTD events must be reported after the
+        -:   42:  * document handler's startDocument event, and before the first
+        -:   43:  * startElement event.</p>
+        -:   44:  *
+        -:   45:  * <p>It is up to the application to store the information for
+        -:   46:  * future use (perhaps in a hash table or object tree).
+        -:   47:  * If the application encounters attributes of type "NOTATION",
+        -:   48:  * "ENTITY", or "ENTITIES", it can use the information that it
+        -:   49:  * obtained through this interface to find the entity and/or
+        -:   50:  * notation corresponding with the attribute value.</p>
+        -:   51:  *
+        -:   52:  * <p>The HandlerBase class provides a default implementation
+        -:   53:  * of this interface, which simply ignores the events.</p>
+        -:   54:  *
+        -:   55:  * @see Parser#setDTDHandler
+        -:   56:  * @see HandlerBase#HandlerBase
+        -:   57:  */
+        -:   58:
+        -:   59:class SAX_EXPORT DTDHandler
+        -:   60:{
+        -:   61:public:
+        -:   62:    /** @name Constructors and Destructor */
+        -:   63:    //@{
+        -:   64:    /** Default Constructor */
+        -:   65:    DTDHandler()
+        -:   66:    {
+        -:   67:    }
+        -:   68:
+        -:   69:    /** Destructor */
+function _ZN11xercesc_3_110DTDHandlerD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_110DTDHandlerD2Ev called 0 returned 0% blocks executed 0%
+    #####:   70:    virtual ~DTDHandler()
+    #####:   71:    {
+    #####:   72:    }
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   73:
+        -:   74:    //@}
+        -:   75:
+        -:   76:    /** @name The DTD handler interface */
+        -:   77:    //@{
+        -:   78:  /**
+        -:   79:    * Receive notification of a notation declaration event.
+        -:   80:    *
+        -:   81:    * <p>It is up to the application to record the notation for later
+        -:   82:    * reference, if necessary.</p>
+        -:   83:    *
+        -:   84:    * <p>If a system identifier is present, and it is a URL, the SAX
+        -:   85:    * parser must resolve it fully before passing it to the
+        -:   86:    * application.</p>
+        -:   87:    *
+        -:   88:    * @param name The notation name.
+        -:   89:    * @param publicId The notation's public identifier, or null if
+        -:   90:    *        none was given.
+        -:   91:    * @param systemId The notation's system identifier, or null if
+        -:   92:    *        none was given.
+        -:   93:    * @exception SAXException Any SAX exception, possibly
+        -:   94:    *            wrapping another exception.
+        -:   95:    * @see #unparsedEntityDecl
+        -:   96:    * @see AttributeList#AttributeList
+        -:   97:    */
+        -:   98:	virtual void notationDecl
+        -:   99:    (
+        -:  100:        const   XMLCh* const    name
+        -:  101:        , const XMLCh* const    publicId
+        -:  102:        , const XMLCh* const    systemId
+        -:  103:    ) = 0;
+        -:  104:
+        -:  105:  /**
+        -:  106:    * Receive notification of an unparsed entity declaration event.
+        -:  107:    *
+        -:  108:    * <p>Note that the notation name corresponds to a notation
+        -:  109:    * reported by the notationDecl() event.  It is up to the
+        -:  110:    * application to record the entity for later reference, if
+        -:  111:    * necessary.</p>
+        -:  112:    *
+        -:  113:    * <p>If the system identifier is a URL, the parser must resolve it
+        -:  114:    * fully before passing it to the application.</p>
+        -:  115:    *
+        -:  116:    * @exception SAXException Any SAX exception, possibly
+        -:  117:    *            wrapping another exception.
+        -:  118:    * @param name The unparsed entity's name.
+        -:  119:    * @param publicId The entity's public identifier, or null if none
+        -:  120:    *        was given.
+        -:  121:    * @param systemId The entity's system identifier (it must always
+        -:  122:    *        have one).
+        -:  123:    * @param notationName The name of the associated notation.
+        -:  124:    * @see #notationDecl
+        -:  125:    * @see AttributeList#AttributeList
+        -:  126:    */
+        -:  127:    virtual void unparsedEntityDecl
+        -:  128:    (
+        -:  129:        const   XMLCh* const    name
+        -:  130:        , const XMLCh* const    publicId
+        -:  131:        , const XMLCh* const    systemId
+        -:  132:        , const XMLCh* const    notationName
+        -:  133:    ) = 0;
+        -:  134:
+        -:  135:    /**
+        -:  136:    * Reset the DocType object on its reuse
+        -:  137:    *
+        -:  138:    * <p>This method helps in reseting the DTD object implementation
+        -:  139:    * defaults each time the DTD is begun.</p>
+        -:  140:    *
+        -:  141:    */
+        -:  142:    virtual void resetDocType() = 0;
+        -:  143:
+        -:  144:    //@}
+        -:  145:
+        -:  146:private :
+        -:  147:    /* Unimplemented constructors and operators */
+        -:  148:
+        -:  149:    /* Copy constructor */
+        -:  150:    DTDHandler(const DTDHandler&);
+        -:  151:
+        -:  152:    /* Assignment operator */
+        -:  153:    DTDHandler& operator=(const DTDHandler&);
+        -:  154:
+        -:  155:};
+        -:  156:
+        -:  157:XERCES_CPP_NAMESPACE_END
+        -:  158:
+        -:  159:#endif

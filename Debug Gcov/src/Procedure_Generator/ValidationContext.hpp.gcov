@@ -1,0 +1,156 @@
+        -:    0:Source:/usr/local/include/xercesc/framework/ValidationContext.hpp
+        -:    0:Graph:simulation_package_builder.gcno
+        -:    0:Data:simulation_package_builder.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: * 
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: * 
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: ValidationContext.hpp 729944 2008-12-29 17:03:32Z amassari $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_VALIDATION_CONTEXT_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_VALIDATION_CONTEXT_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/PlatformUtils.hpp>
+        -:   26:#include <xercesc/util/RefHashTableOf.hpp>
+        -:   27:#include <xercesc/util/NameIdPool.hpp>
+        -:   28:#include <xercesc/util/XMemory.hpp>
+        -:   29:
+        -:   30:XERCES_CPP_NAMESPACE_BEGIN
+        -:   31:
+        -:   32:class XMLRefInfo;
+        -:   33:class DTDEntityDecl;
+        -:   34:class DatatypeValidator;
+        -:   35:class ElemStack;
+        -:   36:class NamespaceScope;
+        -:   37:class XMLScanner;
+        -:   38:
+        -:   39:class XMLPARSER_EXPORT ValidationContext : public XMemory
+        -:   40:{
+        -:   41:public :
+        -:   42:    // -----------------------------------------------------------------------
+        -:   43:    /** @name Virtual destructor for derived classes */
+        -:   44:    // -----------------------------------------------------------------------
+        -:   45:    //@{
+        -:   46:
+        -:   47:    /**
+        -:   48:      * virtual destructor
+        -:   49:      *
+        -:   50:      */
+function _ZN11xercesc_3_117ValidationContextD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_117ValidationContextD2Ev called 0 returned 0% blocks executed 0%
+    #####:   51:    virtual ~ValidationContext(){};
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   52:    //@}
+        -:   53:
+        -:   54:    // -----------------------------------------------------------------------
+        -:   55:    /** @name The ValidationContext Interface */
+        -:   56:    // -----------------------------------------------------------------------
+        -:   57:    //@{
+        -:   58:
+        -:   59:    /**
+        -:   60:      * IDRefList
+        -:   61:      *
+        -:   62:      */
+        -:   63:    virtual RefHashTableOf<XMLRefInfo>*  getIdRefList() const = 0;
+        -:   64:
+        -:   65:    virtual void                         setIdRefList(RefHashTableOf<XMLRefInfo>* const) = 0;
+        -:   66:
+        -:   67:    virtual void                         clearIdRefList() = 0;
+        -:   68:
+        -:   69:    virtual void                         addId(const XMLCh * const ) = 0;
+        -:   70:
+        -:   71:    virtual void                         addIdRef(const XMLCh * const ) = 0;
+        -:   72:
+        -:   73:    virtual void                         toCheckIdRefList(bool) = 0;
+        -:   74:
+        -:   75:    /**
+        -:   76:      * EntityDeclPool
+        -:   77:      *
+        -:   78:      */
+        -:   79:    virtual const NameIdPool<DTDEntityDecl>* getEntityDeclPool() const = 0;
+        -:   80:
+        -:   81:    virtual const NameIdPool<DTDEntityDecl>* setEntityDeclPool(const NameIdPool<DTDEntityDecl>* const) = 0;    
+        -:   82:           
+        -:   83:    virtual void                             checkEntity(const XMLCh * const ) const = 0 ;
+        -:   84:
+        -:   85:    /**
+        -:   86:      * Union datatype handling
+        -:   87:      *
+        -:   88:      */
+        -:   89:
+        -:   90:    virtual DatatypeValidator * getValidatingMemberType() const = 0 ;
+        -:   91:    virtual void setValidatingMemberType(DatatypeValidator * validatingMemberType) = 0 ;
+        -:   92:
+        -:   93:    /**
+        -:   94:      * QName datatype handling
+        -:   95:      * Create default implementations for source code compatibility
+        -:   96:      */
+function _ZN11xercesc_3_117ValidationContext15isPrefixUnknownEPt called 0 returned 0% blocks executed 0%
+    #####:   97:    virtual bool isPrefixUnknown(XMLCh* /* prefix */) { return true; };
+function _ZN11xercesc_3_117ValidationContext12setElemStackEPNS_9ElemStackE called 0 returned 0% blocks executed 0%
+    #####:   98:    virtual void setElemStack(ElemStack* /* elemStack */) {};
+function _ZN11xercesc_3_117ValidationContext15getURIForPrefixEPt called 0 returned 0% blocks executed 0%
+    #####:   99:    virtual const XMLCh* getURIForPrefix(XMLCh* /*prefix */) { return 0; };
+function _ZN11xercesc_3_117ValidationContext10setScannerEPNS_10XMLScannerE called 0 returned 0% blocks executed 0%
+    #####:  100:    virtual void setScanner(XMLScanner* /* scanner */) { };
+function _ZN11xercesc_3_117ValidationContext17setNamespaceScopeEPNS_14NamespaceScopeE called 0 returned 0% blocks executed 0%
+    #####:  101:    virtual void setNamespaceScope(NamespaceScope* /* nsStack */) { };
+        -:  102:
+        -:  103:    //@}
+        -:  104:
+        -:  105:   
+        -:  106:protected :
+        -:  107:    // -----------------------------------------------------------------------
+        -:  108:    /**  Hidden Constructors */
+        -:  109:    // -----------------------------------------------------------------------
+        -:  110:    //@{
+        -:  111:    ValidationContext(MemoryManager* const memMgr = XMLPlatformUtils::fgMemoryManager)
+        -:  112:    :fMemoryManager(memMgr)
+        -:  113:    {
+        -:  114:    };
+        -:  115:    //@}
+        -:  116:
+        -:  117:    // -----------------------------------------------------------------------
+        -:  118:    //  Data members
+        -:  119:    //
+        -:  120:    //  fMemoryManager
+        -:  121:    //      Pluggable memory manager for dynamic allocation/deallocation.
+        -:  122:    // -----------------------------------------------------------------------
+        -:  123:    MemoryManager*                    fMemoryManager;
+        -:  124:
+        -:  125:private :
+        -:  126:    // -----------------------------------------------------------------------
+        -:  127:    /** name  Unimplemented copy constructor and operator= */
+        -:  128:    // -----------------------------------------------------------------------
+        -:  129:    //@{
+        -:  130:    ValidationContext(const ValidationContext& );
+        -:  131:    ValidationContext& operator=(const ValidationContext& );
+        -:  132:    //@}
+        -:  133:
+        -:  134:};
+        -:  135:
+        -:  136:XERCES_CPP_NAMESPACE_END
+        -:  137:
+        -:  138:#endif
+        -:  139:

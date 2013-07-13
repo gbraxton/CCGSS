@@ -1,0 +1,175 @@
+        -:    0:Source:/usr/local/include/xercesc/sax2/DeclHandler.hpp
+        -:    0:Graph:simulation_package_builder.gcno
+        -:    0:Data:simulation_package_builder.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: * 
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: * 
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: DeclHandler.hpp 932887 2010-04-11 13:04:59Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_DECLHANDLER_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_DECLHANDLER_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XercesDefs.hpp>
+        -:   26:
+        -:   27:XERCES_CPP_NAMESPACE_BEGIN
+        -:   28:
+        -:   29:/**
+        -:   30:  * Receive notification of DTD declaration events.
+        -:   31:  *
+        -:   32:  * <p>This is an optional extension handler for SAX2 to provide more
+        -:   33:  * complete information about DTD declarations in an XML document.
+        -:   34:  * XML readers are not required to recognize this handler, and it is not
+        -:   35:  * part of core-only SAX2 distributions.</p>
+        -:   36:  *
+        -:   37:  * <p>Note that data-related DTD declarations (unparsed entities and
+        -:   38:  * notations) are already reported through the DTDHandler interface.</p>
+        -:   39:  *
+        -:   40:  * <p>If you are using the declaration handler together with a lexical
+        -:   41:  * handler, all of the events will occur between the startDTD and the endDTD
+        -:   42:  * events.</p>
+        -:   43:  *
+        -:   44:  * @see SAX2XMLReader#setLexicalHandler
+        -:   45:  * @see SAX2XMLReader#setDeclarationHandler
+        -:   46:  */
+        -:   47:
+        -:   48:class SAX2_EXPORT DeclHandler
+        -:   49:{
+        -:   50:public:
+        -:   51:    /** @name Constructors and Destructor */
+        -:   52:    //@{
+        -:   53:    /** Default constructor */
+        -:   54:    DeclHandler()
+        -:   55:    {
+        -:   56:    }
+        -:   57:
+        -:   58:    /** Destructor */
+function _ZN11xercesc_3_111DeclHandlerD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_111DeclHandlerD2Ev called 0 returned 0% blocks executed 0%
+    #####:   59:    virtual ~DeclHandler()
+    #####:   60:    {
+    #####:   61:    }
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   62:    //@}
+        -:   63:
+        -:   64:    /** @name The virtual declaration handler interface */
+        -:   65:
+        -:   66:    //@{
+        -:   67:   /**
+        -:   68:    * Report an element type declaration.
+        -:   69:    *
+        -:   70:    * <p>The content model will consist of the string "EMPTY", the string
+        -:   71:    * "ANY", or a parenthesised group, optionally followed by an occurrence
+        -:   72:    * indicator. The model will be normalized so that all parameter entities
+        -:   73:    * are fully resolved and all whitespace is removed,and will include the
+        -:   74:    * enclosing parentheses. Other normalization (such as removing redundant
+        -:   75:    * parentheses or simplifying occurrence indicators) is at the discretion
+        -:   76:    * of the parser.</p>
+        -:   77:    *
+        -:   78:    * @param name The element type name.
+        -:   79:    * @param model The content model as a normalized string.
+        -:   80:    * @exception SAXException Any SAX exception, possibly
+        -:   81:    *            wrapping another exception.
+        -:   82:    */
+        -:   83:    virtual void elementDecl
+        -:   84:    (
+        -:   85:        const   XMLCh* const    name
+        -:   86:        , const XMLCh* const    model
+        -:   87:    ) = 0;
+        -:   88:
+        -:   89:   /**
+        -:   90:    * Report an attribute type declaration.
+        -:   91:    *
+        -:   92:    * <p>The Parser will call this method to report each occurrence of
+        -:   93:    * a comment in the XML document.</p>
+        -:   94:    *
+        -:   95:    * <p>The application must not attempt to read from the array
+        -:   96:    * outside of the specified range.</p>
+        -:   97:    *
+        -:   98:    * @param eName The name of the associated element.
+        -:   99:    * @param aName The name of the attribute.
+        -:  100:    * @param type A string representing the attribute type.
+        -:  101:    * @param mode A string representing the attribute defaulting mode ("#IMPLIED", "#REQUIRED", or "#FIXED") or null if none of these applies.
+        -:  102:    * @param value A string representing the attribute's default value, or null if there is none.
+        -:  103:    * @exception SAXException Any SAX exception, possibly
+        -:  104:    *            wrapping another exception.
+        -:  105:    */
+        -:  106:    virtual void attributeDecl
+        -:  107:    (
+        -:  108:        const   XMLCh* const    eName
+        -:  109:        , const XMLCh* const    aName
+        -:  110:        , const XMLCh* const    type
+        -:  111:        , const XMLCh* const    mode
+        -:  112:        , const XMLCh* const    value
+        -:  113:    ) = 0;
+        -:  114:
+        -:  115:   /**
+        -:  116:    * Report an internal entity declaration.
+        -:  117:    *
+        -:  118:    * <p>Only the effective (first) declaration for each entity will be
+        -:  119:    * reported. All parameter entities in the value will be expanded, but
+        -:  120:    * general entities will not.</p>
+        -:  121:    *
+        -:  122:    * @param name The name of the entity. If it is a parameter entity, the name will begin with '%'.
+        -:  123:    * @param value The replacement text of the entity.
+        -:  124:    * @exception SAXException Any SAX exception, possibly
+        -:  125:    *            wrapping another exception.
+        -:  126:    */
+        -:  127:    virtual void internalEntityDecl
+        -:  128:    (
+        -:  129:        const   XMLCh* const    name
+        -:  130:        , const XMLCh* const    value
+        -:  131:    ) = 0;
+        -:  132:
+        -:  133:   /**
+        -:  134:    * Report a parsed external entity declaration.
+        -:  135:    *
+        -:  136:    * <p>Only the effective (first) declaration for each entity will
+        -:  137:    * be reported.</p>
+        -:  138:    *
+        -:  139:    * @param name The name of the entity. If it is a parameter entity, the name will begin with '%'.
+        -:  140:    * @param publicId The The declared public identifier of the entity, or null if none was declared.
+        -:  141:    * @param systemId The declared system identifier of the entity.
+        -:  142:    * @exception SAXException Any SAX exception, possibly
+        -:  143:    *            wrapping another exception.
+        -:  144:    */
+        -:  145:    virtual void externalEntityDecl
+        -:  146:    (
+        -:  147:        const   XMLCh* const    name
+        -:  148:        , const XMLCh* const    publicId
+        -:  149:        , const XMLCh* const    systemId
+        -:  150:    ) = 0;
+        -:  151:
+        -:  152:    //@}
+        -:  153:private :
+        -:  154:    /* Unimplemented Constructors and operators */
+        -:  155:    /* Copy constructor */
+        -:  156:    DeclHandler(const DeclHandler&);
+        -:  157:    /** Assignment operator */
+        -:  158:    DeclHandler& operator=(const DeclHandler&);
+        -:  159:};
+        -:  160:
+        -:  161:XERCES_CPP_NAMESPACE_END
+        -:  162:
+        -:  163:#endif

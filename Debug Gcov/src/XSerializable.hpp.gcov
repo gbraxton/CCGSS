@@ -1,0 +1,129 @@
+        -:    0:Source:/usr/local/include/xercesc/internal/XSerializable.hpp
+        -:    0:Graph:Test.gcno
+        -:    0:Data:Test.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: * 
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: * 
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: XSerializable.hpp 527149 2007-04-10 14:56:39Z amassari $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_XSERIALIZABLE_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_XSERIALIZABLE_HPP
+        -:   24:
+        -:   25:#include <xercesc/internal/XSerializeEngine.hpp>
+        -:   26:#include <xercesc/internal/XProtoType.hpp>
+        -:   27:
+        -:   28:XERCES_CPP_NAMESPACE_BEGIN
+        -:   29:
+        -:   30:class XMLUTIL_EXPORT XSerializable
+        -:   31:{
+        -:   32:public :
+        -:   33:
+        -:   34:    // -----------------------------------------------------------------------
+        -:   35:    //  Constructors and Destructor
+        -:   36:    // -----------------------------------------------------------------------
+function _ZN11xercesc_3_113XSerializableD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_113XSerializableD2Ev called 0 returned 0% blocks executed 0%
+    #####:   37:    virtual ~XSerializable() {} ;
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   38:
+        -:   39:    // -----------------------------------------------------------------------
+        -:   40:    //  Serialization Interface
+        -:   41:    // -----------------------------------------------------------------------   
+        -:   42:    virtual bool        isSerializable()               const = 0;
+        -:   43:
+        -:   44:    virtual void        serialize(XSerializeEngine& )        = 0;
+        -:   45:
+        -:   46:    virtual XProtoType* getProtoType()                 const = 0;
+        -:   47:
+        -:   48:protected:
+        -:   49:    XSerializable() {}
+        -:   50:    XSerializable(const XSerializable& ) {}             
+        -:   51:
+        -:   52:private:
+        -:   53:    // -----------------------------------------------------------------------
+        -:   54:    //  Unimplemented assignment operator
+        -:   55:    // -----------------------------------------------------------------------
+        -:   56:	XSerializable& operator=(const XSerializable&);
+        -:   57:
+        -:   58:};
+        -:   59:
+        -:   60:inline void XSerializable::serialize(XSerializeEngine& )
+        -:   61:{
+        -:   62:}
+        -:   63:
+        -:   64:/***
+        -:   65: * Macro to be included in XSerializable derivatives'
+        -:   66: * declaration's public section
+        -:   67: ***/
+        -:   68:#define DECL_XSERIALIZABLE(class_name) \
+        -:   69:public: \
+        -:   70:\
+        -:   71:DECL_XPROTOTYPE(class_name) \
+        -:   72:\
+        -:   73:virtual bool                    isSerializable()                  const ;  \
+        -:   74:virtual XProtoType*             getProtoType()                    const;   \
+        -:   75:virtual void                    serialize(XSerializeEngine&); \
+        -:   76:\
+        -:   77:inline friend XSerializeEngine& operator>>(XSerializeEngine& serEng  \
+        -:   78:                                         , class_name*&      objPtr) \
+        -:   79:{objPtr = (class_name*) serEng.read(XPROTOTYPE_CLASS(class_name));   \
+        -:   80: return serEng; \
+        -:   81:};
+        -:   82:	
+        -:   83:/***
+        -:   84: * Macro to be included in the implementation file
+        -:   85: * of XSerializable derivatives' which is instantiable
+        -:   86: ***/
+        -:   87:#define IMPL_XSERIALIZABLE_TOCREATE(class_name) \
+        -:   88:IMPL_XPROTOTYPE_TOCREATE(class_name) \
+        -:   89:IMPL_XSERIAL(class_name)
+        -:   90:
+        -:   91:/***
+        -:   92: * Macro to be included in the implementation file
+        -:   93: * of XSerializable derivatives' which is UN-instantiable
+        -:   94: ***/
+        -:   95:#define IMPL_XSERIALIZABLE_NOCREATE(class_name) \
+        -:   96:IMPL_XPROTOTYPE_NOCREATE(class_name) \
+        -:   97:IMPL_XSERIAL(class_name)
+        -:   98:
+        -:   99:/***
+        -:  100: * Helper Macro 
+        -:  101: ***/
+        -:  102:#define IMPL_XSERIAL(class_name) \
+        -:  103:bool        class_name::isSerializable() const \
+        -:  104:{return true; } \
+        -:  105:XProtoType* class_name::getProtoType()   const \
+        -:  106:{return XPROTOTYPE_CLASS(class_name); } 
+        -:  107:
+        -:  108:#define IS_EQUIVALENT(lptr, rptr) \
+        -:  109:    if (lptr == rptr)             \
+        -:  110:        return true;              \
+        -:  111:    if (( lptr && !rptr) || (!lptr &&  rptr))  \
+        -:  112:        return false;
+        -:  113:
+        -:  114:XERCES_CPP_NAMESPACE_END
+        -:  115:
+        -:  116:#endif
+        -:  117:

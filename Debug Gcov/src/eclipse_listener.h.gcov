@@ -1,0 +1,222 @@
+        -:    0:Source:/home/gbraxton/workspace/CCGSS/cute/eclipse_listener.h
+        -:    0:Graph:Test.gcno
+        -:    0:Data:Test.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*********************************************************************************
+        -:    2: * This file is part of CUTE.
+        -:    3: *
+        -:    4: * CUTE is free software: you can redistribute it and/or modify
+        -:    5: * it under the terms of the GNU Lesser General Public License as published by
+        -:    6: * the Free Software Foundation, either version 3 of the License, or
+        -:    7: * (at your option) any later version.
+        -:    8: *
+        -:    9: * CUTE is distributed in the hope that it will be useful,
+        -:   10: * but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   11: * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   12: * GNU Lesser General Public License for more details.
+        -:   13: *
+        -:   14: * You should have received a copy of the GNU Lesser General Public License
+        -:   15: * along with CUTE.  If not, see <http://www.gnu.org/licenses/>.
+        -:   16: *
+        -:   17: * Copyright 2007 Peter Sommerlad, Emanuel Graf
+        -:   18: *
+        -:   19: *********************************************************************************/
+        -:   20:#ifndef ECLIPSE_LISTENER_H_
+        -:   21:#define ECLIPSE_LISTENER_H_
+        -:   22:#include "ostream_listener.h"
+        -:   23:#include <iostream>
+        -:   24:#include <iterator>
+        -:   25:#include <algorithm>
+        -:   26:namespace cute {
+        -:   27:
+        -:   28:	class eclipse_listener
+        -:   29:	{
+        -:   30:	protected:
+        -:   31:		struct blankToUnderscore{
+function _ZN4cute16eclipse_listener17blankToUnderscoreclEc called 49 returned 100% blocks executed 75%
+       49:   32:            char operator()(char in){
+       49:   33:			if (in == ' ') return '_';
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+       49:   34:			return in;
+        -:   35:		}
+        -:   36:        };
+function _ZN4cute16eclipse_listener10maskBlanksERKSs called 3 returned 100% blocks executed 70%
+        3:   37:		std::string maskBlanks(const std::string &in) {
+        3:   38:			std::string result;
+call    0 returned 100%
+        3:   39:			std::transform(in.begin(),in.end(),std::back_inserter(result),blankToUnderscore());
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0% (throw)
+call    2 returned 100%
+branch  3 taken 100% (fallthrough)
+branch  4 taken 0% (throw)
+call    5 returned 100%
+branch  6 taken 100% (fallthrough)
+branch  7 taken 0% (throw)
+call    8 returned 100%
+branch  9 taken 100% (fallthrough)
+branch 10 taken 0% (throw)
+call   11 returned 100%
+        3:   40:			return result;
+call    0 never executed
+call    1 never executed
+        -:   41:		}
+        -:   42:	public:
+function _ZN4cute16eclipse_listenerC2Ev called 1 returned 100% blocks executed 100%
+        1:   43:		eclipse_listener() {}
+function _ZN4cute16eclipse_listener5startERKNS_4testE called 3 returned 100% blocks executed 78%
+        3:   44:		void start(test const &t){
+        3:   45:			std::cout << std::endl << "#starting " <<t.name()<< std::endl;
+call    0 returned 100%
+branch  1 taken 100% (fallthrough)
+branch  2 taken 0% (throw)
+call    3 returned 100%
+branch  4 taken 100% (fallthrough)
+branch  5 taken 0% (throw)
+call    6 returned 100%
+branch  7 taken 100% (fallthrough)
+branch  8 taken 0% (throw)
+call    9 returned 100%
+branch 10 taken 100% (fallthrough)
+branch 11 taken 0% (throw)
+call   12 returned 100%
+call   13 returned 100%
+call   14 never executed
+call   15 never executed
+        3:   46:		}
+        -:   47:
+function _ZN4cute16eclipse_listener5beginERKSt6vectorINS_4testESaIS2_EEPKc called 1 returned 100% blocks executed 100%
+        1:   48:		void begin(suite const &t,char const *info){
+        1:   49:			std::cout << std::endl << "#beginning " << info << " " << t.size() << std::endl;
+call    0 returned 100%
+call    1 returned 100%
+call    2 returned 100%
+call    3 returned 100%
+call    4 returned 100%
+call    5 returned 100%
+call    6 returned 100%
+        1:   50:		}
+function _ZN4cute16eclipse_listener3endERKSt6vectorINS_4testESaIS2_EEPKc called 1 returned 100% blocks executed 100%
+        1:   51:		void end(suite const &t, char const *info){
+        1:   52:			std::cout << std::endl << "#ending " << info << std::endl;
+call    0 returned 100%
+call    1 returned 100%
+call    2 returned 100%
+call    3 returned 100%
+        1:   53:		}
+function _ZN4cute16eclipse_listener7successERKNS_4testEPKc called 3 returned 100% blocks executed 73%
+        3:   54:		void success(test const &t, char const *msg){
+        3:   55:			std::cout << std::endl << "#success " <<  maskBlanks(t.name()) <<" " << msg<< std::endl;
+call    0 returned 100%
+branch  1 taken 100% (fallthrough)
+branch  2 taken 0% (throw)
+call    3 returned 100%
+branch  4 taken 100% (fallthrough)
+branch  5 taken 0% (throw)
+call    6 returned 100%
+branch  7 taken 100% (fallthrough)
+branch  8 taken 0% (throw)
+call    9 returned 100%
+branch 10 taken 100% (fallthrough)
+branch 11 taken 0% (throw)
+call   12 returned 100%
+branch 13 taken 100% (fallthrough)
+branch 14 taken 0% (throw)
+call   15 returned 100%
+branch 16 taken 100% (fallthrough)
+branch 17 taken 0% (throw)
+call   18 returned 100%
+branch 19 taken 100% (fallthrough)
+branch 20 taken 0% (throw)
+call   21 returned 100%
+branch 22 taken 100% (fallthrough)
+branch 23 taken 0% (throw)
+call   24 returned 100%
+call   25 returned 100%
+call   26 never executed
+call   27 never executed
+call   28 never executed
+        3:   56:		}
+function _ZN4cute16eclipse_listener7failureERKNS_4testERKNS_12test_failureE called 0 returned 0% blocks executed 0%
+    #####:   57:		void failure(test const &t,test_failure const &e){
+    #####:   58:			std::cout << std::endl << "#failure " << maskBlanks(t.name()) << " " << e.filename << ":" << e.lineno << " " <<e.reason << std::endl;
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+call    3 never executed
+branch  4 never executed
+branch  5 never executed
+call    6 never executed
+branch  7 never executed
+branch  8 never executed
+call    9 never executed
+branch 10 never executed
+branch 11 never executed
+call   12 never executed
+branch 13 never executed
+branch 14 never executed
+call   15 never executed
+branch 16 never executed
+branch 17 never executed
+call   18 never executed
+branch 19 never executed
+branch 20 never executed
+call   21 never executed
+branch 22 never executed
+branch 23 never executed
+call   24 never executed
+branch 25 never executed
+branch 26 never executed
+call   27 never executed
+branch 28 never executed
+branch 29 never executed
+call   30 never executed
+branch 31 never executed
+branch 32 never executed
+call   33 never executed
+branch 34 never executed
+branch 35 never executed
+call   36 never executed
+call   37 never executed
+call   38 never executed
+call   39 never executed
+call   40 never executed
+    #####:   59:		}
+function _ZN4cute16eclipse_listener5errorERKNS_4testEPKc called 0 returned 0% blocks executed 0%
+    #####:   60:		void error(test const &t, char const *what){
+    #####:   61:			std::cout << std::endl << "#error " << maskBlanks(t.name()) << " " << what << std::endl;
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+call    3 never executed
+branch  4 never executed
+branch  5 never executed
+call    6 never executed
+branch  7 never executed
+branch  8 never executed
+call    9 never executed
+branch 10 never executed
+branch 11 never executed
+call   12 never executed
+branch 13 never executed
+branch 14 never executed
+call   15 never executed
+branch 16 never executed
+branch 17 never executed
+call   18 never executed
+branch 19 never executed
+branch 20 never executed
+call   21 never executed
+branch 22 never executed
+branch 23 never executed
+call   24 never executed
+call   25 never executed
+call   26 never executed
+call   27 never executed
+call   28 never executed
+    #####:   62:		}
+        -:   63:	};
+        -:   64:}
+        -:   65:#endif /*ECLIPSE_LISTENER_H_*/

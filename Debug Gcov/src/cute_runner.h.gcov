@@ -1,0 +1,167 @@
+        -:    0:Source:/home/gbraxton/workspace/CCGSS/cute/cute_runner.h
+        -:    0:Graph:Test.gcno
+        -:    0:Data:Test.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*********************************************************************************
+        -:    2: * This file is part of CUTE.
+        -:    3: *
+        -:    4: * CUTE is free software: you can redistribute it and/or modify
+        -:    5: * it under the terms of the GNU Lesser General Public License as published by
+        -:    6: * the Free Software Foundation, either version 3 of the License, or
+        -:    7: * (at your option) any later version.
+        -:    8: *
+        -:    9: * CUTE is distributed in the hope that it will be useful,
+        -:   10: * but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   11: * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   12: * GNU Lesser General Public License for more details.
+        -:   13: *
+        -:   14: * You should have received a copy of the GNU Lesser General Public License
+        -:   15: * along with CUTE.  If not, see <http://www.gnu.org/licenses/>.
+        -:   16: *
+        -:   17: * Copyright 2006 Peter Sommerlad
+        -:   18: *
+        -:   19: *********************************************************************************/
+        -:   20:
+        -:   21:#ifndef CUTE_RUNNER_H_
+        -:   22:#define CUTE_RUNNER_H_
+        -:   23:#include "cute_test.h"
+        -:   24:#include "cute_suite.h"
+        -:   25:#include "cute_listener.h"
+        -:   26:namespace cute {
+        -:   27:	template <typename Listener=null_listener>
+        -:   28:	struct runner : Listener{
+        -:   29:		runner():Listener(){}
+function _ZN4cute6runnerINS_16eclipse_listenerEEC2ERS1_ called 1 returned 100% blocks executed 100%
+        1:   30:		runner(Listener &s):Listener(s){}
+        -:   31:		bool operator()(test const &t){
+        -:   32:			return runit(t);
+        -:   33:		}
+function _ZN4cute6runnerINS_16eclipse_listenerEEclERKSt6vectorINS_4testESaIS4_EEPKc called 1 returned 100% blocks executed 83%
+        1:   34:		bool operator()(suite const &s,char const *info=""){
+        1:   35:			Listener::begin(s,info);
+call    0 returned 100%
+        1:   36:			bool result=true;
+        4:   37:			for(suite::const_iterator it=s.begin();
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0% (throw)
+call    2 returned 100%
+call    3 returned 100%
+branch  4 taken 100% (fallthrough)
+branch  5 taken 0% (throw)
+call    6 returned 100%
+branch  7 taken 100% (fallthrough)
+branch  8 taken 0% (throw)
+call    9 returned 100%
+branch 10 taken 75%
+branch 11 taken 25% (fallthrough)
+call   12 never executed
+        -:   38:			    it != s.end();
+        -:   39:			    ++it){
+        3:   40:			    	result = this->runit(*it) && result;
+call    0 returned 100%
+branch  1 taken 100% (fallthrough)
+branch  2 taken 0% (throw)
+call    3 returned 100%
+branch  4 taken 100% (fallthrough)
+branch  5 taken 0%
+branch  6 taken 100% (fallthrough)
+branch  7 taken 0%
+        -:   41:			    }
+        1:   42:			Listener::end(s,info);
+call    0 returned 100%
+        1:   43:			return result;
+        -:   44:		}
+        -:   45:	private:
+function _ZN4cute6runnerINS_16eclipse_listenerEE5runitERKNS_4testE called 3 returned 100% blocks executed 13%
+        3:   46:		bool runit(test const &t){
+        -:   47:			try {
+        3:   48:				Listener::start(t);
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0% (throw)
+call    2 returned 100%
+        3:   49:				t();
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0% (throw)
+call    2 returned 100%
+        3:   50:				Listener::success(t,"OK");
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0% (throw)
+call    2 returned 100%
+        3:   51:				return true;
+    =====:   52:			} catch (cute::test_failure const &e){
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+    =====:   53:				Listener::failure(t,e);
+branch  0 never executed
+branch  1 never executed
+call    2 never executed
+    =====:   54:			} catch (std::exception const &exc){
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+    =====:   55:				Listener::error(t,demangle(exc.what()).c_str());
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+branch  5 never executed
+branch  6 never executed
+call    7 never executed
+branch  8 never executed
+branch  9 never executed
+call   10 never executed
+branch 11 never executed
+branch 12 never executed
+call   13 never executed
+    =====:   56:			} catch (std::string &s){
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+    =====:   57:				Listener::error(t,s.c_str());
+branch  0 never executed
+branch  1 never executed
+call    2 never executed
+branch  3 never executed
+branch  4 never executed
+call    5 never executed
+    =====:   58:			} catch (char const *&cs) {
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+    =====:   59:				Listener::error(t,cs);
+branch  0 never executed
+branch  1 never executed
+call    2 never executed
+    =====:   60:			} catch(...) {
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+branch  4 never executed
+branch  5 never executed
+branch  6 never executed
+call    7 never executed
+call    8 never executed
+    =====:   61:				Listener::error(t,"unknown exception thrown");
+branch  0 never executed
+branch  1 never executed
+call    2 never executed
+        -:   62:			}
+    =====:   63:			return false;
+        -:   64:		}
+        -:   65:	};
+        -:   66:	template <typename Listener>
+function _ZN4cute10makeRunnerINS_16eclipse_listenerEEENS_6runnerIT_EERS3_ called 1 returned 100% blocks executed 100%
+        1:   67:	runner<Listener> makeRunner(Listener &s){
+        1:   68:		return runner<Listener>(s);
+call    0 returned 100%
+        -:   69:	}
+        -:   70:}
+        -:   71:#endif /*CUTE_RUNNER_H_*/

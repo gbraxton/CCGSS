@@ -1,0 +1,82 @@
+        -:    0:Source:/home/gbraxton/workspace/CCGSS/cute/cute_demangle.h
+        -:    0:Graph:Test.gcno
+        -:    0:Data:Test.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*********************************************************************************
+        -:    2: * This file is part of CUTE.
+        -:    3: *
+        -:    4: * CUTE is free software: you can redistribute it and/or modify
+        -:    5: * it under the terms of the GNU Lesser General Public License as published by
+        -:    6: * the Free Software Foundation, either version 3 of the License, or
+        -:    7: * (at your option) any later version.
+        -:    8: *
+        -:    9: * CUTE is distributed in the hope that it will be useful,
+        -:   10: * but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   11: * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   12: * GNU Lesser General Public License for more details.
+        -:   13: *
+        -:   14: * You should have received a copy of the GNU Lesser General Public License
+        -:   15: * along with CUTE.  If not, see <http://www.gnu.org/licenses/>.
+        -:   16: *
+        -:   17: * Copyright 2009 Peter Sommerlad
+        -:   18: *
+        -:   19: *********************************************************************************/
+        -:   20:
+        -:   21:#ifndef CUTE_DEMANGLE_H_
+        -:   22:#define CUTE_DEMANGLE_H_
+        -:   23:#include <string>
+        -:   24:// needs adaptation for different compilers
+        -:   25:// dependency to demangle is a given,
+        -:   26:// otherwise we have to use macros everywhere
+        -:   27:#ifdef __GNUG__
+        -:   28:#include <cxxabi.h> // __cxa_demangle
+        -:   29:#include <cstdlib> // ::free() 
+        -:   30:namespace cute {
+        -:   31:
+function _ZN4cute8demangleEPKc called 0 returned 0% blocks executed 0%
+    #####:   32:inline std::string demangle(char const *name){
+    #####:   33:	if (!name) return "unknown";
+branch  0 never executed
+branch  1 never executed
+call    2 never executed
+branch  3 never executed
+branch  4 never executed
+call    5 never executed
+call    6 never executed
+call    7 never executed
+    #####:   34:	char *toBeFreed = abi::__cxa_demangle(name,0,0,0);
+branch  0 never executed
+branch  1 never executed
+call    2 never executed
+    #####:   35:	std::string result(toBeFreed?toBeFreed:name);
+call    0 never executed
+branch  1 never executed
+branch  2 never executed
+branch  3 never executed
+branch  4 never executed
+call    5 never executed
+call    6 never executed
+call    7 never executed
+    #####:   36:	::free(toBeFreed);
+    #####:   37:	return result;
+branch  0 never executed
+branch  1 never executed
+call    2 never executed
+branch  3 never executed
+branch  4 never executed
+call    5 never executed
+call    6 never executed
+call    7 never executed
+        -:   38:}
+        -:   39:}
+        -:   40:#else
+        -:   41:namespace cute {
+        -:   42:// this default works reasonably with MSVC71 and 8, hopefully for others as well
+        -:   43:inline std::string demangle(char const *name){
+        -:   44:	return std::string(name?name:"unknown");
+        -:   45:}
+        -:   46:}
+        -:   47:#endif
+        -:   48:
+        -:   49:#endif /* CUTE_DEMANGLE_H_ */

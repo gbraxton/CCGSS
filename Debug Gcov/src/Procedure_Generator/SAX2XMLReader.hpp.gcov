@@ -1,0 +1,906 @@
+        -:    0:Source:/usr/local/include/xercesc/sax2/SAX2XMLReader.hpp
+        -:    0:Graph:simulation_package_builder.gcno
+        -:    0:Data:simulation_package_builder.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: *
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: *
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: SAX2XMLReader.hpp 932887 2010-04-11 13:04:59Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_SAX2XMLREADER_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_SAX2XMLREADER_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XercesDefs.hpp>
+        -:   26:#include <xercesc/util/XMLUniDefs.hpp>
+        -:   27:#include <xercesc/framework/XMLValidator.hpp>
+        -:   28:#include <xercesc/framework/XMLPScanToken.hpp>
+        -:   29:#include <xercesc/validators/common/Grammar.hpp>
+        -:   30:
+        -:   31:XERCES_CPP_NAMESPACE_BEGIN
+        -:   32:
+        -:   33:class ContentHandler ;
+        -:   34:class DTDHandler;
+        -:   35:class EntityResolver;
+        -:   36:class ErrorHandler;
+        -:   37:class InputSource;
+        -:   38:class LexicalHandler;
+        -:   39:class DeclHandler;
+        -:   40:class XMLDocumentHandler;
+        -:   41:
+        -:   42:class SAX2_EXPORT SAX2XMLReader
+        -:   43:{
+        -:   44:public:
+        -:   45:    // -----------------------------------------------------------------------
+        -:   46:    //  Class types
+        -:   47:    // -----------------------------------------------------------------------
+        -:   48:    /** @name Public constants */
+        -:   49:    //@{
+        -:   50:
+        -:   51:    /** ValScheme enum used in setValidationScheme
+        -:   52:      *    Val_Never:  Do not report validation errors.
+        -:   53:      *    Val_Always: The parser will always report validation errors.
+        -:   54:      *    Val_Auto:   The parser will report validation errors only if a grammar is specified.
+        -:   55:      *
+        -:   56:      * The schemes map to these feature values:
+        -:   57:      *    Val_Never:
+        -:   58:      *        parser->setFeature(XMLUni::fgSAX2CoreValidation, false);
+        -:   59:      *
+        -:   60:      *    Val_Always:
+        -:   61:      *        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+        -:   62:      *        parser->setFeature(XMLUni::fgXercesDynamic, false);
+        -:   63:      *
+        -:   64:      *    Val_Auto:
+        -:   65:      *        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+        -:   66:      *        parser->setFeature(XMLUni::fgXercesDynamic, true);
+        -:   67:      *
+        -:   68:      * @see #setFeature
+        -:   69:      */
+        -:   70:    enum ValSchemes
+        -:   71:    {
+        -:   72:        Val_Never
+        -:   73:        , Val_Always
+        -:   74:        , Val_Auto
+        -:   75:    };
+        -:   76:    //@}
+        -:   77:
+        -:   78:
+        -:   79:    // -----------------------------------------------------------------------
+        -:   80:    //  Constructors and Destructor
+        -:   81:    // -----------------------------------------------------------------------
+        -:   82:    /** @name Constructors and Destructor */
+        -:   83:    //@{
+        -:   84:    /** The default constructor */
+        -:   85:    SAX2XMLReader()
+        -:   86:    {
+        -:   87:    }
+        -:   88:    /** The destructor */
+function _ZN11xercesc_3_113SAX2XMLReaderD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_113SAX2XMLReaderD2Ev called 0 returned 0% blocks executed 0%
+    #####:   89:    virtual ~SAX2XMLReader()
+    #####:   90:    {
+    #####:   91:    }
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   92:    //@}
+        -:   93:
+        -:   94:    //-----------------------------------------------------------------------
+        -:   95:    // The XMLReader interface
+        -:   96:    //-----------------------------------------------------------------------
+        -:   97:    /** @name Implementation of SAX 2.0 XMLReader interface's. */
+        -:   98:    //@{
+        -:   99:
+        -:  100:    /**
+        -:  101:      * This method returns the installed content handler.
+        -:  102:      *
+        -:  103:      * @return A pointer to the installed content handler object.
+        -:  104:      */
+        -:  105:    virtual ContentHandler* getContentHandler() const = 0 ;
+        -:  106:
+        -:  107:    /**
+        -:  108:      * This method returns the installed DTD handler.
+        -:  109:      *
+        -:  110:      * @return A pointer to the installed DTD handler object.
+        -:  111:      */
+        -:  112:    virtual DTDHandler* getDTDHandler() const = 0;
+        -:  113:
+        -:  114:    /**
+        -:  115:      * This method returns the installed entity resolver.
+        -:  116:      *
+        -:  117:      * @return A pointer to the installed entity resolver object.
+        -:  118:      */
+        -:  119:    virtual EntityResolver* getEntityResolver() const = 0 ;
+        -:  120:
+        -:  121:    /**
+        -:  122:      * This method returns the installed error handler.
+        -:  123:      *
+        -:  124:      * @return A pointer to the installed error handler object.
+        -:  125:      */
+        -:  126:    virtual ErrorHandler* getErrorHandler() const = 0 ;
+        -:  127:
+        -:  128:    /**
+        -:  129:      * Query the current state of any feature in a SAX2 XMLReader.
+        -:  130:      *
+        -:  131:      * @param name The unique identifier (URI) of the feature being set.
+        -:  132:      * @return The current state of the feature.
+        -:  133:      * @exception SAXNotRecognizedException If the requested feature is not known.
+        -:  134:      */
+        -:  135:    virtual bool getFeature(const XMLCh* const name) const = 0;
+        -:  136:
+        -:  137:   /**
+        -:  138:     * Query the current value of a property in a SAX2 XMLReader.
+        -:  139:     *
+        -:  140:     * The parser owns the returned pointer.  The memory allocated for
+        -:  141:     * the returned pointer will be destroyed when the parser is deleted.
+        -:  142:     *
+        -:  143:     * To ensure accessibility of the returned information after the parser
+        -:  144:     * is deleted, callers need to copy and store the returned information
+        -:  145:     * somewhere else; otherwise you may get unexpected result.  Since the returned
+        -:  146:     * pointer is a generic void pointer, see the SAX2 Programming Guide to learn
+        -:  147:     * exactly what type of property value each property returns for replication.
+        -:  148:     *
+        -:  149:     * @param name The unique identifier (URI) of the property being set.
+        -:  150:     * @return     The current value of the property.  The pointer spans the same
+        -:  151:     *             life-time as the parser.  A null pointer is returned if nothing
+        -:  152:     *             was specified externally.
+        -:  153:     * @exception  SAXNotRecognizedException If the requested property is not known.
+        -:  154:     */
+        -:  155:	virtual void* getProperty(const XMLCh* const name) const = 0 ;
+        -:  156:
+        -:  157:  /**
+        -:  158:    * Allow an application to register a document event handler.
+        -:  159:    *
+        -:  160:    * If the application does not register a document handler, all
+        -:  161:    * document events reported by the SAX parser will be silently
+        -:  162:    * ignored (this is the default behaviour implemented by
+        -:  163:    * HandlerBase).
+        -:  164:    *
+        -:  165:    * Applications may register a new or different handler in the
+        -:  166:    * middle of a parse, and the SAX parser must begin using the new
+        -:  167:    * handler immediately.
+        -:  168:    *
+        -:  169:    * @param handler The document handler.
+        -:  170:    * @see ContentHandler#ContentHandler
+        -:  171:    * @see HandlerBase#HandlerBase
+        -:  172:    */
+        -:  173:    virtual void setContentHandler(ContentHandler* const handler) = 0;
+        -:  174:
+        -:  175:  /**
+        -:  176:    * Allow an application to register a DTD event handler.
+        -:  177:    *
+        -:  178:    * If the application does not register a DTD handler, all DTD
+        -:  179:    * events reported by the SAX parser will be silently ignored (this
+        -:  180:    * is the default behaviour implemented by HandlerBase).
+        -:  181:    *
+        -:  182:    * Applications may register a new or different handler in the middle
+        -:  183:    * of a parse, and the SAX parser must begin using the new handler
+        -:  184:    * immediately.
+        -:  185:    *
+        -:  186:    * @param handler The DTD handler.
+        -:  187:    * @see DTDHandler#DTDHandler
+        -:  188:    * @see HandlerBase#HandlerBase
+        -:  189:    */
+        -:  190:    virtual void setDTDHandler(DTDHandler* const handler) = 0;
+        -:  191:
+        -:  192:  /**
+        -:  193:    * Allow an application to register a custom entity resolver.
+        -:  194:    *
+        -:  195:    * If the application does not register an entity resolver, the
+        -:  196:    * SAX parser will resolve system identifiers and open connections
+        -:  197:    * to entities itself (this is the default behaviour implemented in
+        -:  198:    * DefaultHandler).
+        -:  199:    *
+        -:  200:    * Applications may register a new or different entity resolver
+        -:  201:    * in the middle of a parse, and the SAX parser must begin using
+        -:  202:    * the new resolver immediately.
+        -:  203:    *
+        -:  204:    * @param resolver The object for resolving entities.
+        -:  205:    * @see EntityResolver#EntityResolver
+        -:  206:    * @see DefaultHandler#DefaultHandler
+        -:  207:    */
+        -:  208:    virtual void setEntityResolver(EntityResolver* const resolver) = 0;
+        -:  209:
+        -:  210:  /**
+        -:  211:    * Allow an application to register an error event handler.
+        -:  212:    *
+        -:  213:    * If the application does not register an error event handler,
+        -:  214:    * all error events reported by the SAX parser will be silently
+        -:  215:    * ignored, except for fatalError, which will throw a SAXException
+        -:  216:    * (this is the default behaviour implemented by HandlerBase).
+        -:  217:    *
+        -:  218:    * Applications may register a new or different handler in the
+        -:  219:    * middle of a parse, and the SAX parser must begin using the new
+        -:  220:    * handler immediately.
+        -:  221:    *
+        -:  222:    * @param handler The error handler.
+        -:  223:    * @see ErrorHandler#ErrorHandler
+        -:  224:    * @see SAXException#SAXException
+        -:  225:    * @see HandlerBase#HandlerBase
+        -:  226:    */
+        -:  227:    virtual void setErrorHandler(ErrorHandler* const handler) = 0;
+        -:  228:
+        -:  229:  /**
+        -:  230:    * Set the state of any feature in a SAX2 XMLReader.
+        -:  231:    * Supported features in SAX2 for xerces-c are:
+        -:  232:    * <br>(See the SAX2 Programming Guide for detail description).
+        -:  233:    *
+        -:  234:    * <br>http://xml.org/sax/features/validation (default: true)
+        -:  235:    * <br>http://xml.org/sax/features/namespaces (default: true)
+        -:  236:    * <br>http://xml.org/sax/features/namespace-prefixes (default: false)
+        -:  237:    * <br>http://apache.org/xml/features/validation/dynamic (default: false)
+        -:  238:    * <br>http://apache.org/xml/features/validation/reuse-grammar (default: false)
+        -:  239:    * <br>http://apache.org/xml/features/validation/schema (default: true)
+        -:  240:    * <br>http://apache.org/xml/features/validation/schema-full-checking (default: false)
+        -:  241:    * <br>http://apache.org/xml/features/validating/load-schema (default: true)
+        -:  242:    * <br>http://apache.org/xml/features/nonvalidating/load-external-dtd (default: true)
+        -:  243:    * <br>http://apache.org/xml/features/continue-after-fatal-error (default: false)
+        -:  244:    * <br>http://apache.org/xml/features/validation-error-as-fatal (default: false)
+        -:  245:    *
+        -:  246:    * @param name The unique identifier (URI) of the feature.
+        -:  247:    * @param value The requested state of the feature (true or false).
+        -:  248:    * @exception SAXNotRecognizedException If the requested feature is not known.
+        -:  249:    * @exception SAXNotSupportedException Feature modification is not supported during parse
+        -:  250:    *
+        -:  251:    */
+        -:  252:	virtual void setFeature(const XMLCh* const name, const bool value) = 0;
+        -:  253:
+        -:  254:  /**
+        -:  255:    * Set the value of any property in a SAX2 XMLReader.
+        -:  256:    * Supported properties in SAX2 for xerces-c are:
+        -:  257:    * <br>(See the SAX2 Programming Guide for detail description).
+        -:  258:    *
+        -:  259:    * <br>http://apache.org/xml/properties/schema/external-schemaLocation
+        -:  260:    * <br>http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation.
+        -:  261:    *
+        -:  262:    * It takes a void pointer as the property value.  Application is required to initialize this void
+        -:  263:    * pointer to a correct type.  See the SAX2 Programming Guide
+        -:  264:    * to learn exactly what type of property value each property expects for processing.
+        -:  265:    * Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
+        -:  266:    * If the same property is set more than once, the last one takes effect.
+        -:  267:    *
+        -:  268:    * @param name The unique identifier (URI) of the property being set.
+        -:  269:    * @param value The requested value for the property.  See
+        -:  270:    *            the SAX2 Programming Guide to learn
+        -:  271:    *            exactly what type of property value each property expects for processing.
+        -:  272:    *            Passing a void pointer that was initialized with a wrong type will lead
+        -:  273:    *            to unexpected result.
+        -:  274:    * @exception SAXNotRecognizedException If the requested property is not known.
+        -:  275:    * @exception SAXNotSupportedException Property modification is not supported during parse
+        -:  276:    */
+        -:  277:	virtual void setProperty(const XMLCh* const name, void* value) = 0 ;
+        -:  278:
+        -:  279:  /**
+        -:  280:    * Parse an XML document.
+        -:  281:    *
+        -:  282:    * The application can use this method to instruct the SAX parser
+        -:  283:    * to begin parsing an XML document from any valid input
+        -:  284:    * source (a character stream, a byte stream, or a URI).
+        -:  285:    *
+        -:  286:    * Applications may not invoke this method while a parse is in
+        -:  287:    * progress (they should create a new Parser instead for each
+        -:  288:    * additional XML document).  Once a parse is complete, an
+        -:  289:    * application may reuse the same Parser object, possibly with a
+        -:  290:    * different input source.
+        -:  291:    *
+        -:  292:    * @param source The input source for the top-level of the
+        -:  293:    *               XML document.
+        -:  294:    * @exception SAXException Any SAX exception, possibly
+        -:  295:    *            wrapping another exception.
+        -:  296:    * @exception XMLException An exception from the parser or client
+        -:  297:    *            handler code.
+        -:  298:    * @see InputSource#InputSource
+        -:  299:    * @see #setEntityResolver
+        -:  300:    * @see #setDTDHandler
+        -:  301:    * @see #setContentHandler
+        -:  302:    * @see #setErrorHandler
+        -:  303:    */
+        -:  304:    virtual void parse
+        -:  305:    (
+        -:  306:        const   InputSource&    source
+        -:  307:    ) = 0;
+        -:  308:
+        -:  309:  /**
+        -:  310:    * Parse an XML document from a system identifier (URI).
+        -:  311:    *
+        -:  312:    * This method is a shortcut for the common case of reading a
+        -:  313:    * document from a system identifier.  It is the exact equivalent
+        -:  314:    * of the following:
+        -:  315:    *
+        -:  316:    * parse(new URLInputSource(systemId));
+        -:  317:    *
+        -:  318:    * If the system identifier is a URL, it must be fully resolved
+        -:  319:    * by the application before it is passed to the parser.
+        -:  320:    *
+        -:  321:    * @param systemId The system identifier (URI).
+        -:  322:    * @exception SAXException Any SAX exception, possibly
+        -:  323:    *            wrapping another exception.
+        -:  324:    * @exception XMLException An exception from the parser or client
+        -:  325:    *            handler code.
+        -:  326:    * @see #parse(const InputSource&)
+        -:  327:    */
+        -:  328:    virtual void parse
+        -:  329:    (
+        -:  330:        const   XMLCh* const    systemId
+        -:  331:    ) = 0;
+        -:  332:
+        -:  333:  /**
+        -:  334:    * Parse an XML document from a system identifier (URI).
+        -:  335:    *
+        -:  336:    * This method is a shortcut for the common case of reading a
+        -:  337:    * document from a system identifier.  It is the exact equivalent
+        -:  338:    * of the following:
+        -:  339:    *
+        -:  340:    * parse(new URLInputSource(systemId));
+        -:  341:    *
+        -:  342:    * If the system identifier is a URL, it must be fully resolved
+        -:  343:    * by the application before it is passed to the parser.
+        -:  344:    *
+        -:  345:    * @param systemId The system identifier (URI).
+        -:  346:    * @exception SAXException Any SAX exception, possibly
+        -:  347:    *            wrapping another exception.
+        -:  348:    * @exception XMLException An exception from the parser or client
+        -:  349:    *            handler code.
+        -:  350:    * @see #parse(const InputSource&)
+        -:  351:    */
+        -:  352:    virtual void parse
+        -:  353:    (
+        -:  354:        const   char* const     systemId
+        -:  355:    ) = 0;
+        -:  356:
+        -:  357:    //@}
+        -:  358:
+        -:  359:    // -----------------------------------------------------------------------
+        -:  360:    //  SAX 2.0-ext
+        -:  361:    // -----------------------------------------------------------------------
+        -:  362:    /** @name SAX 2.0-ext */
+        -:  363:    //@{
+        -:  364:    /**
+        -:  365:      * This method returns the installed declaration handler.
+        -:  366:      *
+        -:  367:      * @return A pointer to the installed declaration handler object.
+        -:  368:      */
+        -:  369:    virtual DeclHandler* getDeclarationHandler() const = 0 ;
+        -:  370:
+        -:  371:	/**
+        -:  372:      * This method returns the installed lexical handler.
+        -:  373:      *
+        -:  374:      * @return A pointer to the installed lexical handler object.
+        -:  375:      */
+        -:  376:    virtual LexicalHandler* getLexicalHandler() const = 0 ;
+        -:  377:
+        -:  378:   /**
+        -:  379:    * Allow an application to register a declaration event handler.
+        -:  380:    *
+        -:  381:    * If the application does not register a declaration handler,
+        -:  382:    * all events reported by the SAX parser will be silently
+        -:  383:    * ignored. (this is the default behaviour implemented by DefaultHandler).
+        -:  384:    *
+        -:  385:    * Applications may register a new or different handler in the
+        -:  386:    * middle of a parse, and the SAX parser must begin using the new
+        -:  387:    * handler immediately.
+        -:  388:    *
+        -:  389:    * @param handler The DTD declaration handler.
+        -:  390:    * @see DeclHandler#DeclHandler
+        -:  391:    * @see SAXException#SAXException
+        -:  392:    * @see DefaultHandler#DefaultHandler
+        -:  393:    */
+        -:  394:    virtual void setDeclarationHandler(DeclHandler* const handler) = 0;
+        -:  395:
+        -:  396:   /**
+        -:  397:    * Allow an application to register a lexical event handler.
+        -:  398:    *
+        -:  399:    * If the application does not register a lexical handler,
+        -:  400:    * all events reported by the SAX parser will be silently
+        -:  401:    * ignored. (this is the default behaviour implemented by HandlerBase).
+        -:  402:    *
+        -:  403:    * Applications may register a new or different handler in the
+        -:  404:    * middle of a parse, and the SAX parser must begin using the new
+        -:  405:    * handler immediately.
+        -:  406:    *
+        -:  407:    * @param handler The error handler.
+        -:  408:    * @see LexicalHandler#LexicalHandler
+        -:  409:    * @see SAXException#SAXException
+        -:  410:    * @see HandlerBase#HandlerBase
+        -:  411:    */
+        -:  412:    virtual void setLexicalHandler(LexicalHandler* const handler) = 0;
+        -:  413:
+        -:  414:    //@}
+        -:  415:
+        -:  416:    // -----------------------------------------------------------------------
+        -:  417:    //  Getter Methods
+        -:  418:    // -----------------------------------------------------------------------
+        -:  419:    /** @name Getter Methods (Xerces-C specific) */
+        -:  420:    //@{
+        -:  421:    /**
+        -:  422:	  * This method is used to get the current validator.
+        -:  423:	  *
+        -:  424:	  * <b>SAX2XMLReader assumes responsibility for the validator.  It will be
+        -:  425:	  * deleted when the XMLReader is destroyed.</b>
+        -:  426:	  *
+        -:  427:	  * @return A pointer to the validator.  An application should not deleted
+        -:  428:	  * the object returned.
+        -:  429:	  *
+        -:  430:	  */
+        -:  431:	virtual XMLValidator* getValidator() const = 0;
+        -:  432:
+        -:  433:    /** Get error count from the last parse operation.
+        -:  434:      *
+        -:  435:      * This method returns the error count from the last parse
+        -:  436:      * operation. Note that this count is actually stored in the
+        -:  437:      * scanner, so this method simply returns what the
+        -:  438:      * scanner reports.
+        -:  439:      *
+        -:  440:      * @return number of errors encountered during the latest
+        -:  441:      *			parse operation.
+        -:  442:      */
+        -:  443:    virtual XMLSize_t getErrorCount() const = 0 ;
+        -:  444:
+        -:  445:    /**
+        -:  446:      * This method returns the state of the parser's
+        -:  447:      * exit-on-First-Fatal-Error flag.
+        -:  448:      *
+        -:  449:      * <p>Or you can query the feature "http://apache.org/xml/features/continue-after-fatal-error"
+        -:  450:      * which indicates the opposite state.</p>
+        -:  451:      *
+        -:  452:      * @return true, if the parser is currently configured to
+        -:  453:      *         exit on the first fatal error, false otherwise.
+        -:  454:      *
+        -:  455:      * @see #setExitOnFirstFatalError
+        -:  456:      * @see #getFeature
+        -:  457:      */
+        -:  458:    virtual bool getExitOnFirstFatalError() const = 0;
+        -:  459:
+        -:  460:    /**
+        -:  461:      * This method returns the state of the parser's
+        -:  462:      * validation-constraint-fatal flag.
+        -:  463:      *
+        -:  464:      * <p>Or you can query the feature "http://apache.org/xml/features/validation-error-as-fatal"
+        -:  465:      * which means the same thing.
+        -:  466:      *
+        -:  467:      * @return true, if the parser is currently configured to
+        -:  468:      *         set validation constraint errors as fatal, false
+        -:  469:      *         otherwise.
+        -:  470:      *
+        -:  471:      * @see #setValidationConstraintFatal
+        -:  472:      * @see #getFeature
+        -:  473:      */
+        -:  474:    virtual bool getValidationConstraintFatal() const = 0;
+        -:  475:
+        -:  476:    /**
+        -:  477:      * Retrieve the grammar that is associated with the specified namespace key
+        -:  478:      *
+        -:  479:      * @param  nameSpaceKey Namespace key
+        -:  480:      * @return Grammar associated with the Namespace key.
+        -:  481:      */
+        -:  482:    virtual Grammar* getGrammar(const XMLCh* const nameSpaceKey) = 0;
+        -:  483:
+        -:  484:    /**
+        -:  485:      * Retrieve the grammar where the root element is declared.
+        -:  486:      *
+        -:  487:      * @return Grammar where root element declared
+        -:  488:      */
+        -:  489:    virtual Grammar* getRootGrammar() = 0;
+        -:  490:
+        -:  491:    /**
+        -:  492:      * Returns the string corresponding to a URI id from the URI string pool.
+        -:  493:      *
+        -:  494:      * @param uriId id of the string in the URI string pool.
+        -:  495:      * @return URI string corresponding to the URI id.
+        -:  496:      */
+        -:  497:    virtual const XMLCh* getURIText(unsigned int uriId) const = 0;
+        -:  498:
+        -:  499:    /**
+        -:  500:      * Returns the current src offset within the input source.
+        -:  501:      * To be used only while parsing is in progress.
+        -:  502:      *
+        -:  503:      * @return offset within the input source
+        -:  504:      */
+        -:  505:    virtual XMLFilePos getSrcOffset() const = 0;
+        -:  506:
+        -:  507:    //@}
+        -:  508:
+        -:  509:    // -----------------------------------------------------------------------
+        -:  510:    //  Setter Methods
+        -:  511:    // -----------------------------------------------------------------------
+        -:  512:    /** @name Setter Methods (Xerces-C specific) */
+        -:  513:    //@{
+        -:  514:    /**
+        -:  515:      * This method is used to set a validator.
+        -:  516:      *
+        -:  517:      * <b>SAX2XMLReader assumes responsibility for the validator.  It will be
+        -:  518:      * deleted when the XMLReader is destroyed.</b>
+        -:  519:      *
+        -:  520:      * @param valueToAdopt A pointer to the validator that the reader should use.
+        -:  521:      *
+        -:  522:      */
+        -:  523:    virtual void setValidator(XMLValidator* valueToAdopt) = 0;
+        -:  524:
+        -:  525:    /**
+        -:  526:      * This method allows users to set the parser's behaviour when it
+        -:  527:      * encounters the first fatal error. If set to true, the parser
+        -:  528:      * will exit at the first fatal error. If false, then it will
+        -:  529:      * report the error and continue processing.
+        -:  530:      *
+        -:  531:      * <p>The default value is 'true' and the parser exits on the
+        -:  532:      * first fatal error.</p>
+        -:  533:      *
+        -:  534:      * <p>Or you can set the feature "http://apache.org/xml/features/continue-after-fatal-error"
+        -:  535:      * which has the opposite behaviour.</p>
+        -:  536:      *
+        -:  537:      * <p>If both the feature above and this function are used, the latter takes effect.</p>
+        -:  538:      *
+        -:  539:      * @param newState The value specifying whether the parser should
+        -:  540:      *                 continue or exit when it encounters the first
+        -:  541:      *                 fatal error.
+        -:  542:      *
+        -:  543:      * @see #getExitOnFirstFatalError
+        -:  544:      * @see #setFeature
+        -:  545:      */
+        -:  546:    virtual void setExitOnFirstFatalError(const bool newState) = 0;
+        -:  547:
+        -:  548:    /**
+        -:  549:      * This method allows users to set the parser's behaviour when it
+        -:  550:      * encounters a validation constraint error. If set to true, and the
+        -:  551:      * the parser will treat validation error as fatal and will exit depends on the
+        -:  552:      * state of "getExitOnFirstFatalError". If false, then it will
+        -:  553:      * report the error and continue processing.
+        -:  554:      *
+        -:  555:      * Note: setting this true does not mean the validation error will be printed with
+        -:  556:      * the word "Fatal Error".   It is still printed as "Error", but the parser
+        -:  557:      * will exit if "setExitOnFirstFatalError" is set to true.
+        -:  558:      *
+        -:  559:      * <p>The default value is 'false'.</p>
+        -:  560:      *
+        -:  561:      * <p>Or you can set the feature "http://apache.org/xml/features/validation-error-as-fatal"
+        -:  562:      * which means the same thing.</p>
+        -:  563:      *
+        -:  564:      * <p>If both the feature above and this function are used, the latter takes effect.</p>
+        -:  565:      *
+        -:  566:      * @param newState If true, the parser will exit if "setExitOnFirstFatalError"
+        -:  567:      *                 is set to true.
+        -:  568:      *
+        -:  569:      * @see #getValidationConstraintFatal
+        -:  570:      * @see #setExitOnFirstFatalError
+        -:  571:      * @see #setFeature
+        -:  572:      */
+        -:  573:    virtual void setValidationConstraintFatal(const bool newState) = 0;
+        -:  574:    //@}
+        -:  575:
+        -:  576:
+        -:  577:    // -----------------------------------------------------------------------
+        -:  578:    //  Progressive scan methods
+        -:  579:    // -----------------------------------------------------------------------
+        -:  580:
+        -:  581:    /** @name Progressive scan methods */
+        -:  582:    //@{
+        -:  583:
+        -:  584:    /** Begin a progressive parse operation
+        -:  585:      *
+        -:  586:      * This method is used to start a progressive parse on a XML file.
+        -:  587:      * To continue parsing, subsequent calls must be to the parseNext
+        -:  588:      * method.
+        -:  589:      *
+        -:  590:      * It scans through the prolog and returns a token to be used on
+        -:  591:      * subsequent scanNext() calls. If the return value is true, then the
+        -:  592:      * token is legal and ready for further use. If it returns false, then
+        -:  593:      * the scan of the prolog failed and the token is not going to work on
+        -:  594:      * subsequent scanNext() calls.
+        -:  595:      *
+        -:  596:      * @param systemId A pointer to a Unicode string representing the path
+        -:  597:      *                 to the XML file to be parsed.
+        -:  598:      * @param toFill   A token maintaing state information to maintain
+        -:  599:      *                 internal consistency between invocation of 'parseNext'
+        -:  600:      *                 calls.
+        -:  601:      *
+        -:  602:      * @return 'true', if successful in parsing the prolog. It indicates the
+        -:  603:      *         user can go ahead with parsing the rest of the file. It
+        -:  604:      *         returns 'false' to indicate that the parser could parse the
+        -:  605:      *         prolog (which means the token will not be valid.)
+        -:  606:      *
+        -:  607:      * @see #parseNext
+        -:  608:      * @see #parseFirst(char*,...)
+        -:  609:      * @see #parseFirst(InputSource&,...)
+        -:  610:      */
+        -:  611:    virtual bool parseFirst
+        -:  612:    (
+        -:  613:        const   XMLCh* const    systemId
+        -:  614:        ,       XMLPScanToken&  toFill
+        -:  615:    ) = 0;
+        -:  616:
+        -:  617:    /** Begin a progressive parse operation
+        -:  618:      *
+        -:  619:      * This method is used to start a progressive parse on a XML file.
+        -:  620:      * To continue parsing, subsequent calls must be to the parseNext
+        -:  621:      * method.
+        -:  622:      *
+        -:  623:      * It scans through the prolog and returns a token to be used on
+        -:  624:      * subsequent scanNext() calls. If the return value is true, then the
+        -:  625:      * token is legal and ready for further use. If it returns false, then
+        -:  626:      * the scan of the prolog failed and the token is not going to work on
+        -:  627:      * subsequent scanNext() calls.
+        -:  628:      *
+        -:  629:      * @param systemId A pointer to a regular native string representing
+        -:  630:      *                 the path to the XML file to be parsed.
+        -:  631:      * @param toFill   A token maintaing state information to maintain
+        -:  632:      *                 internal consistency between invocation of 'parseNext'
+        -:  633:      *                 calls.
+        -:  634:      *
+        -:  635:      * @return 'true', if successful in parsing the prolog. It indicates the
+        -:  636:      *         user can go ahead with parsing the rest of the file. It
+        -:  637:      *         returns 'false' to indicate that the parser could not parse
+        -:  638:      *         the prolog.
+        -:  639:      *
+        -:  640:      * @see #parseNext
+        -:  641:      * @see #parseFirst(XMLCh*,...)
+        -:  642:      * @see #parseFirst(InputSource&,...)
+        -:  643:      */
+        -:  644:    virtual bool parseFirst
+        -:  645:    (
+        -:  646:        const   char* const     systemId
+        -:  647:        ,       XMLPScanToken&  toFill
+        -:  648:    ) = 0;
+        -:  649:
+        -:  650:    /** Begin a progressive parse operation
+        -:  651:      *
+        -:  652:      * This method is used to start a progressive parse on a XML file.
+        -:  653:      * To continue parsing, subsequent calls must be to the parseNext
+        -:  654:      * method.
+        -:  655:      *
+        -:  656:      * It scans through the prolog and returns a token to be used on
+        -:  657:      * subsequent scanNext() calls. If the return value is true, then the
+        -:  658:      * token is legal and ready for further use. If it returns false, then
+        -:  659:      * the scan of the prolog failed and the token is not going to work on
+        -:  660:      * subsequent scanNext() calls.
+        -:  661:      *
+        -:  662:      * @param source   A const reference to the InputSource object which
+        -:  663:      *                 points to the XML file to be parsed.
+        -:  664:      * @param toFill   A token maintaing state information to maintain
+        -:  665:      *                 internal consistency between invocation of 'parseNext'
+        -:  666:      *                 calls.
+        -:  667:      *
+        -:  668:      * @return 'true', if successful in parsing the prolog. It indicates the
+        -:  669:      *         user can go ahead with parsing the rest of the file. It
+        -:  670:      *         returns 'false' to indicate that the parser could not parse
+        -:  671:      *         the prolog.
+        -:  672:      *
+        -:  673:      * @see #parseNext
+        -:  674:      * @see #parseFirst(XMLCh*,...)
+        -:  675:      * @see #parseFirst(char*,...)
+        -:  676:      */
+        -:  677:    virtual bool parseFirst
+        -:  678:    (
+        -:  679:        const   InputSource&    source
+        -:  680:        ,       XMLPScanToken&  toFill
+        -:  681:    ) = 0;
+        -:  682:
+        -:  683:    /** Continue a progressive parse operation
+        -:  684:      *
+        -:  685:      * This method is used to continue with progressive parsing of
+        -:  686:      * XML files started by a call to 'parseFirst' method.
+        -:  687:      *
+        -:  688:      * It parses the XML file and stops as soon as it comes across
+        -:  689:      * a XML token (as defined in the XML specification). Relevant
+        -:  690:      * callback handlers are invoked as required by the SAX
+        -:  691:      * specification.
+        -:  692:      *
+        -:  693:      * @param token A token maintaing state information to maintain
+        -:  694:      *              internal consistency between invocation of 'parseNext'
+        -:  695:      *              calls.
+        -:  696:      *
+        -:  697:      * @return 'true', if successful in parsing the next XML token.
+        -:  698:      *         It indicates the user can go ahead with parsing the rest
+        -:  699:      *         of the file. It returns 'false' to indicate that the parser
+        -:  700:      *         could not find next token as per the XML specification
+        -:  701:      *         production rule.
+        -:  702:      *
+        -:  703:      * @see #parseFirst(XMLCh*,...)
+        -:  704:      * @see #parseFirst(char*,...)
+        -:  705:      * @see #parseFirst(InputSource&,...)
+        -:  706:      */
+        -:  707:    virtual bool parseNext(XMLPScanToken& token) = 0;
+        -:  708:
+        -:  709:    /** Reset the parser after a progressive parse
+        -:  710:      *
+        -:  711:      * If a progressive parse loop exits before the end of the document
+        -:  712:      * is reached, the parser has no way of knowing this. So it will leave
+        -:  713:      * open any files or sockets or memory buffers that were in use at
+        -:  714:      * the time that the parse loop exited.
+        -:  715:      *
+        -:  716:      * The next parse operation will cause these open files and such to
+        -:  717:      * be closed, but the next parse operation might occur at some unknown
+        -:  718:      * future point. To avoid this problem, you should reset the parser if
+        -:  719:      * you exit the loop early.
+        -:  720:      *
+        -:  721:      * If you exited because of an error, then this cleanup will be done
+        -:  722:      * for you. Its only when you exit the file prematurely of your own
+        -:  723:      * accord, because you've found what you wanted in the file most
+        -:  724:      * likely.
+        -:  725:      *
+        -:  726:      * @param token A token maintaing state information to maintain
+        -:  727:      *              internal consistency between invocation of 'parseNext'
+        -:  728:      *              calls.
+        -:  729:      */
+        -:  730:    virtual void parseReset(XMLPScanToken& token) = 0;
+        -:  731:
+        -:  732:    //@}
+        -:  733:
+        -:  734:    // -----------------------------------------------------------------------
+        -:  735:    //  Grammar preparsing interface
+        -:  736:    // -----------------------------------------------------------------------
+        -:  737:
+        -:  738:    /** @name Grammar preparsing interface's. */
+        -:  739:    //@{
+        -:  740:    /**
+        -:  741:      * Preparse schema grammar (XML Schema, DTD, etc.) via an input source
+        -:  742:      * object.
+        -:  743:      *
+        -:  744:      * This method invokes the preparsing process on a schema grammar XML
+        -:  745:      * file specified by the SAX InputSource parameter. If the 'toCache' flag
+        -:  746:      * is enabled, the parser will cache the grammars for re-use. If a grammar
+        -:  747:      * key is found in the pool, no caching of any grammar will take place.
+        -:  748:      *
+        -:  749:      *
+        -:  750:      * @param source A const reference to the SAX InputSource object which
+        -:  751:      *               points to the schema grammar file to be preparsed.
+        -:  752:      * @param grammarType The grammar type (Schema or DTD).
+        -:  753:      * @param toCache If <code>true</code>, we cache the preparsed grammar,
+        -:  754:      *                otherwise, no caching. Default is <code>false</code>.
+        -:  755:      * @return The preparsed schema grammar object (SchemaGrammar or
+        -:  756:      *         DTDGrammar). That grammar object is owned by the parser.
+        -:  757:      *
+        -:  758:      * @exception SAXException Any SAX exception, possibly
+        -:  759:      *            wrapping another exception.
+        -:  760:      * @exception XMLException An exception from the parser or client
+        -:  761:      *            handler code.
+        -:  762:      * @exception DOMException A DOM exception as per DOM spec.
+        -:  763:      *
+        -:  764:      * @see InputSource#InputSource
+        -:  765:      */
+        -:  766:    virtual Grammar* loadGrammar(const InputSource& source,
+        -:  767:                                 const Grammar::GrammarType grammarType,
+        -:  768:                                 const bool toCache = false) = 0;
+        -:  769:
+        -:  770:    /**
+        -:  771:      * Preparse schema grammar (XML Schema, DTD, etc.) via a file path or URL
+        -:  772:      *
+        -:  773:      * This method invokes the preparsing process on a schema grammar XML
+        -:  774:      * file specified by the file path parameter. If the 'toCache' flag
+        -:  775:      * is enabled, the parser will cache the grammars for re-use. If a grammar
+        -:  776:      * key is found in the pool, no caching of any grammar will take place.
+        -:  777:      *
+        -:  778:      *
+        -:  779:      * @param systemId A const XMLCh pointer to the Unicode string which
+        -:  780:      *                 contains the path to the XML grammar file to be
+        -:  781:      *                 preparsed.
+        -:  782:      * @param grammarType The grammar type (Schema or DTD).
+        -:  783:      * @param toCache If <code>true</code>, we cache the preparsed grammar,
+        -:  784:      *                otherwise, no caching. Default is <code>false</code>.
+        -:  785:      * @return The preparsed schema grammar object (SchemaGrammar or
+        -:  786:      *         DTDGrammar). That grammar object is owned by the parser.
+        -:  787:      *
+        -:  788:      * @exception SAXException Any SAX exception, possibly
+        -:  789:      *            wrapping another exception.
+        -:  790:      * @exception XMLException An exception from the parser or client
+        -:  791:      *            handler code.
+        -:  792:      * @exception DOMException A DOM exception as per DOM spec.
+        -:  793:      */
+        -:  794:    virtual Grammar* loadGrammar(const XMLCh* const systemId,
+        -:  795:                                 const Grammar::GrammarType grammarType,
+        -:  796:                                 const bool toCache = false) = 0;
+        -:  797:
+        -:  798:    /**
+        -:  799:      * Preparse schema grammar (XML Schema, DTD, etc.) via a file path or URL
+        -:  800:      *
+        -:  801:      * This method invokes the preparsing process on a schema grammar XML
+        -:  802:      * file specified by the file path parameter. If the 'toCache' flag
+        -:  803:      * is enabled, the parser will cache the grammars for re-use. If a grammar
+        -:  804:      * key is found in the pool, no caching of any grammar will take place.
+        -:  805:      *
+        -:  806:      *
+        -:  807:      * @param systemId A const char pointer to a native string which contains
+        -:  808:      *                 the path to the XML grammar file to be preparsed.
+        -:  809:      * @param grammarType The grammar type (Schema or DTD).
+        -:  810:      * @param toCache If <code>true</code>, we cache the preparsed grammar,
+        -:  811:      *                otherwise, no caching. Default is <code>false</code>.
+        -:  812:      * @return The preparsed schema grammar object (SchemaGrammar or
+        -:  813:      *         DTDGrammar). That grammar object is owned by the parser.
+        -:  814:      *
+        -:  815:      * @exception SAXException Any SAX exception, possibly
+        -:  816:      *            wrapping another exception.
+        -:  817:      * @exception XMLException An exception from the parser or client
+        -:  818:      *            handler code.
+        -:  819:      * @exception DOMException A DOM exception as per DOM spec.
+        -:  820:      */
+        -:  821:    virtual Grammar* loadGrammar(const char* const systemId,
+        -:  822:                                 const Grammar::GrammarType grammarType,
+        -:  823:                                 const bool toCache = false) = 0;
+        -:  824:
+        -:  825:    /**
+        -:  826:      * Clear the cached grammar pool
+        -:  827:      */
+        -:  828:    virtual void resetCachedGrammarPool() = 0;
+        -:  829:
+        -:  830:    /** Set maximum input buffer size
+        -:  831:      *
+        -:  832:      * This method allows users to limit the size of buffers used in parsing
+        -:  833:      * XML character data. The effect of setting this size is to limit the
+        -:  834:      * size of a ContentHandler::characters() call.
+        -:  835:      *
+        -:  836:      * The parser's default input buffer size is 1 megabyte.
+        -:  837:      *
+        -:  838:      * @param bufferSize The maximum input buffer size
+        -:  839:      */
+        -:  840:    virtual void setInputBufferSize(const XMLSize_t bufferSize);
+        -:  841:
+        -:  842:    //@}
+        -:  843:
+        -:  844:
+        -:  845:    // -----------------------------------------------------------------------
+        -:  846:    //  Advanced document handler list maintenance methods
+        -:  847:    // -----------------------------------------------------------------------
+        -:  848:
+        -:  849:    /** @name Advanced document handler list maintenance methods */
+        -:  850:    //@{
+        -:  851:    /**
+        -:  852:      * This method installs the specified 'advanced' document callback
+        -:  853:      * handler, thereby allowing the user to customize the processing,
+        -:  854:      * if they choose to do so. Any number of advanced callback handlers
+        -:  855:      * maybe installed.
+        -:  856:      *
+        -:  857:      * <p>The methods in the advanced callback interface represent
+        -:  858:      * Xerces-C extensions. There is no specification for this interface.</p>
+        -:  859:      *
+        -:  860:      * @param toInstall A pointer to the users advanced callback handler.
+        -:  861:      *
+        -:  862:      * @see #removeAdvDocHandler
+        -:  863:      */
+        -:  864:    virtual void installAdvDocHandler(XMLDocumentHandler* const toInstall) = 0;
+        -:  865:
+        -:  866:    /**
+        -:  867:      * This method removes the 'advanced' document handler callback from
+        -:  868:      * the underlying parser scanner. If no handler is installed, advanced
+        -:  869:      * callbacks are not invoked by the scanner.
+        -:  870:      * @param toRemove A pointer to the advanced callback handler which
+        -:  871:      *                 should be removed.
+        -:  872:      *
+        -:  873:      * @see #installAdvDocHandler
+        -:  874:      */
+        -:  875:    virtual bool removeAdvDocHandler(XMLDocumentHandler* const toRemove) = 0;
+        -:  876:    //@}
+        -:  877:
+        -:  878:private :
+        -:  879:    /* The copy constructor, you cannot call this directly */
+        -:  880:    SAX2XMLReader(const SAX2XMLReader&);
+        -:  881:
+        -:  882:    /* The assignment operator, you cannot call this directly */
+        -:  883:    SAX2XMLReader& operator=(const SAX2XMLReader&);
+        -:  884:
+        -:  885:};
+        -:  886:
+function _ZN11xercesc_3_113SAX2XMLReader18setInputBufferSizeEm called 0 returned 0% blocks executed 0%
+    #####:  887:inline void SAX2XMLReader::setInputBufferSize(const XMLSize_t /*bufferSize*/)
+        -:  888:{
+    #####:  889:}
+        -:  890:
+        -:  891:XERCES_CPP_NAMESPACE_END
+        -:  892:
+        -:  893:#endif

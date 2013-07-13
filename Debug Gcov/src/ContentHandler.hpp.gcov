@@ -1,0 +1,352 @@
+        -:    0:Source:/usr/local/include/xercesc/sax2/ContentHandler.hpp
+        -:    0:Graph:Test.gcno
+        -:    0:Data:Test.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: * 
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: * 
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: ContentHandler.hpp 932887 2010-04-11 13:04:59Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_CONTENTHANDLER_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_CONTENTHANDLER_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XercesDefs.hpp>
+        -:   26:
+        -:   27:XERCES_CPP_NAMESPACE_BEGIN
+        -:   28:
+        -:   29:class Attributes;
+        -:   30:class Locator;
+        -:   31:
+        -:   32:/**
+        -:   33:  * Receive notification of general document events.
+        -:   34:  *
+        -:   35:  * <p>This is the main interface that most SAX2 applications
+        -:   36:  * implement: if the application needs to be informed of basic parsing
+        -:   37:  * events, it implements this interface and registers an instance with
+        -:   38:  * the SAX2 parser using the setDocumentHandler method.  The parser
+        -:   39:  * uses the instance to report basic document-related events like
+        -:   40:  * the start and end of elements and character data.</p>
+        -:   41:  *
+        -:   42:  * <p>The order of events in this interface is very important, and
+        -:   43:  * mirrors the order of information in the document itself.  For
+        -:   44:  * example, all of an element's content (character data, processing
+        -:   45:  * instructions, and/or subelements) will appear, in order, between
+        -:   46:  * the startElement event and the corresponding endElement event.</p>
+        -:   47:  *
+        -:   48:  * <p>Application writers who do not want to implement the entire
+        -:   49:  * interface while can derive a class from Sax2HandlerBase, which implements
+        -:   50:  * the default functionality; parser writers can instantiate
+        -:   51:  * Sax2HandlerBase to obtain a default handler.  The application can find
+        -:   52:  * the location of any document event using the Locator interface
+        -:   53:  * supplied by the Parser through the setDocumentLocator method.</p>
+        -:   54:  *
+        -:   55:  * @see Parser#setDocumentHandler
+        -:   56:  * @see Locator#Locator
+        -:   57:  * @see Sax2HandlerBase#Sax2HandlerBase
+        -:   58:  */
+        -:   59:
+        -:   60:class SAX2_EXPORT ContentHandler
+        -:   61:{
+        -:   62:public:
+        -:   63:    /** @name Constructors and Destructor */
+        -:   64:    //@{
+        -:   65:    /** Default constructor */
+        -:   66:    ContentHandler()
+        -:   67:    {
+        -:   68:    }
+        -:   69:
+        -:   70:    /** Destructor */
+function _ZN11xercesc_3_114ContentHandlerD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_114ContentHandlerD2Ev called 0 returned 0% blocks executed 0%
+    #####:   71:    virtual ~ContentHandler()
+    #####:   72:    {
+    #####:   73:    }
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:   74:    //@}
+        -:   75:
+        -:   76:    /** @name The virtual document handler interface */
+        -:   77:
+        -:   78:    //@{
+        -:   79:   /**
+        -:   80:    * Receive notification of character data.
+        -:   81:    *
+        -:   82:    * <p>The Parser will call this method to report each chunk of
+        -:   83:    * character data.  SAX parsers may return all contiguous character
+        -:   84:    * data in a single chunk, or they may split it into several
+        -:   85:    * chunks; however, all of the characters in any single event
+        -:   86:    * must come from the same external entity, so that the Locator
+        -:   87:    * provides useful information.</p>
+        -:   88:    *
+        -:   89:    * <p>The application must not attempt to read from the array
+        -:   90:    * outside of the specified range.</p>
+        -:   91:    *
+        -:   92:    * <p>Note that some parsers will report whitespace using the
+        -:   93:    * ignorableWhitespace() method rather than this one (validating
+        -:   94:    * parsers must do so).</p>
+        -:   95:    *
+        -:   96:    * @param chars The characters from the XML document.
+        -:   97:    * @param length The number of characters to read from the array.
+        -:   98:    * @exception SAXException Any SAX exception, possibly
+        -:   99:    *            wrapping another exception.
+        -:  100:    * @see #ignorableWhitespace
+        -:  101:    * @see Locator#Locator
+        -:  102:    */
+        -:  103:    virtual void characters
+        -:  104:    (
+        -:  105:        const   XMLCh* const    chars
+        -:  106:        , const XMLSize_t       length
+        -:  107:    ) = 0;
+        -:  108:
+        -:  109:  /**
+        -:  110:    * Receive notification of the end of a document.
+        -:  111:    *
+        -:  112:    * <p>The SAX parser will invoke this method only once, and it will
+        -:  113:    * be the last method invoked during the parse.  The parser shall
+        -:  114:    * not invoke this method until it has either abandoned parsing
+        -:  115:    * (because of an unrecoverable error) or reached the end of
+        -:  116:    * input.</p>
+        -:  117:    *
+        -:  118:    * @exception SAXException Any SAX exception, possibly
+        -:  119:    *            wrapping another exception.
+        -:  120:    */
+        -:  121:    virtual void endDocument () = 0;
+        -:  122:
+        -:  123:  /**
+        -:  124:    * Receive notification of the end of an element.
+        -:  125:    *
+        -:  126:    * <p>The SAX parser will invoke this method at the end of every
+        -:  127:    * element in the XML document; there will be a corresponding
+        -:  128:    * startElement() event for every endElement() event (even when the
+        -:  129:    * element is empty).</p>
+        -:  130:    *
+        -:  131:    * @param uri The URI of the associated namespace for this element
+        -:  132:	* @param localname The local part of the element name
+        -:  133:	* @param qname The QName of this element
+        -:  134:    * @exception SAXException Any SAX exception, possibly
+        -:  135:    *            wrapping another exception.
+        -:  136:    */
+        -:  137:    virtual void endElement
+        -:  138:	(
+        -:  139:		const XMLCh* const uri,
+        -:  140:		const XMLCh* const localname,
+        -:  141:		const XMLCh* const qname
+        -:  142:	) = 0;
+        -:  143:
+        -:  144:  /**
+        -:  145:    * Receive notification of ignorable whitespace in element content.
+        -:  146:    *
+        -:  147:    * <p>Validating Parsers must use this method to report each chunk
+        -:  148:    * of ignorable whitespace (see the W3C XML 1.0 recommendation,
+        -:  149:    * section 2.10): non-validating parsers may also use this method
+        -:  150:    * if they are capable of parsing and using content models.</p>
+        -:  151:    *
+        -:  152:    * <p>SAX parsers may return all contiguous whitespace in a single
+        -:  153:    * chunk, or they may split it into several chunks; however, all of
+        -:  154:    * the characters in any single event must come from the same
+        -:  155:    * external entity, so that the Locator provides useful
+        -:  156:    * information.</p>
+        -:  157:    *
+        -:  158:    * <p>The application must not attempt to read from the array
+        -:  159:    * outside of the specified range.</p>
+        -:  160:    *
+        -:  161:    * @param chars The characters from the XML document.
+        -:  162:    * @param length The number of characters to read from the array.
+        -:  163:    * @exception SAXException Any SAX exception, possibly
+        -:  164:    *            wrapping another exception.
+        -:  165:    * @see #characters
+        -:  166:    */
+        -:  167:    virtual void ignorableWhitespace
+        -:  168:    (
+        -:  169:        const   XMLCh* const    chars
+        -:  170:        , const XMLSize_t       length
+        -:  171:    ) = 0;
+        -:  172:
+        -:  173:  /**
+        -:  174:    * Receive notification of a processing instruction.
+        -:  175:    *
+        -:  176:    * <p>The Parser will invoke this method once for each processing
+        -:  177:    * instruction found: note that processing instructions may occur
+        -:  178:    * before or after the main document element.</p>
+        -:  179:    *
+        -:  180:    * <p>A SAX parser should never report an XML declaration (XML 1.0,
+        -:  181:    * section 2.8) or a text declaration (XML 1.0, section 4.3.1)
+        -:  182:    * using this method.</p>
+        -:  183:    *
+        -:  184:    * @param target The processing instruction target.
+        -:  185:    * @param data The processing instruction data, or null if
+        -:  186:    *        none was supplied.
+        -:  187:    * @exception SAXException Any SAX exception, possibly
+        -:  188:    *            wrapping another exception.
+        -:  189:    */
+        -:  190:    virtual void processingInstruction
+        -:  191:    (
+        -:  192:        const   XMLCh* const    target
+        -:  193:        , const XMLCh* const    data
+        -:  194:    ) = 0;
+        -:  195:
+        -:  196:  /**
+        -:  197:    * Receive an object for locating the origin of SAX document events.
+        -:  198:    *
+        -:  199:    * SAX parsers are strongly encouraged (though not absolutely
+        -:  200:    * required) to supply a locator: if it does so, it must supply
+        -:  201:    * the locator to the application by invoking this method before
+        -:  202:    * invoking any of the other methods in the DocumentHandler
+        -:  203:    * interface.
+        -:  204:    *
+        -:  205:    * The locator allows the application to determine the end
+        -:  206:    * position of any document-related event, even if the parser is
+        -:  207:    * not reporting an error.  Typically, the application will
+        -:  208:    * use this information for reporting its own errors (such as
+        -:  209:    * character content that does not match an application's
+        -:  210:    * business rules). The information returned by the locator
+        -:  211:    * is probably not sufficient for use with a search engine.
+        -:  212:    *
+        -:  213:    * Note that the locator will return correct information only
+        -:  214:    * during the invocation of the events in this interface. The
+        -:  215:    * application should not attempt to use it at any other time.
+        -:  216:    *
+        -:  217:    * @param locator An object that can return the location of
+        -:  218:    *                any SAX document event. The object is only
+        -:  219:    *                'on loan' to the client code and they are not
+        -:  220:    *                to attempt to delete or modify it in any way!
+        -:  221:    *
+        -:  222:    * @see Locator#Locator
+        -:  223:    */
+        -:  224:    virtual void setDocumentLocator(const Locator* const locator) = 0;
+        -:  225:
+        -:  226:  /**
+        -:  227:    * Receive notification of the beginning of a document.
+        -:  228:    *
+        -:  229:    * <p>The SAX parser will invoke this method only once, before any
+        -:  230:    * other methods in this interface or in DTDHandler (except for
+        -:  231:    * setDocumentLocator).</p>
+        -:  232:    *
+        -:  233:    * @exception SAXException Any SAX exception, possibly
+        -:  234:    *            wrapping another exception.
+        -:  235:    */
+        -:  236:    virtual void startDocument() = 0;
+        -:  237:
+        -:  238:  /**
+        -:  239:    * Receive notification of the beginning of an element.
+        -:  240:    *
+        -:  241:    * <p>The Parser will invoke this method at the beginning of every
+        -:  242:    * element in the XML document; there will be a corresponding
+        -:  243:    * endElement() event for every startElement() event (even when the
+        -:  244:    * element is empty). All of the element's content will be
+        -:  245:    * reported, in order, before the corresponding endElement()
+        -:  246:    * event.</p>
+        -:  247:    *
+        -:  248:    * <p>Note that the attribute list provided will
+        -:  249:    * contain only attributes with explicit values (specified or
+        -:  250:    * defaulted): \#IMPLIED attributes will be omitted.</p>
+        -:  251:    *
+        -:  252:    * @param uri The URI of the associated namespace for this element
+        -:  253:	* @param localname The local part of the element name
+        -:  254:	* @param qname The QName of this element
+        -:  255:    * @param attrs The attributes attached to the element, if any.
+        -:  256:    * @exception SAXException Any SAX exception, possibly
+        -:  257:    *            wrapping another exception.
+        -:  258:    * @see #endElement
+        -:  259:    * @see Attributes#Attributes
+        -:  260:    */
+        -:  261:    virtual void startElement
+        -:  262:    (
+        -:  263:        const   XMLCh* const    uri,
+        -:  264:        const   XMLCh* const    localname,
+        -:  265:        const   XMLCh* const    qname,
+        -:  266:        const   Attributes&     attrs
+        -:  267:    ) = 0;
+        -:  268:
+        -:  269:  /**
+        -:  270:    * Receive notification of the start of an namespace prefix mapping.
+        -:  271:    *
+        -:  272:    * <p>By default, do nothing.  Application writers may override this
+        -:  273:    * method in a subclass to take specific actions at the start of
+        -:  274:    * each namespace prefix mapping.</p>
+        -:  275:    *
+        -:  276:    * @param prefix The namespace prefix used
+        -:  277:    * @param uri The namespace URI used.
+        -:  278:    * @exception SAXException Any SAX exception, possibly
+        -:  279:    *            wrapping another exception.
+        -:  280:    */
+        -:  281:	virtual void startPrefixMapping
+        -:  282:	(
+        -:  283:		const	XMLCh* const	prefix,
+        -:  284:		const	XMLCh* const	uri
+        -:  285:	) = 0 ;
+        -:  286:
+        -:  287:  /**
+        -:  288:    * Receive notification of the end of an namespace prefix mapping.
+        -:  289:    *
+        -:  290:    * <p>By default, do nothing.  Application writers may override this
+        -:  291:    * method in a subclass to take specific actions at the end of
+        -:  292:    * each namespace prefix mapping.</p>
+        -:  293:    *
+        -:  294:    * @param prefix The namespace prefix used
+        -:  295:    * @exception SAXException Any SAX exception, possibly
+        -:  296:    *            wrapping another exception.
+        -:  297:    */
+        -:  298:	virtual void endPrefixMapping
+        -:  299:	(
+        -:  300:		const	XMLCh* const	prefix
+        -:  301:	) = 0 ;
+        -:  302:
+        -:  303:  /**
+        -:  304:    * Receive notification of a skipped entity
+        -:  305:    *
+        -:  306:    * <p>The parser will invoke this method once for each entity
+        -:  307:	* skipped.  All processors may skip external entities,
+        -:  308:	* depending on the values of the features:<br>
+        -:  309:	* http://xml.org/sax/features/external-general-entities<br>
+        -:  310:	* http://xml.org/sax/features/external-parameter-entities</p>
+        -:  311:	*
+        -:  312:	* <p>Note: Xerces (specifically) never skips any entities, regardless
+        -:  313:	* of the above features.  This function is never called in the
+        -:  314:	* Xerces implementation of SAX2.</p>
+        -:  315:    *
+        -:  316:	* <p>Introduced with SAX2</p>
+        -:  317:	*
+        -:  318:    * @param name The name of the skipped entity.  If it is a parameter entity,
+        -:  319:	* the name will begin with %, and if it is the external DTD subset,
+        -:  320:	* it will be the string [dtd].
+        -:  321:    * @exception SAXException Any SAX exception, possibly
+        -:  322:    *            wrapping another exception.
+        -:  323:    */
+        -:  324:	virtual void skippedEntity
+        -:  325:	(
+        -:  326:		const	XMLCh* const	name
+        -:  327:	) = 0 ;
+        -:  328:
+        -:  329:    //@}
+        -:  330:private :
+        -:  331:    /* Unimplemented Constructors and operators */
+        -:  332:    /* Copy constructor */
+        -:  333:    ContentHandler(const ContentHandler&);
+        -:  334:    /** Assignment operator */
+        -:  335:    ContentHandler& operator=(const ContentHandler&);
+        -:  336:};
+        -:  337:
+        -:  338:XERCES_CPP_NAMESPACE_END
+        -:  339:
+        -:  340:#endif

@@ -1,0 +1,177 @@
+        -:    0:Source:/usr/local/include/xercesc/sax/EntityResolver.hpp
+        -:    0:Graph:Test.gcno
+        -:    0:Data:Test.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: * 
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: * 
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: EntityResolver.hpp 527149 2007-04-10 14:56:39Z amassari $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_ENTITYRESOLVER_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_ENTITYRESOLVER_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XercesDefs.hpp>
+        -:   26:
+        -:   27:XERCES_CPP_NAMESPACE_BEGIN
+        -:   28:
+        -:   29:class InputSource;
+        -:   30:
+        -:   31:/**
+        -:   32:  * Basic interface for resolving entities.
+        -:   33:  *
+        -:   34:  * <p>If a SAX application needs to implement customized handling
+        -:   35:  * for external entities, it must implement this interface and
+        -:   36:  * register an instance with the SAX parser using the parser's
+        -:   37:  * setEntityResolver method.</p>
+        -:   38:  *
+        -:   39:  * <p>The parser will then allow the application to intercept any
+        -:   40:  * external entities (including the external DTD subset and external
+        -:   41:  * parameter entities, if any) before including them.</p>
+        -:   42:  *
+        -:   43:  * <p>Many SAX applications will not need to implement this interface,
+        -:   44:  * but it will be especially useful for applications that build
+        -:   45:  * XML documents from databases or other specialised input sources,
+        -:   46:  * or for applications that use URI types other than URLs.</p>
+        -:   47:  *
+        -:   48:  * <p>The following resolver would provide the application
+        -:   49:  * with a special character stream for the entity with the system
+        -:   50:  * identifier "http://www.myhost.com/today":</p>
+        -:   51:  *
+        -:   52:  *<code>
+        -:   53:  *\#include <xercesc/sax/EntityResolver.hpp><br>
+        -:   54:  *\#include <xercesc/sax/InputSource.hpp><br>
+        -:   55:  *<br>
+        -:   56:  *class MyResolver : public EntityResolver {<br>
+        -:   57:  *  public:<br>&nbsp;
+        -:   58:  *    InputSource resolveEntity (const XMLCh* const publicId, const XMLCh* const systemId);<br>&nbsp;&nbsp;
+        -:   59:  *    <br>
+        -:   60:  *   ...<br>&nbsp;&nbsp;
+        -:   61:  *   };<br>&nbsp;
+        -:   62:  *<br>
+        -:   63:  *&nbsp;MyResolver::resolveEntity {<br>
+        -:   64:  *&nbsp;&nbsp;if (XMLString::compareString(systemId, "http://www.myhost.com/today")) {<br>
+        -:   65:  *&nbsp;&nbsp;&nbsp;MyReader* reader = new MyReader();<br>
+        -:   66:  *&nbsp;&nbsp;&nbsp;return new InputSource(reader);<br>
+        -:   67:  *&nbsp;&nbsp;} else {<br>
+        -:   68:  *&nbsp;&nbsp;&nbsp;return null;<br>
+        -:   69:  *&nbsp;&nbsp;}<br>
+        -:   70:  *&nbsp;}<br>
+        -:   71:  *<br>
+        -:   72:  *</code>
+        -:   73:  *
+        -:   74:  * <p>The application can also use this interface to redirect system
+        -:   75:  * identifiers to local URIs or to look up replacements in a catalog
+        -:   76:  * (possibly by using the public identifier).</p>
+        -:   77:  *
+        -:   78:  * <p>The HandlerBase class implements the default behaviour for
+        -:   79:  * this interface, which is simply always to return null (to request
+        -:   80:  * that the parser use the default system identifier).</p>
+        -:   81:  *
+        -:   82:  * @see Parser#setEntityResolver
+        -:   83:  * @see InputSource#InputSource
+        -:   84:  * @see HandlerBase#HandlerBase
+        -:   85:  */
+        -:   86:class SAX_EXPORT EntityResolver
+        -:   87:{
+        -:   88:public:
+        -:   89:    /** @name Constructors and Destructor */
+        -:   90:    //@{
+        -:   91:
+        -:   92:    /** Default Constructor */
+        -:   93:    EntityResolver()
+        -:   94:    {
+        -:   95:    }
+        -:   96:
+        -:   97:    /** Destructor */
+function _ZN11xercesc_3_114EntityResolverD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_114EntityResolverD2Ev called 0 returned 0% blocks executed 0%
+    #####:   98:    virtual ~EntityResolver()
+    #####:   99:    {
+    #####:  100:    }
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:  101:
+        -:  102:    //@}
+        -:  103:
+        -:  104:    /** @name The EntityResolver interface */
+        -:  105:    //@{
+        -:  106:
+        -:  107:  /**
+        -:  108:    * Allow the application to resolve external entities.
+        -:  109:    *
+        -:  110:    * <p>The Parser will call this method before opening any external
+        -:  111:    * entity except the top-level document entity (including the
+        -:  112:    * external DTD subset, external entities referenced within the
+        -:  113:    * DTD, and external entities referenced within the document
+        -:  114:    * element): the application may request that the parser resolve
+        -:  115:    * the entity itself, that it use an alternative URI, or that it
+        -:  116:    * use an entirely different input source.</p>
+        -:  117:    *
+        -:  118:    * <p>Application writers can use this method to redirect external
+        -:  119:    * system identifiers to secure and/or local URIs, to look up
+        -:  120:    * public identifiers in a catalogue, or to read an entity from a
+        -:  121:    * database or other input source (including, for example, a dialog
+        -:  122:    * box).</p>
+        -:  123:    *
+        -:  124:    * <p>If the system identifier is a URL, the SAX parser must
+        -:  125:    * resolve it fully before reporting it to the application.</p>
+        -:  126:    *
+        -:  127:    * @param publicId The public identifier of the external entity
+        -:  128:    *        being referenced, or null if none was supplied.
+        -:  129:    * @param systemId The system identifier of the external entity
+        -:  130:    *        being referenced.
+        -:  131:    * @return An InputSource object describing the new input source,
+        -:  132:    *         or null to request that the parser open a regular
+        -:  133:    *         URI connection to the system identifier.
+        -:  134:    *         The returned InputSource is owned by the parser which is
+        -:  135:    *         responsible to clean up the memory.
+        -:  136:    * @exception SAXException Any SAX exception, possibly
+        -:  137:    *            wrapping another exception.
+        -:  138:    * @exception IOException An IO exception,
+        -:  139:    *            possibly the result of creating a new InputStream
+        -:  140:    *            or Reader for the InputSource.
+        -:  141:    * @see InputSource#InputSource
+        -:  142:    */
+        -:  143:    virtual InputSource* resolveEntity
+        -:  144:    (
+        -:  145:        const   XMLCh* const    publicId
+        -:  146:        , const XMLCh* const    systemId
+        -:  147:    ) = 0;
+        -:  148:
+        -:  149:    //@}
+        -:  150:
+        -:  151:private :
+        -:  152:    /* Unimplemented constructors and operators */
+        -:  153:
+        -:  154:
+        -:  155:    /* Copy constructor */
+        -:  156:    EntityResolver(const EntityResolver&);
+        -:  157:
+        -:  158:    /* Assignment operator */
+        -:  159:    EntityResolver& operator=(const EntityResolver&);
+        -:  160:
+        -:  161:};
+        -:  162:
+        -:  163:XERCES_CPP_NAMESPACE_END
+        -:  164:
+        -:  165:#endif

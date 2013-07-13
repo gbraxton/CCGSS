@@ -1,0 +1,184 @@
+        -:    0:Source:/usr/local/include/xercesc/framework/XMLAttDefList.hpp
+        -:    0:Graph:simulation_package_builder.gcno
+        -:    0:Data:simulation_package_builder.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * Licensed to the Apache Software Foundation (ASF) under one or more
+        -:    3: * contributor license agreements.  See the NOTICE file distributed with
+        -:    4: * this work for additional information regarding copyright ownership.
+        -:    5: * The ASF licenses this file to You under the Apache License, Version 2.0
+        -:    6: * (the "License"); you may not use this file except in compliance with
+        -:    7: * the License.  You may obtain a copy of the License at
+        -:    8: *
+        -:    9: *      http://www.apache.org/licenses/LICENSE-2.0
+        -:   10: *
+        -:   11: * Unless required by applicable law or agreed to in writing, software
+        -:   12: * distributed under the License is distributed on an "AS IS" BASIS,
+        -:   13: * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        -:   14: * See the License for the specific language governing permissions and
+        -:   15: * limitations under the License.
+        -:   16: */
+        -:   17:
+        -:   18:/*
+        -:   19: * $Id: XMLAttDefList.hpp 932887 2010-04-11 13:04:59Z borisk $
+        -:   20: */
+        -:   21:
+        -:   22:#if !defined(XERCESC_INCLUDE_GUARD_XMLATTDEFLIST_HPP)
+        -:   23:#define XERCESC_INCLUDE_GUARD_XMLATTDEFLIST_HPP
+        -:   24:
+        -:   25:#include <xercesc/util/XercesDefs.hpp>
+        -:   26:#include <xercesc/util/XMemory.hpp>
+        -:   27:#include <xercesc/internal/XSerializable.hpp>
+        -:   28:
+        -:   29:XERCES_CPP_NAMESPACE_BEGIN
+        -:   30:
+        -:   31:class XMLAttDef;
+        -:   32:
+        -:   33:/**
+        -:   34: *  This class defines an abstract interface that all validators must support.
+        -:   35: *  When the scanner scans the attributes in a start tag, it must have a list
+        -:   36: *  of the defined attributes for that element. This is used to fault in
+        -:   37: *  defaulted and fixed attributes, to know which ones are required, and to
+        -:   38: *  know the their types in order to do the correct normalization.
+        -:   39: *
+        -:   40: *  Since each validator will have its own derivatives of XMLAttDef and will
+        -:   41: *  have its own specialized storage mechanisms for elements and the att
+        -:   42: *  defs that they own, there must be an abstracted way for the scanner to
+        -:   43: *  deal with this list.
+        -:   44: *
+        -:   45: *  It does not derive from the generic Enumerator template class, because
+        -:   46: *  there are portability issues with deriving from a template class in a
+        -:   47: *  DLL. It does though provide a similar enumerator interface.
+        -:   48: */
+        -:   49:
+        -:   50:class XMLPARSER_EXPORT XMLAttDefList : public XSerializable, public XMemory
+        -:   51:{
+        -:   52:public:
+        -:   53:    // -----------------------------------------------------------------------
+        -:   54:    //  Constructors and Destructor
+        -:   55:    // -----------------------------------------------------------------------
+        -:   56:
+        -:   57:    /** @name Destructor */
+        -:   58:    //@{
+        -:   59:    virtual ~XMLAttDefList();
+        -:   60:    //@}
+        -:   61:
+        -:   62:
+        -:   63:    // -----------------------------------------------------------------------
+        -:   64:    //  The virtual interface
+        -:   65:    // -----------------------------------------------------------------------
+        -:   66:
+        -:   67:    virtual bool isEmpty() const = 0;
+        -:   68:    virtual XMLAttDef* findAttDef
+        -:   69:    (
+        -:   70:        const   unsigned int        uriID
+        -:   71:        , const XMLCh* const        attName
+        -:   72:    ) = 0;
+        -:   73:    virtual const XMLAttDef* findAttDef
+        -:   74:    (
+        -:   75:        const   unsigned int        uriID
+        -:   76:        , const XMLCh* const        attName
+        -:   77:    )   const = 0;
+        -:   78:    virtual XMLAttDef* findAttDef
+        -:   79:    (
+        -:   80:        const   XMLCh* const        attURI
+        -:   81:        , const XMLCh* const        attName
+        -:   82:    ) = 0;
+        -:   83:    virtual const XMLAttDef* findAttDef
+        -:   84:    (
+        -:   85:        const   XMLCh* const        attURI
+        -:   86:        , const XMLCh* const        attName
+        -:   87:    )   const = 0;
+        -:   88:
+        -:   89:    /**
+        -:   90:     * return total number of attributes in this list
+        -:   91:     */
+        -:   92:    virtual XMLSize_t getAttDefCount() const = 0;
+        -:   93:
+        -:   94:    /**
+        -:   95:     * return attribute at the index-th position in the list.
+        -:   96:     */
+        -:   97:    virtual XMLAttDef &getAttDef(XMLSize_t index) = 0;
+        -:   98:
+        -:   99:    /**
+        -:  100:     * return attribute at the index-th position in the list.
+        -:  101:     */
+        -:  102:    virtual const XMLAttDef &getAttDef(XMLSize_t index) const = 0;
+        -:  103:
+        -:  104:    /***
+        -:  105:     * Support for Serialization/De-serialization
+        -:  106:     ***/
+        -:  107:    DECL_XSERIALIZABLE(XMLAttDefList)
+        -:  108:
+        -:  109:
+        -:  110:    // -----------------------------------------------------------------------
+        -:  111:    //  Getter methods
+        -:  112:    // -----------------------------------------------------------------------
+        -:  113:
+        -:  114:    /** @name Getter methods */
+        -:  115:    //@{
+        -:  116:
+        -:  117:    /** Get the memory manager
+        -:  118:      *
+        -:  119:      * This method returns the configurable memory manager used by the
+        -:  120:      * element declaration for dynamic allocation/deallocation.
+        -:  121:      *
+        -:  122:      * @return the memory manager
+        -:  123:      */
+        -:  124:    MemoryManager* getMemoryManager() const;
+        -:  125:
+        -:  126:    //@}
+        -:  127:
+        -:  128:protected :
+        -:  129:    // -----------------------------------------------------------------------
+        -:  130:    //  Hidden constructors and operators
+        -:  131:    // -----------------------------------------------------------------------
+        -:  132:    XMLAttDefList(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+        -:  133:
+        -:  134:private:
+        -:  135:    // unimplemented
+        -:  136:    XMLAttDefList(const XMLAttDefList&);
+        -:  137:    XMLAttDefList& operator=(const XMLAttDefList&);
+        -:  138:
+        -:  139:    MemoryManager*      fMemoryManager;
+        -:  140:};
+        -:  141:
+        -:  142:
+        -:  143:
+        -:  144:// ---------------------------------------------------------------------------
+        -:  145://  XMLAttDefList: Getter methods
+        -:  146:// ---------------------------------------------------------------------------
+        -:  147:
+        -:  148:inline MemoryManager* XMLAttDefList::getMemoryManager() const
+        -:  149:{
+        -:  150:    return fMemoryManager;
+        -:  151:}
+        -:  152:
+        -:  153:// ---------------------------------------------------------------------------
+        -:  154://  XMLAttDefList: Constructors and Destructor
+        -:  155:// ---------------------------------------------------------------------------
+function _ZN11xercesc_3_113XMLAttDefListD0Ev called 0 returned 0% blocks executed 0%
+function _ZN11xercesc_3_113XMLAttDefListD2Ev called 0 returned 0% blocks executed 0%
+    #####:  156:inline XMLAttDefList::~XMLAttDefList()
+call    0 never executed
+        -:  157:{
+    #####:  158:}
+call    0 never executed
+call    1 never executed
+branch  2 never executed
+branch  3 never executed
+call    4 never executed
+        -:  159:
+        -:  160:
+        -:  161:// ---------------------------------------------------------------------------
+        -:  162://  XMLAttDefList: Protected Constructor
+        -:  163:// ---------------------------------------------------------------------------
+        -:  164:inline XMLAttDefList::XMLAttDefList(MemoryManager* const manager):
+        -:  165:fMemoryManager(manager)
+        -:  166:{
+        -:  167:}
+        -:  168:
+        -:  169:XERCES_CPP_NAMESPACE_END
+        -:  170:
+        -:  171:#endif
